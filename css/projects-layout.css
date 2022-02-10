@@ -1,0 +1,33 @@
+* {
+  margin: auto;
+}
+body {
+  display: grid;
+
+  justify-content: space-evenly;
+  grid-template-rows: 10% 60% 30%;
+  row-gap: 50px;
+}
+
+.links {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  justify-items: center;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: space-evenly;
+}
+
+.links #about-me {
+  display: grid;
+  grid-column: 1/2;
+}
+.links #home-page {
+  display: grid;
+  grid-column: 2/3;
+}
+
+.links #projects {
+  display: grid;
+  grid-column: 3/4;
+}

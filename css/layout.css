@@ -1,0 +1,74 @@
+body {
+  display: grid;
+
+  justify-content: space-evenly;
+  grid-template-rows: 10% 60% 30%;
+  row-gap: 50px;
+}
+
+.links {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  justify-items: center;
+
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: space-evenly;
+}
+.links #about-me {
+  display: grid;
+  grid-column: 1/2;
+}
+.links #home-page {
+  display: grid;
+  grid-column: 2/3;
+}
+
+.links #projects {
+  display: grid;
+  grid-column: 3/4;
+}
+
+.Software-Developer {
+  display: grid;
+  grid-row: 2;
+  grid-template-rows: 80% 20%;
+  row-gap: 20px;
+}
+
+.Software-Developer #photo {
+  display: grid;
+  grid-row: 1;
+  margin: auto;
+
+  max-block-size: 16rem;
+}
+
+footer {
+  display: grid;
+  grid-template-rows: 33% 33% 34%;
+  grid-template-columns: 50% 50%;
+}
+
+footer img {
+  max-width: 10%;
+  grid-row: 1;
+}
+
+#gmail-link {
+  margin: auto;
+  align-self: center;
+}
+#linked-in-link {
+}
+
+#linked-in-notice {
+  grid-column: 2/3;
+}
+
+#email-notice {
+  grid-column: 1/2;
+}
+#feedback-appreciated {
+  grid-column: 1/3;
+}
