@@ -34,6 +34,7 @@ body {
   grid-row: 2;
   grid-template-rows: 80% 20%;
   row-gap: 20px;
+  align-items: center;
 }
 
 .Software-Developer #photo {
@@ -53,6 +54,7 @@ footer {
 footer img {
   max-width: 10%;
   grid-row: 1;
+  align-items: center;
 }
 
 #gmail-link {
