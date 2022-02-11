@@ -43,39 +43,22 @@ body {
 #email-input {
 }
 
-.feedback {
-  display: grid;
-  grid-template-columns: 50% 50%;
-}
-
-#interview-input {
+.suggestions {
   display: grid;
   grid-template-rows: 30% 70%;
-  grid-column: 1/2;
-  max-width: 1000px;
+  justify-content: center;
+  margin: 20px 20px;
+  align-items: center;
 }
-
-#interview-label {
-  grid-row: 1/2;
+#feedback-label {
+  grid-row: 1;
 }
-
-#yes-text-box {
+#text-box {
   grid-row: 2;
+  align-self: center;
+  width: 50%;
 }
 
-#no-interview-input {
-  display: grid;
-  grid-template-rows: 30% 70%;
-  grid-column: 2/3;
-}
-
-#no-interview-label {
-  grid-row: 1/2;
-}
-
-#no-text-box {
-  grid-row: 2;
-}
 .contact-links {
   display: grid;
   grid-template-rows: 50% 50%;
