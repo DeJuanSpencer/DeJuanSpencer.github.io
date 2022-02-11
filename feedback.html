@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/feedback-style.css" />
+    <link rel="stylesheet" href="css/feedback-layout.css" />
+    <title>Feedback</title>
+  </head>
+  <body>
+    <header>
+      <nav class="grid-item links">
+        <section id="grid-item home-page">
+          <a href="index.html">Home Page</a>
+        </section>
+        <section id="grid-item about-me">
+          <a href="aboutme.html">About Me</a>
+        </section>
+        <section id="grid-item projects">
+          <a href="projects.html">My Projects</a>
+        </section>
+      </nav>
+    </header>
+    <main>
+      <form
+        class="grid-item form"
+        action="https://getform.io/f/cdbe429f-f16f-4c2e-bc9a-58b2b9d50381"
+        method="POST"
+      >
+        <label for="fullname">Your name:</label>
+        <input type="text" name="name" />
+        <input type="email" name="email" />
+        <input type="text" name="message" />
+        <label for="userfeedback"
+          >Why wouldn't you invite me to an interview with you?</label
+        >
+        <textarea name="message" rows="10" cols="30"> </textarea>
+
+        <label for="userfeedback"
+          >Why would you invite me to an interview with you?</label
+        >
+        <textarea name="message" rows="10" cols="30"> </textarea>
+        <!-- checkbox handle -->
+        <input type="checkbox" name="subscribe" value="yes" checked />
+        <input type="hidden" name="subscribe" value="no" />
+        <!-- radio button handle -->
+        <input type="radio" name="gender" value="male" checked />
+        <input type="radio" name="gender" value="female" />
+        <input type="radio" name="gender" value="other" />
+        <!-- select field handle -->
+        <select name="work-experience">
+          <option value="one-year">0-1 years</option>
+          <option value="one-five-years">1-5 years</option>
+          <option value="five-plus-years">5+ years</option>
+        </select>
+        <button type="submit">Send</button>
+      </form>
+    </main>
+
+    <footer class="grid-item contact-links">
+      <div class="grid-item linked-in-container">
+        <a
+          id="grid-item linked-in-icon"
+          href="https://www.linkedin.com/in/dejuanspencer/"
+          target="_blank"
+          alt="My Linked-In page"
+          title="Let's expand our network"
+        >
+          <img src="images\linked-in-icon.png" />
+        </a>
+      </div>
+
+      <div class="grid-item email-container">
+        <a
+          id="grid-item email-icon"
+          href="mailto:dejuanspencer@gmail.com"
+          target="_blank"
+          alt="Email link"
+          title="Email me"
+        >
+          <img src="images\gmail-icon.jpg" />
+        </a>
+      </div>
+      <div class="grid-item resume-container">
+        <a id="resume-icon" href="resume.html" alt="Resume" title="My Resume">
+          <img src="images\resume-icon.png" alt="My resume" />
+        </a>
+      </div>
+
+      <p id="feedback-appreciated">
+        My portfolio is always a work-in-progress and
+        <a href="feedback.html" alt="Feedback form" title="Feedback form here"
+          >feedback</a
+        >
+        is always appreciated!
+      </p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+body {
+  display: grid;
+  grid-template-rows: 10% 60% 30%;
+  row-gap: 50px;
+}
+
+.form {
+  display: grid;
+}
+
+.contact-links {
+  display: grid;
+  grid-template-rows: 50% 50%;
+  max-width: 100%;
+  grid-row: 3;
+  align-items: center;
+  align-items: baseline;
+  justify-items: center;
+}
+
+.contact-links img {
+  max-width: 100%;
+  grid-row: 3;
+  align-items: center;
+}
+
+.email-container {
+  display: grid;
+  grid-template-columns: 5%;
+  grid-column: 1;
+  grid-row: 1;
+  align-content: center;
+  justify-content: end;
+}
+
+#gmail-icon {
+  grid-column: 1;
+  max-width: 100%;
+}
+
+.linked-in-container {
+  display: grid;
+  grid-template-columns: 5%;
+  grid-column: 2;
+  grid-row: 1;
+  align-content: center;
+  justify-content: center;
+}
+
+#linked-in-icon {
+  grid-column: 1;
+  max-width: 100%;
+}
+
+.resume-container {
+  display: grid;
+  grid-template-columns: 10%;
+  grid-column: 3;
+  justify-content: start;
+
+  grid-row: 1;
+  align-content: center;
+}
+#resume-icon {
+  grid-column: 1;
+  max-width: 100%;
+}
+
+#feedback-appreciated {
+  grid-area: 2/2/3/3;
+}

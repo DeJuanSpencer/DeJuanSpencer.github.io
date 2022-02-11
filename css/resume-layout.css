@@ -1,0 +1,96 @@
+body {
+  display: grid;
+  grid-template-rows: 10% 60% 30%;
+  row-gap: 50px;
+}
+
+.links {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  justify-items: center;
+
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: space-evenly;
+}
+.links #about-me {
+  display: grid;
+  grid-column: 1/2;
+}
+.links #home-page {
+  display: grid;
+  grid-column: 2/3;
+}
+
+.links #projects {
+  display: grid;
+  grid-column: 3/4;
+}
+
+img {
+  max-width: 100%;
+
+  align-items: center;
+}
+.contact-links {
+  display: grid;
+  grid-template-rows: 50% 50%;
+  max-width: 100%;
+  grid-row: 3;
+  align-items: center;
+  align-items: baseline;
+  justify-items: center;
+  align-items: end;
+}
+
+.contact-links img {
+  max-width: 100%;
+  grid-row: 3;
+  align-items: center;
+}
+
+.email-container {
+  display: grid;
+  grid-template-columns: 5%;
+  grid-column: 1;
+  grid-row: 1;
+  align-content: center;
+  justify-content: end;
+}
+
+#gmail-icon {
+  grid-column: 1;
+  max-width: 100%;
+}
+
+.linked-in-container {
+  display: grid;
+  grid-template-columns: 5%;
+  grid-column: 2;
+  grid-row: 1;
+  align-content: center;
+  justify-content: center;
+}
+
+#linked-in-icon {
+  grid-column: 1;
+  max-width: 100%;
+}
+
+.resume-container {
+  display: grid;
+  grid-template-columns: 10%;
+  grid-column: 3;
+  justify-content: start;
+
+  grid-row: 1;
+  align-content: center;
+}
+#resume-icon {
+  grid-column: 1;
+  max-width: 100%;
+}
+
+#feedback-appreciated {
+  grid-area: 2/2/3/3;
+}
