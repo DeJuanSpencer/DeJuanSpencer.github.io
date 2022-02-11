@@ -1,7 +1,5 @@
 body {
   display: grid;
-
-  justify-content: space-evenly;
   grid-template-rows: 10% 60% 30%;
   row-gap: 50px;
 }
@@ -35,42 +33,79 @@ body {
   grid-template-rows: 80% 20%;
   row-gap: 20px;
   align-items: center;
+  justify-content: center;
 }
 
 .Software-Developer #photo {
   display: grid;
   grid-row: 1;
   margin: auto;
-
   max-block-size: 16rem;
 }
 
-footer {
-  display: grid;
-  grid-template-rows: 33% 33% 34%;
-  grid-template-columns: 50% 50%;
+.Software-Developer p {
+  margin: auto;
+  max-width: 35rem;
 }
 
-footer img {
-  max-width: 10%;
-  grid-row: 1;
+.contact-links {
+  display: grid;
+  grid-template-rows: 50% 50%;
+  max-width: 100%;
+  grid-row: 3;
+  align-items: center;
+  align-items: baseline;
+  justify-items: center;
+}
+
+.contact-links img {
+  max-width: 100%;
+  grid-row: 3;
   align-items: center;
 }
 
+.email-container {
+  display: grid;
+  grid-template-columns: 5%;
+  grid-column: 1;
+  grid-row: 1;
+  align-content: center;
+  justify-content: end;
+}
+
 #gmail-icon {
-  margin: auto;
-  align-self: center;
-}
-#linked-icon {
+  grid-column: 1;
+  max-width: 100%;
 }
 
-#linked-in-notice {
-  grid-column: 2/3;
+.linked-in-container {
+  display: grid;
+  grid-template-columns: 5%;
+  grid-column: 2;
+  grid-row: 1;
+  align-content: center;
+  justify-content: center;
 }
 
-#email-notice {
-  grid-column: 1/2;
+#linked-in-icon {
+  grid-column: 1;
+  max-width: 100%;
 }
+
+.resume-container {
+  display: grid;
+  grid-template-columns: 10%;
+  grid-column: 3;
+  justify-content: start;
+
+  grid-row: 1;
+  align-content: center;
+}
+#resume-icon {
+  grid-column: 1;
+  max-width: 100%;
+}
+
 #feedback-appreciated {
-  grid-column: 1/3;
+  grid-area: 2/2/3/3;
 }
