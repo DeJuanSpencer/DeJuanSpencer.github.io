@@ -26,6 +26,56 @@ body {
   grid-column: 3/4;
 }
 
+.form {
+  display: grid;
+  grid-template-rows: 30% 80%;
+  justify-items: center;
+  align-items: start;
+}
+
+.information {
+  grid-row: 1/2;
+}
+
+#name-input {
+}
+
+#email-input {
+}
+
+.feedback {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+#interview-input {
+  display: grid;
+  grid-template-rows: 30% 70%;
+  grid-column: 1/2;
+  max-width: 1000px;
+}
+
+#interview-label {
+  grid-row: 1/2;
+}
+
+#yes-text-box {
+  grid-row: 2;
+}
+
+#no-interview-input {
+  display: grid;
+  grid-template-rows: 30% 70%;
+  grid-column: 2/3;
+}
+
+#no-interview-label {
+  grid-row: 1/2;
+}
+
+#no-text-box {
+  grid-row: 2;
+}
 .contact-links {
   display: grid;
   grid-template-rows: 50% 50%;
@@ -86,7 +136,4 @@ body {
 
 #feedback-appreciated {
   grid-area: 2/2/3/3;
-}
-.form {
-  display: grid;
 }
