@@ -4,8 +4,26 @@ body {
   row-gap: 50px;
 }
 
-.form {
+.links {
   display: grid;
+  width: 100%;
+  height: 100%;
+  justify-items: center;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: space-evenly;
+}
+.links #about-me {
+  display: grid;
+  grid-column: 1/2;
+}
+.links #home-page {
+  display: grid;
+  grid-column: 2/3;
+}
+
+.links #projects {
+  display: grid;
+  grid-column: 3/4;
 }
 
 .contact-links {
@@ -68,4 +86,7 @@ body {
 
 #feedback-appreciated {
   grid-area: 2/2/3/3;
+}
+.form {
+  display: grid;
 }
