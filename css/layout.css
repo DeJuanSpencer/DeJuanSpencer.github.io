@@ -49,23 +49,27 @@ body {
 
 .contact-links {
   display: grid;
-  grid-template-rows: 50% 50%;
+
   max-width: 100%;
-  grid-row: 3;
+
   align-items: center;
+  align-items: baseline;
+  justify-items: center;
+}
+.links-container {
+  display: grid;
+  grid-template-columns: 33% 34% 33%;
+  max-width: 70%;
   align-items: baseline;
   justify-items: center;
 }
 
 .contact-links img {
   max-width: 100%;
-  grid-row: 3;
-  align-items: center;
 }
 
-.email-container {
-  display: grid;
-  grid-template-columns: 5%;
+.email {
+  max-width: 20%;
   grid-column: 1;
   grid-row: 1;
   align-content: center;
@@ -73,38 +77,28 @@ body {
 }
 
 #gmail-icon {
-  grid-column: 1;
   max-width: 100%;
 }
 
-.linked-in-container {
-  display: grid;
-  grid-template-columns: 5%;
+.linked-in {
   grid-column: 2;
   grid-row: 1;
+  max-width: 20%;
   align-content: center;
   justify-content: center;
 }
 
 #linked-in-icon {
-  grid-column: 1;
   max-width: 100%;
 }
 
-.resume-container {
-  display: grid;
-  grid-template-columns: 10%;
+.resume {
   grid-column: 3;
-  justify-content: start;
-
   grid-row: 1;
+  max-width: 20%;
+  justify-content: start;
   align-content: center;
 }
 #resume-icon {
-  grid-column: 1;
   max-width: 100%;
-}
-
-#feedback-appreciated {
-  grid-area: 2/2/3/3;
 }
