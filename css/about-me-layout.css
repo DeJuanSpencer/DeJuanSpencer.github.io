@@ -29,20 +29,26 @@ body {
 
 .details-about-me {
   display: grid;
+  grid-template-columns: 0.5fr 1fr 0.5fr;
   grid-row: 2;
   align-items: center;
   justify-content: center;
 }
+.details-container {
+  display: grid;
+  grid-template-rows: 0.2fr 1fr 0.25fr;
+  grid-column-start: 2;
+  justify-items: center;
+}
 
 #quote {
-  display: grid;
   grid-row: 1/2;
 }
 
 .details-about-me img {
   display: grid;
   grid-row: 2/3;
-  margin: auto;
+
   max-block-size: 16rem;
 }
 
@@ -52,7 +58,6 @@ body {
   margin: auto;
   max-width: 35rem;
 }
-
 /* This is where the footer starts */
 
 .contact-links {

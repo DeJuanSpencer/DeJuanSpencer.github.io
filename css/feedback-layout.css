@@ -39,8 +39,12 @@ body {
   grid-row: 1/2;
 }
 
+.suggestions-container {
+  grid-template-columns: 0.5fr 1fr 0.5fr;
+}
 .suggestions {
   display: grid;
+  grid-column-start: 2;
   grid-template-rows: 0.5fr 1fr 0.3fr;
   justify-items: center;
   align-items: center;
