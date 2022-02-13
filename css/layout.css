@@ -8,7 +8,12 @@ body {
   row-gap: 10px;
 }
 
+header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
 .links {
+  grid-column: 3;
   display: grid;
   width: 100%;
   height: 100%;
