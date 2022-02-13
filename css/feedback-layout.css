@@ -34,44 +34,37 @@ header {
 .form {
   display: grid;
   grid-row: 2;
-  grid-template-rows: 0.25fr 1fr;
+  grid-template-rows: 0.5fr 1fr;
   justify-items: center;
-
   align-items: center;
 }
 
 .information {
   display: grid;
-  grid-row: 1/2;
+  grid-row-start: 1;
   row-gap: 5px;
 }
 
 .suggestions-container {
-  grid-template-columns: 0.5fr 1fr 0.5fr;
+  display: grid;
+  grid-row-start: 2;
+  grid-template-columns: 1fr 2fr 1fr;
 }
 .suggestions {
   display: grid;
+  grid-row-start: 2;
   grid-column-start: 2;
-  grid-template-rows: 0.5fr 1fr 0.3fr;
-  justify-items: center;
-  align-items: center;
 }
 #feedback-label {
-  display: grid;
-  grid-row: 1;
+  grid-row-start: 1;
 }
 #text-box {
-  grid-row: 2;
+  grid-row-start: 2;
   align-self: center;
-  max-width: 100%;
-  margin: 5px;
+  width: 40%;
 }
-
 #submit-button {
-  grid-row: 3;
-
-  max-width: 10%;
-  max-height: 10%;
+  grid-row-start: 3;
 }
 
 /* This is where the footer starts */
