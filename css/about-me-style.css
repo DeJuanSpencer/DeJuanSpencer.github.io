@@ -18,3 +18,9 @@
   border: 2px solid black;
   max-width: 10%;
 }
+
+/* Get help for why the font isn't changing */
+
+#quote {
+  font-size: 100x;
+}
