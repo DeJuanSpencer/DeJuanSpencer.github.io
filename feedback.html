@@ -31,68 +31,68 @@
         <section class="grid-item information">
           <div id="grid-item name-input">
             <label for="fullname">Name:</label>
-            <input type="text" name="name" />
+            <input id="grid-item email-box" type="text" name="name" />
           </div>
 
           <div id="grid-item email-input">
             <label for="email">Email:</label>
-            <input type="email" name="email" />
+            <input id="grid-item email-box" type="email" name="email" />
           </div>
         </section>
 
-        
-          <section class="grid-item suggestions">
-            <label id="grid-item feedback-label" for="user-feedback"
-              >Please enter suggestions for improvement and/or guidance for
-              getting in touch with someone at your company for an
-              interview:</label
-            >
-            <textarea
-              id="grid-item text-box"
-              name="No-interview?"
-              rows="10"
-              cols="60"
-            >
-            </textarea>
-          </div>
+        <section class="grid-item suggestions">
+          <label id="grid-item feedback-label" for="user-feedback"
+            >Please enter suggestions for improvement and/or guidance for
+            getting in touch with someone at your company for an
+            interview:</label
+          >
+          <textarea
+            id="grid-item text-box"
+            name="feed-back-box"
+            rows="10"
+            cols="60"
+          >
+          </textarea>
+
+          <button id="grid-item submit-button" type="submit">Send</button>
         </section>
       </form>
     </main>
 
     <footer class="grid-item contact-links">
-      <section class="grid-item links-container">
-        <div class="grid-item linked-in">
-          <a
-            id="grid-item linked-in-icon"
-            href="https://www.linkedin.com/in/dejuanspencer/"
-            target="_blank"
-            alt="My Linked-In page"
-            title="Let's expand our network"
-          >
-            <img src="images\linked-in-icon.png" />
-          </a>
-        </div>
+      <!-- <section class="grid-item links-container"> -->
+      <div class="grid-item linked-in">
+        <a
+          id="grid-item linked-in-icon"
+          href="https://www.linkedin.com/in/dejuanspencer/"
+          target="_blank"
+          alt="My Linked-In page"
+          title="Let's expand our network"
+        >
+          <img src="images\linked-in-icon.png" />
+        </a>
+      </div>
 
-        <div class="grid-item email">
-          <a
-            id="grid-item email-icon"
-            href="mailto:dejuanspencer@gmail.com"
-            target="_blank"
-            alt="Email link"
-            title="Email me"
-          >
-            <img src="images\gmail-icon.jpg" />
-          </a>
-        </div>
-        <div class="grid-item resume">
-          <a id="resume-icon" href="resume.html" alt="Resume" title="My Resume">
-            <img src="images\resume-icon.png" alt="My resume" />
-          </a>
-        </div>
-      </section>
+      <div class="grid-item email">
+        <a
+          id="grid-item email-icon"
+          href="mailto:dejuanspencer@gmail.com"
+          target="_blank"
+          alt="Email link"
+          title="Email me"
+        >
+          <img src="images\gmail-icon.jpg" />
+        </a>
+      </div>
+      <div class="grid-item resume">
+        <a id="resume-icon" href="resume.html" alt="Resume" title="My Resume">
+          <img src="images\resume-icon.png" alt="My resume" />
+        </a>
+      </div>
+      <!-- </section> -->
 
       <p id="feedback-appreciated">
-        My portfolio is always a work-in-progress and feedback is always appreciated!
+        My portfolio is a work-in-progress and feedback is always appreciated!
       </p>
     </footer>
   </body>
