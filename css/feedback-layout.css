@@ -1,128 +1,99 @@
-body {
-  display: grid;
-  grid-template-rows: 0.25fr 3fr 0.5fr;
-  align-items: center;
-  row-gap: 10px;
-}
-
 header {
-  display: grid;
-  grid-template-columns: 1fr 1fr 2fr;
-}
-.links {
-  grid-column: 3;
-  display: grid;
-  width: 100%;
-  height: 100%;
-  grid-row: 1;
-  justify-items: center;
-  grid-template-columns: 1fr 1fr 1fr;
-  justify-content: space-evenly;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
+  height: 2vw;
+  gap: 1vh;
   align-items: center;
   font-size: larger;
-}
-.links #about-me {
-  grid-column: 1/2;
-}
-.links #home-page {
-  grid-column: 2/3;
+  flex-wrap: nowrap;
 }
 
-.links #projects {
-  grid-column: 3/4;
+.links {
+  display: flex;
+  flex-direction: row;
+  gap: 1vw;
 }
+
 .form {
-  display: grid;
-  grid-row: 2;
-  grid-template-rows: 0.5fr 1fr;
+  display: flex;
+  flex-direction: column;
   justify-items: center;
   align-items: center;
+  margin-top: 20vh;
 }
 
 .information {
-  display: grid;
-  grid-row-start: 1;
+  display: flex;
+
   row-gap: 5px;
 }
 
 .suggestions-container {
-  display: grid;
-  grid-row-start: 2;
-  grid-template-columns: 1fr 2fr 1fr;
+  display: flex;
 }
 .suggestions {
-  display: grid;
-  grid-row-start: 2;
-  grid-column-start: 2;
+  display: flex;
 }
-#feedback-label {
-  grid-row-start: 1;
+.feedback-label {
 }
-#text-box {
-  grid-row-start: 2;
+.text-box {
   align-self: center;
-  width: 40%;
 }
-#submit-button {
-  grid-row-start: 3;
+.submit-button {
 }
 
 /* This is where the footer starts */
+footer {
+  row-gap: 1vh;
+  display: flex;
+  padding-top: 1vh;
+  width: 100vw;
+  justify-content: center;
+  flex-direction: column;
+  align-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+}
 
 .contact-links {
-  display: grid;
-
-  max-width: 100%;
-  max-height: 100%;
-  grid-row: 3;
-
+  display: flex;
+  flex-direction: row;
   align-items: center;
-  align-content: center;
 
-  justify-items: center;
+  justify-content: center;
+  gap: 6vw;
+  width: 100vw;
+  height: 10vw;
 }
 
 .contact-links img {
-  max-width: 100%;
+  display: flex;
+  align-self: center;
+  margin: auto;
+  width: 100%;
 }
 
-.email {
-  max-width: 15%;
-  grid-column: 1;
-  grid-row: 1;
-  align-content: center;
-  justify-content: end;
-}
-
-#gmail-icon {
-  max-width: 100%;
-}
-
-.linked-in {
-  grid-column: 2;
-  grid-row: 1;
-  max-width: 11%;
-  align-content: center;
+.feedback-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  max-width: 50vw;
+  max-height: 100vh;
   justify-content: center;
+  gap: 1vw;
+  margin: auto;
 }
 
-#linked-in-icon {
-  max-width: 100%;
+.feedback {
+  margin: auto;
+  height: 10vw;
+  width: 50vw;
+  gap: 1vw;
 }
 
-.resume {
-  grid-column: 3;
-  grid-row: 1;
-  max-width: 20%;
-  justify-content: start;
-  align-content: center;
-}
-#resume-icon {
-  max-width: 100%;
-}
-
-.contact-links p {
-  grid-column: 2;
+.feedback-container {
+  width: 100vw;
 }
 
 /* This is where the footer ends*/

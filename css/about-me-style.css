@@ -1,6 +1,19 @@
 * {
   background-color: grey;
 }
+.links {
+  font-size: 2vh;
+}
+.links a {
+  border: 0.2vh solid rgb(146, 146, 190);
+}
+
+.quote {
+  font-size: 2vh;
+}
+.about-me-paragraph {
+  font-size: 2vh;
+}
 .email img {
   border-radius: 25% 25%;
   border: 2px solid black;
@@ -19,8 +32,6 @@
   max-width: 10%;
 }
 
-/* Get help for why the font isn't changing */
-
-#quote {
-  font-size: 100x;
+footer {
+  font-size: 2vh;
 }

@@ -1,118 +1,116 @@
-* {
-  background-color: grey;
-}
-
-body {
-  display: grid;
-  grid-template-rows: 0.5fr 3fr 1.5fr;
-  row-gap: 10px;
-}
-
 header {
-  display: grid;
-  grid-template-columns: 1fr 1fr 2fr;
-}
-.links {
-  grid-column: 3;
-  display: grid;
-  width: 100%;
-  height: 100%;
-  grid-row: 1;
-  justify-items: center;
-  grid-template-columns: 1fr 1fr 1fr;
-  justify-content: space-evenly;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
+  height: 2vw;
+  gap: 1vh;
   align-items: center;
   font-size: larger;
-}
-.links #about-me {
-  grid-column: 1/2;
-}
-.links #home-page {
-  grid-column: 2/3;
+  flex-wrap: nowrap;
 }
 
-.links #projects {
-  grid-column: 3/4;
+.links {
+  display: flex;
+  flex-direction: row;
+  gap: 1vw;
 }
 
 .Software-Developer {
-  display: grid;
-  grid-row: 2;
-  grid-template-rows: 3fr 1fr;
-  row-gap: 10px;
-  align-items: center;
+  display: flex;
+  padding-top: 1vh;
+  margin: 5vw 5vh 5vw 5vh;
+  width: 80vw;
+  height: 70vh;
   justify-content: center;
-  max-width: 100%;
+  flex-direction: row;
+  align-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: space-around;
 }
 
-.Software-Developer #photo {
-  display: grid;
-  grid-row: 1;
-  margin: auto;
-  max-block-size: 16rem;
+.Software-Developer h3 {
+  display: flex;
+  width: 30vw;
+  order: 2;
+  max-height: 5vh;
+  min-width: 10vw;
+  max-width: 90vw;
 }
 
-.Software-Developer p {
-  margin: auto;
-  max-width: 35rem;
+.Software-Developer #description {
+  display: flex;
+  width: 50vw;
+  height: 30vh;
+}
+
+.Software-Developer div {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  font-size: 3vh;
+  align-items: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.Software-Developer img {
+  padding-right: 10vw;
+  width: 50vh;
+  order: 1;
 }
 
 /* This is where the footer starts */
+footer {
+  row-gap: 1vh;
+  display: flex;
+  padding-top: 1vh;
+  width: 100vw;
+  justify-content: center;
+  flex-direction: column;
+  align-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+}
 
 .contact-links {
-  display: grid;
-
-  max-width: 100%;
-  max-height: 100%;
-  grid-row: 3;
-
+  display: flex;
+  flex-direction: row;
   align-items: center;
-  align-content: center;
 
-  justify-items: center;
+  justify-content: center;
+  gap: 6vw;
+  width: 100vw;
+  height: 10vw;
 }
 
 .contact-links img {
-  max-width: 100%;
+  display: flex;
+  align-self: center;
+  margin: auto;
+  width: 100%;
 }
 
-.email {
-  max-width: 15%;
-  grid-column: 1;
-  grid-row: 1;
-  align-content: center;
-  justify-content: end;
-}
-
-#gmail-icon {
-  max-width: 100%;
-}
-
-.linked-in {
-  grid-column: 2;
-  grid-row: 1;
-  max-width: 11%;
-  align-content: center;
+#feedback-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  max-width: 50vw;
+  max-height: 100vh;
   justify-content: center;
+  gap: 1vw;
+  margin: auto;
 }
 
-#linked-in-icon {
-  max-width: 100%;
+#feedback {
+  margin: auto;
+  height: 10vw;
+  width: 50vw;
+  gap: 1vw;
 }
 
-.resume {
-  grid-column: 3;
-  grid-row: 1;
-  max-width: 20%;
-  justify-content: start;
-  align-content: center;
-}
-#resume-icon {
-  max-width: 100%;
-}
-
-.contact-links p {
-  grid-column: 2;
+#feedback-container {
+  width: 100vw;
 }
 
 /* This is where the footer ends*/

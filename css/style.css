@@ -1,20 +1,47 @@
-* {
+body {
   background-color: grey;
 }
+header a {
+  font-size: 1vw;
+}
+
+.Software-Developer p {
+  font-size: 3vh;
+}
+
+.Software-Developer h3 {
+  font-weight: lighter;
+  border-color: aqua;
+}
+
+.linked-in-container {
+  border-radius: 40%;
+  width: 4vw;
+  height: 4vw;
+}
+.email-container {
+  width: 5vw;
+}
+.resume-container {
+  width: 4vw;
+}
 .email img {
-  border-radius: 25% 25%;
+  border-radius: 40%;
   border: 2px solid black;
-  max-width: 15%;
+  max-width: 100%;
 }
 
 .resume img {
   border-radius: 20%;
   border: 2px solid black;
-  max-width: 10%;
+  max-width: 100%;
 }
 
 .linked-in img {
   border-radius: 50%;
   border: 2px solid black;
-  max-width: 10%;
+}
+
+footer {
+  font-size: 1vw;
 }

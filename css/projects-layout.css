@@ -1,115 +1,89 @@
-* {
-  background-color: grey;
-}
-
-body {
-  display: grid;
-  grid-template-rows: 0.5fr 3fr 1.5fr;
-  row-gap: 10px;
-  align-items: center;
-}
 header {
-  display: grid;
-  grid-template-columns: 1fr 1fr 2fr;
-}
-.links {
-  grid-column: 3;
-  display: grid;
-  width: 100%;
-  height: 100%;
-  grid-row: 1;
-  justify-items: center;
-  grid-template-columns: 1fr 1fr 1fr;
-  justify-content: space-evenly;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
+  height: 10vw;
+  gap: 1vh;
   align-items: center;
   font-size: larger;
+  flex-wrap: nowrap;
+  width: 100vw;
 }
-
-.links #about-me {
-  grid-column: 1/2;
-}
-.links #home-page {
-  grid-column: 2/3;
-}
-
-.links #projects {
-  grid-column: 3/4;
+.links {
+  display: flex;
+  flex-direction: row;
+  gap: 1vw;
+  width: 40vw;
+  justify-content: space-around;
 }
 
 .projects {
-  display: grid;
+  display: flex;
   justify-content: center;
 }
 
 .virtual-pet {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  justify-items: center;
+  display: flex;
+  flex-direction: column;
+  padding-top: 1vh;
+  width: 100vw;
+  align-items: center;
 }
 
-#asci-dog a {
-  grid-row: 1;
+.ascii-dog a {
 }
 
-#asci-dog p {
-  grid-row: 2;
+.ascii-dog p {
 }
+
 /* This is where the footer starts */
 
 .contact-links {
-  display: grid;
-
-  max-width: 100%;
-  max-height: 100%;
-  grid-row: 3;
-
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  align-content: center;
-
-  justify-items: center;
-}
-
-.contact-links img {
-  max-width: 100%;
-}
-
-.email {
-  max-width: 15%;
-  grid-column: 1;
-  grid-row: 1;
-  align-content: center;
-  justify-content: end;
-}
-
-#gmail-icon {
-  max-width: 100%;
-}
-
-.linked-in {
-  grid-column: 2;
-  grid-row: 1;
-  max-width: 11%;
-  align-content: center;
   justify-content: center;
+  gap: 5vw;
+  width: 100vw;
+  height: 20vw;
 }
 
-#linked-in-icon {
-  max-width: 100%;
-}
-
-.resume {
-  grid-column: 3;
-  grid-row: 1;
-  max-width: 20%;
-  justify-content: start;
-  align-content: center;
-}
-#resume-icon {
-  max-width: 100%;
+.links-container {
+  display: flex;
+  order: 1;
 }
 
 .contact-links p {
-  grid-column: 2;
+  order: 2;
+}
+
+.contact-links img {
+  display: flex;
+  align-self: center;
+  margin: auto;
+  width: 100%;
+}
+
+#feedback-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  max-width: 50vw;
+  max-height: 100vh;
+  justify-content: center;
+  gap: 1vw;
+  margin: auto;
+}
+
+#feedback {
+  margin: auto;
+  height: 10vw;
+  width: 50vw;
+  gap: 1vw;
+}
+
+#feedback-container {
+  width: 100vw;
 }
 
 /* This is where the footer ends*/

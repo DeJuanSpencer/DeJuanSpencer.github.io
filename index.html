@@ -8,81 +8,100 @@
     <link rel="stylesheet" href="css/layout.css" />
     <title>DeJuan's Portfolio</title>
   </head>
-  <body class="grid-item body">
+  <body>
     <!-- At some point, add some code that can auto-generate inspiring quotes on programming -->
 
-    <header>
-      <nav class="grid-item links">
-        <section id="grid-item home-page">
-          <a href="index.html">Home Page</a>
-        </section>
-        <section id="grid-item about-me">
-          <a href="aboutme.html">About Me</a>
-        </section>
-        <section id="grid-item projects">
-          <a href="projects.html">My Projects</a>
-        </section>
+    <header class="flex-item links">
+      <nav id="flex-item home-page">
+        <a href="index.html">Home Page</a>
+      </nav>
+      <nav id="flex-item about-me">
+        <a href="aboutme.html">About Me</a>
+      </nav>
+      <nav id="flex-item projects">
+        <a href="projects.html">My Projects</a>
       </nav>
     </header>
 
-    <main>
-      <section class="grid-item Software-Developer">
-        <img id="photo" src="images\Portfolio-photo.jpg" />
-        <p>
+    <main class="flex-item Software-Developer">
+      <div id="flex-item skills-photo-container">
+        <h3 id="flex-item techstack">
+          Java Spring Hibernate JPA JavaScript MVC HTML CSS - flexbox and flex
+          TDD Agile (Scrum) OOP AJAX JSON Restful APIs Responsive Design SQL
+          Relational Databases Source Control/Git React
+        </h3>
+        <img id="flex-item photo" src="images\Portfolio-photo.jpg" />
+      </div>
+      <div id="flex-item description">
+        <p id="flex-item description1">
           I am currently a full-stack Java Software-Developer apprentice at We
-          Can Code IT (WCCI)! They are a highly reputable programming bootcamp
-          in both Cleveland and Columbus, Ohio. To learn more about them, click
-          this
+          Can Code IT (WCCI); they are a reputable programming bootcamp in both
+          Cleveland and Columbus, Ohio. To learn more about them, click this
           <a
-            id="grid-item wcci-link"
+            id="flex-item wcci-link"
             href="https://wecancodeit.org/"
             target="_blank"
             >link</a
           >
           to access their website!
         </p>
-      </section>
+      </div>
     </main>
 
-    <footer class="grid-item contact-links">
-      <!-- <section class="grid-item links-container"> -->
-      <div class="grid-item linked-in">
-        <a
-          id="grid-item linked-in-icon"
-          href="https://www.linkedin.com/in/dejuanspencer/"
-          target="_blank"
-          alt="My Linked-In page"
-          title="Let's expand our network"
-        >
-          <img src="images\linked-in-icon.png" />
-        </a>
-      </div>
+    <footer>
+      <section class="flex-item contact-links">
+        <div class="flex-item linked-in-container">
+          <div class="flex-item linked-in">
+            <a
+              id="flex-item linked-in-icon"
+              href="https://www.linkedin.com/in/dejuanspencer/"
+              target="_blank"
+              alt="My Linked-In page"
+              title="Let's expand our network"
+            >
+              <img
+                id="flex-item linked-in-picture"
+                src="images\linked-in-icon.png"
+              />
+            </a>
+          </div>
+        </div>
 
-      <div class="grid-item email">
-        <a
-          id="grid-item email-icon"
-          href="mailto:dejuanspencer@gmail.com"
-          target="_blank"
-          alt="Email link"
-          title="Email me"
-        >
-          <img src="images\gmail-icon.jpg" />
-        </a>
+        <div class="flex-item email-container">
+          <div class="flex-item email">
+            <a
+              id="email-icon"
+              href="mailto:dejuanspencer@gmail.com"
+              target="_blank"
+              alt="Email link"
+              title="Email me"
+            >
+              <img src="images\gmail-icon.jpg" />
+            </a>
+          </div>
+        </div>
+        <div class="flex-item resume-container">
+          <div class="flex-item resume">
+            <a
+              id="resume-icon"
+              href="resume.html"
+              alt="Resume"
+              title="My Resume"
+            >
+              <img src="images\resume-icon.png" alt="My resume" />
+            </a>
+          </div>
+        </div>
+      </section>
+      <div id="flex-item feedback-container">
+        <p id="flex-item feedback">
+          My portfolio is a work-in-progress and
+          <a href="feedback.html" alt="Feedback form" title="Feedback form here"
+            >feedback</a
+          >
+          is always appreciated!
+        </p>
       </div>
-      <div class="grid-item resume">
-        <a id="resume-icon" href="resume.html" alt="Resume" title="My Resume">
-          <img src="images\resume-icon.png" alt="My resume" />
-        </a>
-      </div>
-      <!-- </section> -->
-
-      <p id="feedback-appreciated">
-        My portfolio is a work-in-progress and
-        <a href="feedback.html" alt="Feedback form" title="Feedback form here"
-          >feedback</a
-        >
-        is always appreciated!
-      </p>
     </footer>
   </body>
 </html>

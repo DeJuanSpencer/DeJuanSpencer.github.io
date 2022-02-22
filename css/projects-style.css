@@ -1,6 +1,10 @@
 * {
   background-color: grey;
 }
+
+.about-virtual-pet {
+  font-size: 1vh;
+}
 .email img {
   border-radius: 25% 25%;
   border: 2px solid black;
@@ -17,4 +21,7 @@
   border-radius: 50%;
   border: 2px solid black;
   max-width: 10%;
+}
+footer {
+  font-size: 2vh;
 }
