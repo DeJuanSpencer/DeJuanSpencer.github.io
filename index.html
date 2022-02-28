@@ -8,81 +8,192 @@
     <link rel="stylesheet" href="css/layout.css" />
     <title>DeJuan's Portfolio</title>
   </head>
-  <body class="grid-item body">
+  <body>
     <!-- At some point, add some code that can auto-generate inspiring quotes on programming -->
+    <header class="flex-item">
+      <h1>DeJuan Spencer</h1>
+      <div class="flex-item links-container">
+        <nav class="flex-item links">
+          <a href="#main">Top of the Page</a>
+          <a href="#feedback">Provide Feedback</a>
+        </nav>
+      </div>
 
-    <header>
-      <nav class="grid-item links">
-        <section id="grid-item home-page">
-          <a href="index.html">Home Page</a>
-        </section>
-        <section id="grid-item about-me">
-          <a href="aboutme.html">About Me</a>
-        </section>
-        <section id="grid-item projects">
-          <a href="projects.html">My Projects</a>
-        </section>
-      </nav>
-    </header>
-
-    <main>
-      <section class="grid-item Software-Developer">
-        <img id="photo" src="images\Portfolio-photo.jpg" />
-        <p>
-          I am currently a full-stack Java Software-Developer apprentice at We
-          Can Code IT (WCCI)! They are a highly reputable programming bootcamp
-          in both Cleveland and Columbus, Ohio. To learn more about them, click
-          this
-          <a
-            id="grid-item wcci-link"
-            href="https://wecancodeit.org/"
-            target="_blank"
-            >link</a
-          >
-          to access their website!
+      <section class="flex-item quote-container">
+        <p class="flex-item quote">
+          "Everybody in this country should learn to program a computer...
+          because it teaches you how to think." ~ Steve Jobs
         </p>
       </section>
+    </header>
+    <div class="flex-item h">
+      <h1 class="flex-item h1-tag">
+        DeJuan Spencer's Portfolio. Dedicated learner, martial arts instructor,
+      </h1>
+    </div>
+    <main class="flex-item" id="main">
+      <section class="flex-item rows">
+        <section class="flex-item row1">
+          <section class="flex-item picture-container">
+            <img class="flex-item picture" src="images\blue-suit.jpg" />
+          </section>
+
+          <div class="flex-item bio-container">
+            <div class="flex-item bio-heading">
+              <h2 class="flex-item who-i-am">Who I am</h2>
+            </div>
+            <p class="flex-item bio">
+              My name is DeJuan Spencer and I am currently a full-stack Java
+              Software-Developer apprentice at We Can Code IT (WCCI) where I am
+              learning some of the best practices for Java full-stack web
+              development. To learn more about them, click on this
+              <a
+                class="flex-item wcci-link"
+                href="https://wecancodeit.org/"
+                target="_blank"
+                >link</a
+              >
+              to access their website! <br /><br />
+            </p>
+            <p class="flex-item programming-bio">
+              I first became interested in computer programming at the thought
+              of wanting to do something that would teach me to think better.
+              Now I am sticking with it because I am beginning to see that it
+              gives us endless opportunities. With my computer and some
+              knowledge, I am now able to create something that others may find
+              useful. Simply put, programming is a process that makes me feel
+              very good.
+            </p>
+          </div>
+        </section>
+        <section class="flex-item row2">
+          <section class="flex-item projects-container">
+            <h2>Projects and skills acquired:</h2>
+            <h1 class="flex-item techstack">
+              Key topics covered: Java Spring Hibernate JPA JavaScript MVC HTML
+              CSS - flexbox and flex TDD Agile (Scrum) OOP AJAX JSON Restful
+              APIs Responsive Design SQL Relational Databases Source Control/Git
+              React
+            </h1>
+
+            <section class="flex-item projects">
+              <!-- Mention the skills you used in your portfolio not so much the description of it -->
+            </section>
+            <div class="flex-item project1">
+              <p>Project 1: Fortune Teller</p>
+            </div>
+            <div class="flex-item project2">
+              <p>
+                <a
+                  class="flex-item first-project"
+                  href="https://github.com/2022-Spring-Cohort/virtual-pet-DeJuanSpencer"
+                  target="_blank"
+                >
+                  <img class="flex-item ascii-dog" src="images\ASCII-dog.jpg" />
+                </a>
+
+                Used OOP, abstraction, polymorphism, inheritance, and
+                encapsulation, to create organic animals and robot animals.
+              </p>
+            </div>
+            <div class="flex-item project3">
+              <p>
+                Github Portfolio: This page was created using HTML and CSS
+                (flexbox)
+              </p>
+            </div>
+            <div class="flex-item project4">
+              <p>
+                Review site: Gained exposure to Spring MVC and databases with
+                Hibernate JPA.
+              </p>
+            </div>
+          </section>
+        </section>
+      </section>
     </main>
+    <hr />
 
-    <footer class="grid-item contact-links">
-      <!-- <section class="grid-item links-container"> -->
-      <div class="grid-item linked-in">
-        <a
-          id="grid-item linked-in-icon"
-          href="https://www.linkedin.com/in/dejuanspencer/"
-          target="_blank"
-          alt="My Linked-In page"
-          title="Let's expand our network"
+    <footer>
+      <section class="flex-item form-container" id="feedback">
+        <form
+          class="flex-item form"
+          action="https://getform.io/f/cdbe429f-f16f-4c2e-bc9a-58b2b9d50381"
+          method="POST"
         >
-          <img src="images\linked-in-icon.png" />
-        </a>
-      </div>
+          <div class="flex-item form-inner-container">
+            <section class="flex-item name-and-email">
+              <div class="flex-item name-input">
+                <label for="fullname"></label>
+                <input
+                  class="flex-item name-box"
+                  placeholder="What's your name?"
+                  type="text"
+                  name="name"
+                />
+              </div>
+              <!-- Match the label 'for' and class -->
+              <div class="flex-item email-input">
+                <label for="email"></label>
+                <input
+                  placeholder="What's your email?"
+                  class="flex-item email-box"
+                  type="email"
+                  name="email"
+                />
+              </div>
+            </section>
 
-      <div class="grid-item email">
-        <a
-          id="grid-item email-icon"
-          href="mailto:dejuanspencer@gmail.com"
-          target="_blank"
-          alt="Email link"
-          title="Email me"
-        >
-          <img src="images\gmail-icon.jpg" />
-        </a>
-      </div>
-      <div class="grid-item resume">
-        <a id="resume-icon" href="resume.html" alt="Resume" title="My Resume">
-          <img src="images\resume-icon.png" alt="My resume" />
-        </a>
-      </div>
-      <!-- </section> -->
+            <section class="flex-item input-area">
+              <textarea
+                class="flex-item text-box"
+                name="feed-back-box"
+                rows="10"
+                cols="60"
+                placeholder="How can I make this better?"
+              ></textarea>
+              <div class="flex-item submit-button-container">
+                <button class="flex-item submit-button" type="submit">
+                  Send
+                </button>
+              </div>
+            </section>
+          </div>
+        </form>
+      </section>
+      <section class="flex-item contact-links">
+        <div class="flex-item linked-in-container">
+          <div class="flex-item linked-in">
+            <a
+              class="flex-item linked-in-icon"
+              href="https://www.linkedin.com/in/dejuanspencer/"
+              target="_blank"
+              alt="My Linked-In page"
+              title="Let's expand our network"
+            >
+              <img
+                class="flex-item linked-in-picture"
+                src="images\linked-in-icon.png"
+              />
+            </a>
+          </div>
+        </div>
 
-      <p id="feedback-appreciated">
-        My portfolio is a work-in-progress and
-        <a href="feedback.html" alt="Feedback form" title="Feedback form here"
-          >feedback</a
-        >
-        is always appreciated!
-      </p>
+        <div class="flex-item email-container">
+          <div class="flex-item email">
+            <a
+              class="email-icon"
+              href="mailto:dejuanspencer@gmail.com"
+              target="_blank"
+              alt="Email link"
+              title="Email me"
+            >
+              <img src="images\gmail-icon.jpg" />
+            </a>
+          </div>
+        </div>
+      </section>
+      <div class="flex-item feedback-container"></div>
     </footer>
   </body>
 </html>

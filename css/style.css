@@ -1,20 +1,67 @@
-* {
+body {
   background-color: grey;
 }
+header {
+  background-color: rgb(33, 30, 30);
+}
+
+header h1 {
+  color: rgb(17, 122, 202);
+  font-weight: bolder;
+  font-family: serif;
+}
+header a {
+  font-size: 1vw;
+}
+
+.Software-Developer p {
+  font-size: 3vh;
+}
+
+.Software-Developer h3 {
+  font-weight: lighter;
+  border-color: aqua;
+}
+.quote {
+  border-color: rgb(17, 122, 202);
+  color: rgb(61, 102, 114);
+  font-weight: bolder;
+
+  /* The border color and font color are the same colors Chase uses for their logo */
+}
+.linked-in-container {
+  border-radius: 40%;
+  width: 4vw;
+  height: 4vw;
+}
+.email-container {
+  width: 5vw;
+}
+.resume-container {
+  width: 4vw;
+}
 .email img {
-  border-radius: 25% 25%;
+  border-radius: 40%;
   border: 2px solid black;
-  max-width: 15%;
+  max-width: 100%;
 }
 
 .resume img {
   border-radius: 20%;
   border: 2px solid black;
-  max-width: 10%;
+  max-width: 100%;
 }
 
 .linked-in img {
   border-radius: 50%;
   border: 2px solid black;
-  max-width: 10%;
+}
+
+footer {
+  font-size: 1vw;
+}
+
+.name-and-email {
+  display: flex;
+  background-color: rgb(17, 122, 202);
 }
