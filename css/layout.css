@@ -209,6 +209,8 @@ footer {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 1vw;
+  margin: auto;
 }
 
 .contact-links {
