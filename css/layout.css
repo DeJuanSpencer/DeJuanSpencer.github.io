@@ -3,6 +3,7 @@ header {
   flex-direction: column;
   font-size: 4rem;
   min-height: 25vh;
+  min-width: 45rem;
   gap: 1vh;
   width: 100vw;
 }
@@ -54,6 +55,7 @@ main {
 .rows {
   display: flex;
   width: 100vw;
+
   height: auto;
   flex-direction: column;
   justify-content: flex-start;
@@ -62,6 +64,7 @@ main {
 .row1 {
   display: flex;
   flex-wrap: wrap;
+  min-width: 45rem;
   order: 2;
   width: 100vw;
   justify-content: space-evenly;
@@ -69,6 +72,8 @@ main {
 
 .row2 {
   display: flex;
+  align-content: center;
+  min-width: 45rem;
   order: 3;
   width: 100%;
 }
@@ -81,7 +86,7 @@ main {
   border-style: double;
   height: auto;
   width: 45%;
-  min-width: 700px;
+  min-width: 45rem;
 }
 
 .picture {
@@ -99,6 +104,7 @@ main {
   flex-direction: column;
   height: auto;
   width: 45%;
+  min-width: 45rem;
 }
 
 .bio-heading {
@@ -180,6 +186,7 @@ footer {
   display: flex;
   padding-top: 1vh;
   width: 100vw;
+  min-width: 45rem;
   height: 5%;
   justify-content: center;
   flex-direction: column;
