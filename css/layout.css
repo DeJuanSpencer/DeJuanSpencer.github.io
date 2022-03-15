@@ -99,12 +99,13 @@ main {
 .bio-container {
   display: flex;
   order: 1;
-  font-size: 2.2rem;
+  font-size: 2rem;
   align-content: space-evenly;
   flex-direction: column;
   height: auto;
   width: 45%;
   min-width: 45rem;
+  line-height: 2;
 }
 
 .bio-heading {
@@ -117,13 +118,18 @@ main {
 
 .who-i-am {
   justify-content: center;
+  font-size: 4rem;
 }
 .bio {
   border-style: double;
+  font-size: 4rem;
+  height: 50%;
 }
 
 .programming-bio {
   border-style: double;
+  font-size: 4rem;
+  height: 50%;
 }
 
 .resume-body {
@@ -187,7 +193,6 @@ footer {
   padding-top: 1vh;
   width: 100vw;
   min-width: 45rem;
-  height: 5%;
   justify-content: center;
   flex-direction: column;
   align-content: center;
@@ -224,6 +229,7 @@ footer {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-width: 45rem;
   gap: 1%;
   margin: auto;
 }
