@@ -1,12 +1,8 @@
-/* body {
-  display: flex;
-  flex-direction: column;
-} */
-
 header {
   display: flex;
   flex-direction: column;
-  height: 25vh;
+  font-size: 4rem;
+  min-height: 25vh;
   gap: 1vh;
   width: 100vw;
 }
@@ -14,7 +10,7 @@ header {
 header h1 {
   display: flex;
   justify-content: center;
-  font-size: 3rem;
+  font-size: 2rem;
   order: 2;
 }
 
@@ -41,12 +37,14 @@ header h1 {
   gap: 1vw;
   justify-content: center;
   width: 100%;
+  min-height: 20vh;
   padding-bottom: 1vh;
   order: 3;
+  min-width: 70%;
 }
 
 .quote {
-  font-size: 3vh;
+  font-size: 3rem;
 }
 
 main {
@@ -56,15 +54,17 @@ main {
 .rows {
   display: flex;
   width: 100vw;
-  height: 100%;
+  height: auto;
   flex-direction: column;
   justify-content: flex-start;
 }
 
 .row1 {
   display: flex;
+  flex-wrap: wrap;
   order: 2;
-  width: 100%;
+  width: 100vw;
+  justify-content: space-evenly;
 }
 
 .row2 {
@@ -75,44 +75,49 @@ main {
 
 .picture-container {
   display: flex;
+
+  align-items: center;
   order: 2;
   border-style: double;
-  height: 100%;
-  width: 50vw;
+  height: auto;
+  width: 45%;
+  min-width: 700px;
 }
 
 .picture {
+  height: auto;
   width: 100%;
+  height: 100%;
+  min-height: 30%;
 }
 
 .bio-container {
   display: flex;
   order: 1;
-  font-size: 3vh;
+  font-size: 2.2rem;
+  align-content: space-evenly;
   flex-direction: column;
-  height: 100%;
-  width: 50vw;
+  height: auto;
+  width: 45%;
 }
 
 .bio-heading {
   display: flex;
   justify-content: center;
+  align-items: center;
+  height: 10%;
   background-color: aquamarine;
-  height: 5%;
 }
 
 .who-i-am {
   justify-content: center;
 }
 .bio {
-  font-size: 3vh;
   border-style: double;
-  width: 100%;
 }
 
 .programming-bio {
   border-style: double;
-  height: 5%;
 }
 
 .resume-body {
@@ -131,6 +136,8 @@ main {
 }
 
 .projects-container {
+  display: flex;
+  flex-wrap: wrap;
   width: 100%;
   height: 100%;
   order: 3;
@@ -138,12 +145,12 @@ main {
 }
 
 .projects-container p {
-  font-size: 2vh;
+  font-size: 2rem;
 }
 
 .techstack {
   width: 100%;
-  font-size: 3vh;
+  font-size: 2.2rem;
   justify-content: flex-end;
 }
 
@@ -162,6 +169,7 @@ main {
   display: flex;
   flex-direction: column;
   width: 20%;
+  min-width: 20%;
   border-style: double;
   background-color: azure;
 }
@@ -209,7 +217,7 @@ footer {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 1vw;
+  gap: 1%;
   margin: auto;
 }
 
@@ -218,8 +226,8 @@ footer {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 6vw;
-  width: 100vw;
+  gap: 6%;
+  width: 100%;
   height: 10%;
 }
 
@@ -257,24 +265,24 @@ footer {
   flex-direction: column;
 
   width: 100%;
-  height: 70vh;
+  height: 70%;
 }
 
 .feedback-label {
   margin: auto;
-  height: 10vw;
-  width: 50vw;
+  height: 10%;
+  width: 50%;
   gap: 1vw;
 }
 .feedback {
-  height: 10vw;
-  width: 50vw;
+  height: 10%;
+  width: 50%;
   gap: 1vw;
 }
 
 .feedback-container {
-  width: 100vw;
-  height: 100vh;
+  min-width: 100%;
+  min-height: 100%;
 }
 
 /* This is where the footer ends*/
