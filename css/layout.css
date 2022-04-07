@@ -188,10 +188,9 @@ main {
 
 /* This is where the footer starts */
 footer {
-  row-gap: 1vh;
   display: flex;
   padding-top: 1vh;
-  width: 100vw;
+  width: 100%;
   min-width: 45rem;
   justify-content: center;
   flex-direction: column;
