@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 export default function About() {
   return (
     <section className="max-w-4xl mx-auto px-6 text-center">
