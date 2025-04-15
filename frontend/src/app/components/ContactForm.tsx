@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 
@@ -7,9 +7,7 @@ export default function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -36,9 +34,7 @@ export default function ContactForm() {
       <h2 className="text-3xl font-bold text-center mb-6">Contact Me</h2>
 
       {submitted ? (
-        <p className="text-green-600 text-center">
-          Thanks for reaching out! I'll be in touch soon.
-        </p>
+        <p className="text-green-600 text-center">Thanks for reaching out! I'll be in touch soon.</p>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
