@@ -25,7 +25,7 @@ export default function Hero() {
           Contact Me
         </a>
         <a
-          href="../DeJuan Spencer Resume.docx"
+          href="/resume.pdf"
           className="text-gray-600 underline hover:text-blue-600 text-sm pt-2 md:pt-3 block"
           download
         >
