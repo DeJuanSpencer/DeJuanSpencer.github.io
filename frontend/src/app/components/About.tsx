@@ -9,14 +9,14 @@ export default function About() {
         Secret Security Clearance. I bring a unique blend of problem-solving,
         discipline, and innovation from both the tech industry and military
         intelligence space. My toolkit includes technologies like{" "}
-        <strong>C#, .NET, Angular, Python, and Azure</strong>, and I'm
-        passionate about building scalable, mission-critical software for public
-        and private sector clients.
+        <strong>Java, .NET, Python, Next, Azure, and Power Platform</strong>,
+        and I'm passionate about building scalable, mission-critical software
+        for public and private sector clients.
       </p>
 
       <p className="text-gray-700 text-lg leading-relaxed mt-4">
         Outside of coding, I'm a martial arts instructor and system thinker who
-        enjoys applying AI/GenAI tools to real-world problems. Whether I'm
+        enjoys applying AI tools to real-world problems. Whether I'm
         architecting full-stack solutions, analyzing threats, or automating
         workflows with Power Platform, I aim to deliver high-performance
         outcomes with clarity and purpose.

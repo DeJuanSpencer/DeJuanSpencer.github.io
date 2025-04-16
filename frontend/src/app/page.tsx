@@ -1,9 +1,12 @@
 import About from "./components/About";
 import ContactForm from "./components/ContactForm";
+import Experience from "./components/Experience";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
+import MartialArts from "./components/MartialArts";
 import Projects from "./components/Projects";
+import Skills from "./components/Skills";
 
 export default function HomePage() {
   return (
@@ -19,7 +22,7 @@ export default function HomePage() {
       <section id="projects" className="py-16 bg-white">
         <Projects />
       </section>
-      {/* <section id="experience" className="py-16">
+      <section id="experience" className="py-16">
         <Experience />
       </section>
       <section id="skills" className="py-16 bg-white">
@@ -27,7 +30,7 @@ export default function HomePage() {
       </section>
       <section id="martial-arts" className="py-16">
         <MartialArts />
-      </section> */}
+      </section>
       <section id="contact" className="py-16 bg-white">
         <ContactForm />
       </section>
