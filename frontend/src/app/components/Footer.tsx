@@ -18,13 +18,13 @@ export default function Footer() {
           >
             <i className="fab fa-linkedin"></i>
           </Link>
-          <Link
+          {/* <Link
             href="https://github.com/yourusername"
             target="_blank"
             className="hover:text-black"
           >
             <i className="fab fa-github"></i>
-          </Link>
+          </Link> */}
           <Link
             href="mailto:dejuanspencer@gmail.com"
             className="hover:text-red-500"
