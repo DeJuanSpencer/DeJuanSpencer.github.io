@@ -1,5 +1,20 @@
 const experience = [
   {
+    title: "Independent Software Engineer",
+    company: "Freelance",
+    duration: "Nov 2024 – Present",
+    bullets: [
+      "Built and deployed self-initiated full-stack projects using .NET, Angular, and Python to explore scalable architecture patterns and business use cases.",
+      "Created a library of reusable UI components based on Atomic Design, enhancing consistency and speed across personal app interfaces.",
+      "Developed automation tools with Power Platform to streamline repetitive tasks and integrate personal workflows with external APIs.",
+      "Prototyped GenAI tools and prompt engineering frameworks, experimenting with use cases for chat interfaces, content generation, and research assistants.",
+      "Led all phases of the software lifecycle independently, from architecture and coding to testing, deployment, and iteration, applying Agile principles to personal project sprints.",
+      "Explored advanced system design techniques including event-driven microservices, layered architecture, and domain-driven design across experimental builds.",
+      "Maintained high-quality documentation, GitHub repositories, and demos to showcase technical decisions and design rationale.",
+    ],
+  },
+
+  {
     title: "Software Development Consultant",
     company: "Insight Enterprises",
     duration: "May 2022 – Nov 2024",
