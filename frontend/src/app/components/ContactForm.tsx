@@ -34,7 +34,11 @@ export default function ContactForm() {
 
   return (
     <div className="max-w-2xl mx-auto px-6">
-      <h2 className="text-3xl font-bold text-center mb-6">Contact Me</h2>
+      <h2 className="text-3xl font-bold text-center mb-2">Let&apos;s Work Together</h2>
+      <p className="text-center text-gray-500 mb-6">
+        Have a project in mind or want to explore working together? Send me a
+        message and I&apos;ll get back to you within 24 hours.
+      </p>
 
       {submitted ? (
         <p className="text-green-600 text-center">
@@ -72,7 +76,7 @@ export default function ContactForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition text-base"
           >
             {loading ? "Sending..." : "Send Message"}
           </button>

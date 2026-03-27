@@ -5,21 +5,25 @@ export default function About() {
       <h2 className="text-3xl font-bold mb-4">About Me</h2>
 
       <p className="text-gray-700 text-lg leading-relaxed">
-        I'm a mid-level Software Engineer and Intelligence Analyst with a Top
-        Secret Security Clearance. I bring a unique blend of problem-solving,
-        discipline, and innovation from both the tech industry and military
-        intelligence space. My toolkit includes technologies like{" "}
-        <strong>Java, .NET, Python, Next, Azure, and Power Platform</strong>,
-        and I'm passionate about building scalable, mission-critical software
-        for public and private sector clients.
+        I'm a Software Engineer and Intelligence Analyst with 5+ years of
+        professional software delivery and a{" "}
+        <strong>Top Secret Security Clearance</strong>. I bring a rare
+        combination of engineering precision and strategic analysis — honed
+        across enterprise consulting, military intelligence, and independent
+        product development. My toolkit spans{" "}
+        <strong>Java, .NET, Python, Next.js, Azure, and Power Platform</strong>.
       </p>
 
       <p className="text-gray-700 text-lg leading-relaxed mt-4">
-        Outside of coding, I'm a martial arts instructor and system thinker who
-        enjoys applying AI tools to real-world problems. Whether I'm
-        architecting full-stack solutions, analyzing threats, or automating
-        workflows with Power Platform, I aim to deliver high-performance
-        outcomes with clarity and purpose.
+        Whether I'm architecting full-stack solutions, building AI-powered
+        tools, or automating mission-critical workflows, I deliver with clarity
+        and purpose. Clients get a partner who thinks in systems, communicates
+        clearly, and ships quality software on time.
+      </p>
+
+      <p className="text-gray-500 text-base italic mt-5">
+        "Discipline bridges the gap between vision and execution." — also a
+        Sifu of Kuntao-Silat, applied daily.
       </p>
     </section>
   );

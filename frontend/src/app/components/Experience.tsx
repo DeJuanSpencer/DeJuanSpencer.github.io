@@ -3,36 +3,35 @@ const experience = [
     title: "Independent Software Engineer",
     company: "Freelance",
     duration: "Nov 2024 – Present",
+    accent: "border-blue-500",
     bullets: [
-      "Built and deployed self-initiated full-stack projects using .NET, Angular, and Python to explore scalable architecture patterns and business use cases.",
-      "Created a library of reusable UI components based on Atomic Design, enhancing consistency and speed across personal app interfaces.",
-      "Developed automation tools with Power Platform to streamline repetitive tasks and integrate personal workflows with external APIs.",
-      "Prototyped GenAI tools and prompt engineering frameworks, experimenting with use cases for chat interfaces, content generation, and research assistants.",
-      "Led all phases of the software lifecycle independently, from architecture and coding to testing, deployment, and iteration, applying Agile principles to personal project sprints.",
-      "Explored advanced system design techniques including event-driven microservices, layered architecture, and domain-driven design across experimental builds.",
-      "Maintained high-quality documentation, GitHub repositories, and demos to showcase technical decisions and design rationale.",
+      "Designed and shipped full-stack applications using .NET, Angular, Next.js, and Python — covering architecture, CI/CD, and deployment.",
+      "Built a reusable Atomic Design component library that accelerated UI development across multiple projects.",
+      "Delivered GenAI tooling and prompt engineering frameworks for chat interfaces, content generation, and automation workflows.",
+      "Applied Agile practices across solo sprints: scoping, building, testing, and iterating on production-grade software.",
     ],
   },
-
   {
     title: "Software Development Consultant",
     company: "Insight Enterprises",
     duration: "May 2022 – Nov 2024",
+    accent: "border-indigo-500",
     bullets: [
-      "Built full-stack features using .NET, Angular, and Python for enterprise clients.",
-      "Developed reusable UI components and modular architecture using Atomic Design.",
-      "Led Power Platform automation efforts for workflow optimization.",
-      "Contributed to GenAI internal tools and AI prompt frameworks.",
+      "Built full-stack features using .NET, Angular, and Python for enterprise clients across public and private sectors.",
+      "Developed modular UI component systems using Atomic Design, reducing dev time and improving cross-team consistency.",
+      "Led Power Platform automation initiatives that eliminated manual workflows and improved process efficiency.",
+      "Contributed to internal GenAI tooling and AI prompt frameworks, increasing team productivity with AI-assisted workflows.",
     ],
   },
   {
     title: "Intelligence Analyst",
     company: "Ohio Army National Guard",
     duration: "Feb 2017 – Feb 2025",
+    accent: "border-green-600",
     bullets: [
-      "Conducted strategic/tactical intelligence analysis using SIGINT, HUMINT, and mapping tools.",
-      "Delivered time-sensitive briefings to leadership in mission-critical settings.",
-      "Streamlined data collaboration across inter-agency teams.",
+      "Conducted strategic and tactical intelligence analysis using SIGINT, HUMINT, and geospatial tools under mission-critical conditions.",
+      "Delivered time-sensitive intelligence briefings directly to senior leadership, translating complex data into actionable decisions.",
+      "Coordinated data sharing and analysis across inter-agency teams, improving operational clarity and response speed.",
     ],
   },
 ];
@@ -44,7 +43,7 @@ export default function Experience() {
 
       <div className="space-y-10">
         {experience.map((job, index) => (
-          <div key={index} className="bg-white shadow-md rounded-xl p-6">
+          <div key={index} className={`bg-white shadow-md rounded-xl p-6 border-l-4 ${job.accent}`}>
             <h3 className="text-xl font-semibold text-gray-800">{job.title}</h3>
             <p className="text-gray-600">
               {job.company} • <span className="italic">{job.duration}</span>
