@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/work-with-me/:path*',
-        destination: 'https://your-intake-form.vercel.app/:path*',
+        destination: 'https://intake-form-topaz.vercel.app/:path*',
       },
     ];
   },
