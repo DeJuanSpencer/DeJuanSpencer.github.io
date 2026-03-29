@@ -11,33 +11,20 @@ export default function Hero() {
         Building scalable, secure apps at the intersection of tech and strategy.
       </p>
 
-<div className="flex flex-wrap justify-center gap-4">
-  
-    href="/work-with-me"
-    className="bg-green-700 text-white px-6 py-3 rounded-xl font-medium hover:bg-green-800 transition"
-  >
-    Work With Me
-  </a>
-  
-    href="#projects"
-    className="bg-blue-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-700 transition"
-  >
-    View Projects
-  </a>
-  
-    href="#contact"
-    className="border border-blue-600 text-blue-600 px-6 py-3 rounded-xl font-medium hover:bg-blue-50 transition"
-  >
-    Contact Me
-  </a>
-  
-    href="/resume.pdf"
-    className="text-gray-600 underline hover:text-blue-600 text-sm pt-2 md:pt-3 block"
-    download
-  >
-    Download Resume
-  </a>
-</div>
+      <div className="flex flex-wrap justify-center gap-4">
+        <a href="/work-with-me" className="bg-green-700 text-white px-6 py-3 rounded-xl font-medium hover:bg-green-800 transition">
+          Work With Me
+        </a>
+        <a href="#projects" className="bg-blue-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-700 transition">
+          View Projects
+        </a>
+        <a href="#contact" className="border border-blue-600 text-blue-600 px-6 py-3 rounded-xl font-medium hover:bg-blue-50 transition">
+          Contact Me
+        </a>
+        <a href="/resume.pdf" className="text-gray-600 underline hover:text-blue-600 text-sm pt-2 md:pt-3 block" download>
+          Download Resume
+        </a>
+      </div>
     </section>
   );
 }
