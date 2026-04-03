@@ -8,6 +8,7 @@ const navLinks = [
   { name: "Experience", href: "#experience" },
   { name: "Contact", href: "#contact" },
   { name: "Work With Me", href: "/work-with-me" },
+  { name: "Prompt Engine", href: "/prompt-engine" },
 ];
 
 type Props = {
