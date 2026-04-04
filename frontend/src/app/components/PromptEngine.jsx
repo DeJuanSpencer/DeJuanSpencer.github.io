@@ -24,22 +24,16 @@ const STEPS = [
 ];
 
 const LOADING_PHRASES = [
-  "Thinking...",
-  "Analyzing your context...",
-  "Mapping the domain...",
-  "Constructing the framework...",
-  "Calibrating precision...",
-  "Shaping the architecture...",
-  "Refining the output...",
-  "Almost there...",
+  "Thinking...", "Analyzing your context...", "Mapping the domain...",
+  "Constructing the framework...", "Calibrating precision...",
+  "Shaping the architecture...", "Refining the output...", "Almost there...",
 ];
 
 const extractJSON = (text) => {
   const stripped = text.replace(/```json\s?|```/g, "").trim();
   const firstBrace = stripped.indexOf("{");
   const firstBracket = stripped.indexOf("[");
-  let start = -1;
-  let opener, closer;
+  let start = -1, opener, closer;
   if (firstBrace === -1 && firstBracket === -1) return null;
   if (firstBrace === -1) { start = firstBracket; opener = "["; closer = "]"; }
   else if (firstBracket === -1) { start = firstBrace; opener = "{"; closer = "}"; }
@@ -53,13 +47,25 @@ const extractJSON = (text) => {
   return null;
 };
 
+// FIX 3: safeParseJSON with fallbacks
+const safeParseJSON = (str) => {
+  try { return JSON.parse(str); } catch {}
+  try { return JSON.parse(str.replace(/[\x00-\x1F\x7F]/g, " ")); } catch {}
+  try {
+    const fixed = str.replace(/([{,]\s*)(\w+)(\s*:)/g, '$1"$2"$3');
+    return JSON.parse(fixed);
+  } catch {}
+  return null;
+};
+
+// FIX 1: /api/claude proxy | FIX 2: claude-sonnet-4-6 | FIX 4: _error propagation
 const callClaude = async (systemPrompt, userPrompt, maxTokens = 2000) => {
   try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    const response = await fetch("/api/claude", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
+        model: "claude-sonnet-4-6",
         max_tokens: maxTokens,
         system: systemPrompt,
         messages: [{ role: "user", content: userPrompt }],
@@ -67,14 +73,17 @@ const callClaude = async (systemPrompt, userPrompt, maxTokens = 2000) => {
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();
+    if (data.type === "error") throw new Error(data?.error?.message || "API error");
     if (data.stop_reason === "max_tokens") throw new Error("Response truncated");
     const text = data.content?.map(i => i.type === "text" ? i.text : "").join("\n") || "";
     const json = extractJSON(text);
     if (!json) throw new Error("No JSON found in response");
-    return JSON.parse(json);
+    const parsed = safeParseJSON(json);
+    if (!parsed) throw new Error("JSON parse failed");
+    return parsed;
   } catch (err) {
     console.error("Claude API error:", err.message);
-    return null;
+    return { _error: err.message };
   }
 };
 
@@ -155,75 +164,22 @@ const Toast = ({ msg }) => (
 const LoadingIndicator = () => {
   const [phraseIdx, setPhraseIdx] = useState(0);
   const [dots, setDots] = useState("");
-
   useEffect(() => {
-    const phraseTimer = setInterval(() => {
-      setPhraseIdx(prev => (prev + 1) % LOADING_PHRASES.length);
-    }, 2400);
-    const dotTimer = setInterval(() => {
-      setDots(prev => prev.length >= 3 ? "" : prev + ".");
-    }, 500);
+    const phraseTimer = setInterval(() => setPhraseIdx(prev => (prev + 1) % LOADING_PHRASES.length), 2400);
+    const dotTimer = setInterval(() => setDots(prev => prev.length >= 3 ? "" : prev + "."), 500);
     return () => { clearInterval(phraseTimer); clearInterval(dotTimer); };
   }, []);
-
   return (
-    <div style={{
-      padding: "20px 24px",
-      marginBottom: "16px",
-      background: "linear-gradient(135deg, rgba(212,162,78,0.08), rgba(212,162,78,0.03))",
-      border: "1px solid rgba(212,162,78,0.2)",
-      borderRadius: "12px",
-      display: "flex",
-      alignItems: "center",
-      gap: "16px",
-    }}>
-      <div style={{
-        width: "40px",
-        height: "40px",
-        borderRadius: "12px",
-        background: "rgba(212,162,78,0.12)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexShrink: 0,
-        animation: "glow 2s ease-in-out infinite",
-      }}>
+    <div style={{ padding: "20px 24px", marginBottom: "16px", background: "linear-gradient(135deg, rgba(212,162,78,0.08), rgba(212,162,78,0.03))", border: "1px solid rgba(212,162,78,0.2)", borderRadius: "12px", display: "flex", alignItems: "center", gap: "16px" }}>
+      <div style={{ width: "40px", height: "40px", borderRadius: "12px", background: "rgba(212,162,78,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, animation: "glow 2s ease-in-out infinite" }}>
         <Loader2 size={20} color="#d4a24e" className="spin" />
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{
-          fontSize: "14px",
-          fontWeight: 600,
-          color: "#d4a24e",
-          fontFamily: "'DM Sans', sans-serif",
-          marginBottom: "4px",
-        }}>
-          {LOADING_PHRASES[phraseIdx]}
-        </div>
-        <div style={{
-          fontSize: "12px",
-          color: "rgba(255,255,255,0.35)",
-          fontFamily: "'JetBrains Mono', monospace",
-          letterSpacing: "0.5px",
-        }}>
-          claude-sonnet generating{dots}
-        </div>
+        <div style={{ fontSize: "14px", fontWeight: 600, color: "#d4a24e", fontFamily: "'DM Sans', sans-serif", marginBottom: "4px" }}>{LOADING_PHRASES[phraseIdx]}</div>
+        <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.35)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.5px" }}>claude-sonnet generating{dots}</div>
       </div>
-      <div style={{
-        width: "60px",
-        height: "4px",
-        borderRadius: "2px",
-        background: "rgba(255,255,255,0.06)",
-        overflow: "hidden",
-        flexShrink: 0,
-      }}>
-        <div style={{
-          width: "40%",
-          height: "100%",
-          borderRadius: "2px",
-          background: "linear-gradient(90deg, #d4a24e, #b8862e)",
-          animation: "shimmerBar 1.5s ease-in-out infinite",
-        }} />
+      <div style={{ width: "60px", height: "4px", borderRadius: "2px", background: "rgba(255,255,255,0.06)", overflow: "hidden", flexShrink: 0 }}>
+        <div style={{ width: "40%", height: "100%", borderRadius: "2px", background: "linear-gradient(90deg, #d4a24e, #b8862e)", animation: "shimmerBar 1.5s ease-in-out infinite" }} />
       </div>
     </div>
   );
@@ -233,48 +189,20 @@ const Fireworks = () => {
   const [particles] = useState(() => Array.from({ length: 30 }, (_, i) => {
     const angle = (i / 30) * 360;
     const distance = 60 + Math.random() * 80;
-    const x = Math.cos(angle * Math.PI / 180) * distance;
-    const y = Math.sin(angle * Math.PI / 180) * distance;
-    const size = 4 + Math.random() * 6;
-    const delay = Math.random() * 300;
-    const duration = 800 + Math.random() * 400;
     const colors = ["#d4a24e", "#f0c674", "#b8862e", "#ffd700", "#ff9500", "#50b450"];
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    return { x, y, size, delay, duration, color, id: i };
+    return { x: Math.cos(angle * Math.PI / 180) * distance, y: Math.sin(angle * Math.PI / 180) * distance, size: 4 + Math.random() * 6, delay: Math.random() * 300, duration: 800 + Math.random() * 400, color: colors[Math.floor(Math.random() * colors.length)], id: i };
   }));
   const [positions, setPositions] = useState({});
   useEffect(() => {
-    const timers = particles.map(p =>
-      setTimeout(() => {
-        setPositions(prev => ({ ...prev, [p.id]: true }));
-      }, p.delay)
-    );
+    const timers = particles.map(p => setTimeout(() => setPositions(prev => ({ ...prev, [p.id]: true })), p.delay));
     return () => timers.forEach(t => clearTimeout(t));
   }, []);
   return (
     <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, pointerEvents: "none", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center" }}>
-      {particles.map((p) => (
-        <div key={p.id} style={{
-          position: "absolute",
-          width: `${p.size}px`,
-          height: `${p.size}px`,
-          borderRadius: "50%",
-          background: p.color,
-          boxShadow: `0 0 ${p.size * 2}px ${p.color}`,
-          transform: positions[p.id] ? `translate(${p.x}px, ${p.y}px) scale(0.3)` : "translate(0, 0) scale(1)",
-          opacity: positions[p.id] ? 0 : 1,
-          transition: `transform ${p.duration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity ${p.duration}ms ease`,
-        }} />
+      {particles.map(p => (
+        <div key={p.id} style={{ position: "absolute", width: `${p.size}px`, height: `${p.size}px`, borderRadius: "50%", background: p.color, boxShadow: `0 0 ${p.size * 2}px ${p.color}`, transform: positions[p.id] ? `translate(${p.x}px, ${p.y}px) scale(0.3)` : "translate(0,0) scale(1)", opacity: positions[p.id] ? 0 : 1, transition: `transform ${p.duration}ms cubic-bezier(0.25,0.46,0.45,0.94), opacity ${p.duration}ms ease` }} />
       ))}
-      <div style={{
-        fontSize: "18px",
-        fontWeight: 700,
-        color: "#d4a24e",
-        fontFamily: "'DM Sans', sans-serif",
-        textShadow: "0 0 20px rgba(212,162,78,0.5)",
-        animation: "fadeInScale 0.4s 0.2s ease forwards",
-        opacity: 0,
-      }}>Instructions Copied!</div>
+      <div style={{ fontSize: "18px", fontWeight: 700, color: "#d4a24e", fontFamily: "'DM Sans', sans-serif", textShadow: "0 0 20px rgba(212,162,78,0.5)", animation: "fadeInScale 0.4s 0.2s ease forwards", opacity: 0 }}>Instructions Copied!</div>
     </div>
   );
 };
@@ -288,13 +216,17 @@ export default function PromptEngine() {
   const [copiedBlurb, setCopiedBlurb] = useState(false);
   const [error, setError] = useState(null);
   const [showAssist, setShowAssist] = useState(false);
+  const [showFireworks, setShowFireworks] = useState(false);
   const [itemLoading, setItemLoading] = useState({});
-  const lastActivity = useRef(Date.now());
-  const idleTimer = useRef(null);
+  const [generateLoading, setGenerateLoading] = useState({});
+  const [dragIdx, setDragIdx] = useState(null);
+  const [dragOverIdx, setDragOverIdx] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   const [showMobileNav, setShowMobileNav] = useState(false);
+  const lastActivity = useRef(Date.now());
+  const idleTimer = useRef(null);
 
-  // Gate & feedback
+  // Gate & feedback (from their version)
   const [userEmail, setUserEmail] = useState("");
   const [gateUnlocked, setGateUnlocked] = useState(false);
   const [gateError, setGateError] = useState("");
@@ -303,13 +235,12 @@ export default function PromptEngine() {
   const [feedbackSending, setFeedbackSending] = useState(false);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Core state
   const [projectName, setProjectName] = useState("");
   const [projectDesc, setProjectDesc] = useState("");
   const [domain, setDomain] = useState("");
@@ -334,8 +265,6 @@ export default function PromptEngine() {
   const [examples, setExamples] = useState([]);
   const [approvedExamples, setApprovedExamples] = useState(new Set());
   const [compiledOutput, setCompiledOutput] = useState("");
-
-  // Edit mode state
   const [pastedInstructions, setPastedInstructions] = useState("");
   const [parsedPreview, setParsedPreview] = useState(null);
   const [selectedSections, setSelectedSections] = useState(new Set());
@@ -378,9 +307,7 @@ export default function PromptEngine() {
   };
 
   useEffect(() => {
-    const checkIdle = () => {
-      if (Date.now() - lastActivity.current > 45000 && step < 9) setShowAssist(true);
-    };
+    const checkIdle = () => { if (Date.now() - lastActivity.current > 45000 && step < 9) setShowAssist(true); };
     idleTimer.current = setInterval(checkIdle, 15000);
     return () => clearInterval(idleTimer.current);
   }, [step]);
@@ -422,8 +349,7 @@ export default function PromptEngine() {
   const getContext = () => ({
     name: projectName, description: projectDesc, domain, goals,
     identity: selectedIdentity !== null ? identityOptions[selectedIdentity] : null,
-    knowledge: knowledgeResult,
-    negatives: [...selectedNegatives].map(i => negativeSuggestions[i]),
+    knowledge: knowledgeResult, negatives: [...selectedNegatives].map(i => negativeSuggestions[i]),
     modes, priorities, failures,
   });
 
@@ -434,35 +360,19 @@ export default function PromptEngine() {
     finally { setLoading(false); }
   };
 
-  const [generateLoading, setGenerateLoading] = useState({});
-  const [dragIdx, setDragIdx] = useState(null);
-  const [dragOverIdx, setDragOverIdx] = useState(null);
-
   const generateField = async (field) => {
     setGenerateLoading(p => ({ ...p, [field]: true })); trackActivity();
-    const context = { name: projectName, domain, description: projectDesc, goals };
-    const other = Object.entries(context).filter(([k]) => k !== field && context[k]).map(([k, v]) => `${k}: ${v}`).join("\n");
+    const ctx = { name: projectName, domain, description: projectDesc, goals };
+    const other = Object.entries(ctx).filter(([k]) => k !== field && ctx[k]).map(([k, v]) => `${k}: ${v}`).join("\n");
     const prompts = {
-      name: {
-        system: `You generate a clear, concise project name for an AI project based on available context. Return ONLY valid JSON: {"generated":"the project name"}`,
-        user: `Generate a project name based on this context:\n${other || "No other context provided yet. Generate a creative AI project name."}`
-      },
-      domain: {
-        system: `You generate a precise domain label for an AI project based on available context. Return ONLY valid JSON: {"generated":"specific domain label"}`,
-        user: `Generate a domain label based on this context:\n${other || "No other context provided yet. Suggest a compelling AI project domain."}`
-      },
-      description: {
-        system: `You generate a clear 2-3 sentence project description for an AI project based on available context. Return ONLY valid JSON: {"generated":"project description text"}`,
-        user: `Generate a project description based on this context:\n${other || "No other context provided yet. Suggest a useful AI project description."}`
-      },
-      goals: {
-        system: `You generate sharp, measurable project goals for an AI project based on available context. Return ONLY valid JSON: {"generated":"goal text"}`,
-        user: `Generate project goals based on this context:\n${other || "No other context provided yet. Suggest practical AI project goals."}`
-      },
+      name: { system: `You generate a clear concise project name for an AI project. Return ONLY valid JSON: {"generated":"the project name"}`, user: `Generate a project name.\nContext:\n${other || "No context yet."}` },
+      domain: { system: `You generate a precise domain label for an AI project. Return ONLY valid JSON: {"generated":"specific domain label"}`, user: `Generate a domain label.\nContext:\n${other || "No context yet."}` },
+      description: { system: `You generate a clear 2-3 sentence project description for an AI project. Return ONLY valid JSON: {"generated":"project description text"}`, user: `Generate a project description.\nContext:\n${other || "No context yet."}` },
+      goals: { system: `You generate sharp measurable project goals for an AI project. Return ONLY valid JSON: {"generated":"goal text"}`, user: `Generate project goals.\nContext:\n${other || "No context yet."}` },
     };
     const p = prompts[field];
     const result = await callClaude(p.system, p.user);
-    if (result && result.generated) {
+    if (result?.generated) {
       if (field === "name") setProjectName(result.generated);
       if (field === "domain") setDomain(result.generated);
       if (field === "description") setProjectDesc(result.generated);
@@ -477,34 +387,16 @@ export default function PromptEngine() {
     const fieldValue = vals[field] || "";
     const other = Object.entries(vals).filter(([k]) => k !== field && vals[k]).map(([k, v]) => `${k}: ${v}`).join("\n");
     const prompts = {
-      name: {
-        system: `You help users craft clear, concise project names for AI project instructions. Analyze the project name and return ONLY valid JSON with exactly these keys: {"improved":"refined project name","reasoning":"why this is better","alternatives":["alt1","alt2"],"tips":["tip1"],"missingInfo":[]}`,
-        user: `Project Name: "${fieldValue}"\nContext:\n${other}`
-      },
-      domain: {
-        system: `You help users define precise domain labels for AI project instructions. Analyze the domain label and return ONLY valid JSON with exactly these keys: {"improved":"refined domain label","reasoning":"why this is better","alternatives":["alt1","alt2"],"tips":["tip1"],"missingInfo":[]}`,
-        user: `Domain: "${fieldValue}"\nContext:\n${other}`
-      },
-      description: {
-        system: `You help users write precise project descriptions for AI project instructions. Analyze the description and return ONLY valid JSON with exactly these keys: {"improved":"refined description text","reasoning":"why this is better","alternatives":["alt1","alt2"],"tips":["tip1"],"missingInfo":[]}`,
-        user: `Description: "${fieldValue}"\nContext:\n${other}`
-      },
-      goals: {
-        system: `You help users define sharp measurable project goals for AI project instructions. Analyze the goals and return ONLY valid JSON with exactly these keys: {"improved":"refined goals text","reasoning":"why this is better","alternatives":["alt1","alt2"],"tips":["tip1"],"missingInfo":[]}`,
-        user: `Goals: "${fieldValue}"\nContext:\n${other}`
-      },
+      name: { system: `You help users craft clear concise project names for AI project instructions. Analyze and return ONLY valid JSON with exactly these keys: {"improved":"refined project name","reasoning":"why this is better","alternatives":["alt1","alt2"],"tips":["tip1"],"missingInfo":[]}`, user: `Project Name: "${fieldValue}"\nContext:\n${other}` },
+      domain: { system: `You help users define precise domain labels for AI project instructions. Analyze and return ONLY valid JSON with exactly these keys: {"improved":"refined domain label","reasoning":"why this is better","alternatives":["alt1","alt2"],"tips":["tip1"],"missingInfo":[]}`, user: `Domain: "${fieldValue}"\nContext:\n${other}` },
+      description: { system: `You help users write precise project descriptions for AI project instructions. Analyze and return ONLY valid JSON with exactly these keys: {"improved":"refined description text","reasoning":"why this is better","alternatives":["alt1","alt2"],"tips":["tip1"],"missingInfo":[]}`, user: `Description: "${fieldValue}"\nContext:\n${other}` },
+      goals: { system: `You help users define sharp measurable project goals for AI project instructions. Analyze and return ONLY valid JSON with exactly these keys: {"improved":"refined goals text","reasoning":"why this is better","alternatives":["alt1","alt2"],"tips":["tip1"],"missingInfo":[]}`, user: `Goals: "${fieldValue}"\nContext:\n${other}` },
     };
     const p = prompts[field];
     if (!p) { setRefineLoading(prev => ({ ...prev, [field]: false })); return; }
     const result = await callClaude(p.system, p.user);
-    if (result && result.improved) {
-      setRefineSuggestions(prev => ({ ...prev, [field]: result }));
-    } else if (result && !result.improved) {
-      showError(`Refine returned unexpected format for ${field}.`);
-      console.error("Refine result missing 'improved':", result);
-    } else {
-      showError("Refine failed.");
-    }
+    if (result?.improved) setRefineSuggestions(prev => ({ ...prev, [field]: result }));
+    else { showError("Refine failed."); console.error("Refine result:", result); }
     setRefineLoading(prev => ({ ...prev, [field]: false }));
   };
 
@@ -520,61 +412,61 @@ export default function PromptEngine() {
 
   const generateIdentities = () => withLoading(async () => {
     const r = await callClaude(`You generate professional role identities for AI assistants based on project context. Return ONLY valid JSON array of 3 objects: [{"title":"...","description":"...","traits":["...","...","..."]}]`, `Project: ${projectName}\nDescription: ${projectDesc}\nDomain: ${domain}\nGoals: ${goals}`);
-    if (r) setIdentityOptions(r); else showError("Identity generation failed.");
+    if (r && !r._error) setIdentityOptions(r); else showError(r?._error || "Identity generation failed.");
   });
   const generateQuiz = () => withLoading(async () => {
     const r = await callClaude(`You create knowledge assessment quizzes for a specific domain. Return ONLY valid JSON array of 5 question objects: [{"id":"q1","question":"...","topic":"...","difficulty":"beginner|intermediate|advanced"}]`, `Domain: ${domain}\nProject: ${projectName}\nDescription: ${projectDesc}`);
-    if (r) { setQuizQuestions(r); setQuizAnswers({}); } else showError("Quiz generation failed.");
+    if (r && !r._error) { setQuizQuestions(r); setQuizAnswers({}); } else showError(r?._error || "Quiz generation failed.");
   });
   const processQuizAnswers = () => withLoading(async () => {
     const qa = quizQuestions.map(q => ({ question: q.question, answer: quizAnswers[q.id] || "skipped", topic: q.topic }));
-    const r = await callClaude(`You analyze knowledge assessment quiz responses and derive what the user knows. Return ONLY valid JSON array of strings summarizing knowledge: ["User understands X","User has working knowledge of Y"]`, `Domain: ${domain}\nAnswers: ${JSON.stringify(qa)}`);
-    if (r) setKnowledgeResult(r); else showError("Quiz processing failed.");
+    const r = await callClaude(`You analyze knowledge assessment quiz responses and derive what the user knows. Return ONLY valid JSON array of strings: ["User understands X","User has working knowledge of Y"]`, `Domain: ${domain}\nAnswers: ${JSON.stringify(qa)}`);
+    if (r && !r._error) setKnowledgeResult(r); else showError(r?._error || "Quiz processing failed.");
   });
   const generateNegativeSpace = () => withLoading(async () => {
     const r = await callClaude(`You identify counterproductive AI behaviors for a specific domain and project. Return ONLY valid JSON array: [{"behavior":"short name","instruction":"do not... directive","reason":"why this matters"}]`, `Project: ${projectName}\nDomain: ${domain}\nDescription: ${projectDesc}`);
-    if (r) { setNegativeSuggestions(r); setSelectedNegatives(new Set(r.map((_, i) => i))); } else showError("Negative space generation failed.");
+    if (r && !r._error) { setNegativeSuggestions(r); setSelectedNegatives(new Set(r.map((_, i) => i))); } else showError(r?._error || "Negative space generation failed.");
   });
   const generateModes = () => withLoading(async () => {
-    const r = await callClaude(`You design operational modes for AI assistants — distinct behavioral profiles the user can switch between. Return ONLY valid JSON: {"modes":[{"name":"...","trigger":"one word or short phrase user says to activate","description":"...","characteristics":["...","...","..."]}],"defaultMode":0}`, `Domain: ${domain}\nProject: ${projectName}\nDescription: ${projectDesc}\nGoals: ${goals}`);
-    if (r) { setModes(r.modes || []); setDefaultModeIdx(r.defaultMode || 0); } else showError("Mode generation failed.");
+    const r = await callClaude(`You design operational modes for AI assistants. Return ONLY valid JSON: {"modes":[{"name":"...","trigger":"one word or short phrase","description":"...","characteristics":["...","...","..."]}],"defaultMode":0}`, `Domain: ${domain}\nProject: ${projectName}\nDescription: ${projectDesc}\nGoals: ${goals}`);
+    if (r && !r._error) { setModes(r.modes || []); setDefaultModeIdx(r.defaultMode || 0); } else showError(r?._error || "Mode generation failed.");
   });
   const regenerateMode = async (idx) => {
     setItemLoading(p => ({ ...p, [`mode_${idx}`]: true }));
     const r = await callClaude(`You design a single operational mode for an AI assistant. Return ONLY valid JSON object: {"name":"...","trigger":"one word or short phrase","description":"...","characteristics":["...","...","..."]}`, `Domain: ${domain}\nProject: ${projectName}\nExisting modes to avoid duplicating: ${modes.map(m => m.name).join(", ")}`);
-    if (r) setModes(prev => prev.map((m, i) => i === idx ? r : m)); else showError("Regenerate failed.");
+    if (r && !r._error) setModes(prev => prev.map((m, i) => i === idx ? r : m)); else showError(r?._error || "Regenerate failed.");
     setItemLoading(p => ({ ...p, [`mode_${idx}`]: false }));
   };
   const generatePriorities = () => withLoading(async () => {
     const ctx = getContext();
-    const r = await callClaude(`You define priority hierarchies that resolve conflicts between AI behavioral rules. Return ONLY valid JSON array ordered highest to lowest priority: [{"rule":"clear priority statement","overrides":"what lower rule this beats","exception":"when this rule does not apply"}]`, `Project: ${projectName}\nDomain: ${domain}\nIdentity: ${JSON.stringify(ctx.identity)}`);
-    if (r) setPriorities(r); else showError("Priority generation failed.");
+    const r = await callClaude(`You define priority hierarchies that resolve conflicts between AI behavioral rules. Return ONLY valid JSON array ordered highest to lowest: [{"rule":"clear priority statement","overrides":"what lower rule this beats","exception":"when this rule does not apply"}]`, `Project: ${projectName}\nDomain: ${domain}\nIdentity: ${JSON.stringify(ctx.identity)}`);
+    if (r && !r._error) setPriorities(r); else showError(r?._error || "Priority generation failed.");
   });
   const regeneratePriority = async (idx) => {
     setItemLoading(p => ({ ...p, [`priority_${idx}`]: true }));
     const ctx = getContext();
     const r = await callClaude(`You define a single priority rule for AI behavior conflict resolution. Return ONLY valid JSON object: {"rule":"clear priority statement","overrides":"what this beats","exception":"when it doesn't apply"}`, `Project: ${projectName}\nDomain: ${domain}\nIdentity: ${JSON.stringify(ctx.identity)}\nExisting rules to avoid duplicating: ${priorities.map(p => p.rule).join("; ")}`);
-    if (r) setPriorities(prev => prev.map((p, i) => i === idx ? r : p)); else showError("Regenerate failed.");
+    if (r && !r._error) setPriorities(prev => prev.map((p, i) => i === idx ? r : p)); else showError(r?._error || "Regenerate failed.");
     setItemLoading(p => ({ ...p, [`priority_${idx}`]: false }));
   };
   const generateFailures = () => withLoading(async () => {
-    const r = await callClaude(`You identify common AI failure patterns in a specific domain — ways the AI might behave poorly or unhelpfully. Return ONLY valid JSON array: [{"pattern":"name of failure pattern","prevention":"specific instruction to prevent it","severity":"low|medium|high"}]`, `Domain: ${domain}\nProject: ${projectName}\nDescription: ${projectDesc}`);
-    if (r) setFailures(r); else showError("Failure generation failed.");
+    const r = await callClaude(`You identify common AI failure patterns in a specific domain. Return ONLY valid JSON array: [{"pattern":"name of failure pattern","prevention":"specific instruction to prevent it","severity":"low|medium|high"}]`, `Domain: ${domain}\nProject: ${projectName}\nDescription: ${projectDesc}`);
+    if (r && !r._error) setFailures(r); else showError(r?._error || "Failure generation failed.");
   });
   const regenerateFailure = async (idx) => {
     setItemLoading(p => ({ ...p, [`failure_${idx}`]: true }));
     const r = await callClaude(`You identify a single AI failure pattern for a specific domain. Return ONLY valid JSON object: {"pattern":"name of failure pattern","prevention":"specific instruction to prevent it","severity":"low|medium|high"}`, `Domain: ${domain}\nProject: ${projectName}\nExisting patterns to avoid duplicating: ${failures.map(f => f.pattern).join("; ")}`);
-    if (r) setFailures(prev => prev.map((f, i) => i === idx ? r : f)); else showError("Regenerate failed.");
+    if (r && !r._error) setFailures(prev => prev.map((f, i) => i === idx ? r : f)); else showError(r?._error || "Regenerate failed.");
     setItemLoading(p => ({ ...p, [`failure_${idx}`]: false }));
   };
   const generateTemplates = () => withLoading(async () => {
-    const r = await callClaude(`You design response format templates for AI assistants — structured formats for common interaction types. Return ONLY valid JSON array of 4 objects: [{"name":"template name","trigger":"when to use this","format":"the actual format structure with placeholders"}]`, `Domain: ${domain}\nProject: ${projectName}\nDescription: ${projectDesc}`);
-    if (r) { setTemplates(r); setSelectedTemplates(new Set()); } else showError("Template generation failed.");
+    const r = await callClaude(`You design response format templates for AI assistants. Return ONLY valid JSON array of 4 objects: [{"name":"template name","trigger":"when to use this","format":"the actual format structure with placeholders"}]`, `Domain: ${domain}\nProject: ${projectName}\nDescription: ${projectDesc}`);
+    if (r && !r._error) { setTemplates(r); setSelectedTemplates(new Set()); } else showError(r?._error || "Template generation failed.");
   });
   const generateExamples = () => withLoading(async () => {
     const ctx = getContext();
-    const r = await callClaude(`You create ideal example interactions for AI assistants that demonstrate correct behavior. Return ONLY valid JSON array of 3 objects: [{"userMessage":"realistic user input","idealResponse":"ideal assistant response","reasoning":"why this response is ideal"}]`, `Project: ${projectName}\nDomain: ${domain}\nIdentity: ${JSON.stringify(ctx.identity)}\nNegatives: ${JSON.stringify(ctx.negatives)}`, 3000);
-    if (r) { setExamples(r); setApprovedExamples(new Set()); } else showError("Example generation failed.");
+    const r = await callClaude(`You create ideal example interactions for AI assistants. Return ONLY valid JSON array of 3 objects: [{"userMessage":"realistic user input","idealResponse":"ideal assistant response","reasoning":"why this response is ideal"}]`, `Project: ${projectName}\nDomain: ${domain}\nIdentity: ${JSON.stringify(ctx.identity)}\nNegatives: ${JSON.stringify(ctx.negatives)}`, 3000);
+    if (r && !r._error) { setExamples(r); setApprovedExamples(new Set()); } else showError(r?._error || "Example generation failed.");
   });
 
   const autoFillCurrent = () => withLoading(async () => {
@@ -595,15 +487,15 @@ export default function PromptEngine() {
     if (id === "examples" && !examples.length) await generateExamples();
   });
 
-  // Edit mode: parse into preview
+  // FIX 5: improved prompt, 8000 char slice, 4000 tokens, _error check
   const handleEditParse = () => withLoading(async () => {
     const r = await callClaude(
-      `You decompose existing Claude project instructions into their structured component levers. Extract every piece of information you can find. Return ONLY valid JSON with this exact shape:
-{"projectName":"...","domain":"...","description":"...","goals":"...","identity":{"title":"...","description":"...","traits":[]},"knowledge":[],"negatives":[{"behavior":"...","instruction":"...","reason":"..."}],"modes":[{"name":"...","trigger":"...","description":"...","characteristics":[]}],"priorities":[{"rule":"...","overrides":"...","exception":"..."}],"failures":[{"pattern":"...","prevention":"...","severity":"medium"}],"templates":[],"examples":[]}`,
-      `Decompose these project instructions into structured levers:\n\n${pastedInstructions}`,
-      3000
+      `You extract structured information from any Claude project instructions or context document — whether it is a compiled lever output, strategic prose, or a mix of both. Do your best to populate as many fields as possible. If a field cannot be determined, use an empty string or empty array. Never omit a key. Return ONLY valid JSON with exactly this shape, no preamble, no markdown:
+{"projectName":"","domain":"","description":"","goals":"","identity":{"title":"","description":"","traits":[]},"knowledge":[],"negatives":[{"behavior":"","instruction":"","reason":""}],"modes":[{"name":"","trigger":"","description":"","characteristics":[]}],"priorities":[{"rule":"","overrides":"","exception":""}],"failures":[{"pattern":"","prevention":"","severity":"medium"}],"templates":[],"examples":[]}`,
+      `Extract everything you can from this document into the JSON structure:\n\n${pastedInstructions.slice(0, 8000)}`,
+      4000
     );
-    if (r) {
+    if (r && !r._error) {
       setParsedPreview(r);
       const available = new Set();
       if (r.projectName || r.domain || r.description || r.goals) available.add("context");
@@ -615,11 +507,11 @@ export default function PromptEngine() {
       if (r.failures?.length) available.add("failures");
       if (r.templates?.length) available.add("templates");
       if (r.examples?.length) available.add("examples");
+      if (available.size === 0) { showError("Nothing could be extracted. Check your instructions format."); return; }
       setSelectedSections(available);
-    } else showError("Parse failed. Check your input format.");
+    } else showError(r?._error ? `Parse error: ${r._error}` : "Parse failed. Check your input format.");
   });
 
-  // Apply selected sections
   const applyParsed = () => {
     const r = parsedPreview;
     if (selectedSections.has("context")) {
@@ -628,101 +520,55 @@ export default function PromptEngine() {
       if (r.description) setProjectDesc(r.description);
       if (r.goals) setGoals(r.goals);
     }
-    if (selectedSections.has("identity") && r.identity?.title) {
-      setIdentityOptions([r.identity]); setSelectedIdentity(0);
-    }
+    if (selectedSections.has("identity") && r.identity?.title) { setIdentityOptions([r.identity]); setSelectedIdentity(0); }
     if (selectedSections.has("knowledge") && r.knowledge?.length) setKnowledgeResult(r.knowledge);
-    if (selectedSections.has("negatives") && r.negatives?.length) {
-      setNegativeSuggestions(r.negatives);
-      setSelectedNegatives(new Set(r.negatives.map((_, i) => i)));
-    }
+    if (selectedSections.has("negatives") && r.negatives?.length) { setNegativeSuggestions(r.negatives); setSelectedNegatives(new Set(r.negatives.map((_, i) => i))); }
     if (selectedSections.has("modes") && r.modes?.length) setModes(r.modes);
     if (selectedSections.has("priorities") && r.priorities?.length) setPriorities(r.priorities);
     if (selectedSections.has("failures") && r.failures?.length) setFailures(r.failures);
-    if (selectedSections.has("templates") && r.templates?.length) {
-      setTemplates(r.templates); setTemplatesEnabled(true);
-      setSelectedTemplates(new Set(r.templates.map((_, i) => i)));
-    }
-    if (selectedSections.has("examples") && r.examples?.length) {
-      setExamples(r.examples);
-      setApprovedExamples(new Set(r.examples.map((_, i) => i)));
-    }
-    setParsedPreview(null);
-    setPastedInstructions("");
-    setAppMode("create");
-    setStep(0);
+    if (selectedSections.has("templates") && r.templates?.length) { setTemplates(r.templates); setTemplatesEnabled(true); setSelectedTemplates(new Set(r.templates.map((_, i) => i))); }
+    if (selectedSections.has("examples") && r.examples?.length) { setExamples(r.examples); setApprovedExamples(new Set(r.examples.map((_, i) => i))); }
+    setParsedPreview(null); setPastedInstructions(""); setAppMode("create"); setStep(0);
   };
-
-  const [showFireworks, setShowFireworks] = useState(false);
 
   const copyToClipboard = async () => {
     try {
-      const textArea = document.createElement("textarea");
-      textArea.value = compiledOutput;
-      textArea.style.position = "fixed";
-      textArea.style.left = "-9999px";
-      textArea.style.top = "-9999px";
-      textArea.style.opacity = "0";
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textArea);
-      setCopied(true);
-      setShowFireworks(true);
+      const ta = document.createElement("textarea");
+      ta.value = compiledOutput;
+      Object.assign(ta.style, { position: "fixed", left: "-9999px", top: "-9999px", opacity: "0" });
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      document.execCommand("copy"); document.body.removeChild(ta);
+      setCopied(true); setShowFireworks(true);
       setTimeout(() => setCopied(false), 2000);
       setTimeout(() => setShowFireworks(false), 3000);
-    } catch (err) {
-      try {
-        await navigator.clipboard.writeText(compiledOutput);
-        setCopied(true);
-        setShowFireworks(true);
-        setTimeout(() => setCopied(false), 2000);
-        setTimeout(() => setShowFireworks(false), 3000);
-      } catch (err2) {
-        console.error("Copy failed:", err2);
-        showError("Copy failed. Try selecting the text manually.");
-      }
+    } catch {
+      try { await navigator.clipboard.writeText(compiledOutput); setCopied(true); setShowFireworks(true); setTimeout(() => setCopied(false), 2000); setTimeout(() => setShowFireworks(false), 3000); }
+      catch { showError("Copy failed. Try selecting the text manually."); }
     }
   };
 
-  const handleDragStart = (idx) => { setDragIdx(idx); };
+  const copyBlurb = async () => {
+    const projectBlurb = `${projectDesc}${goals ? " Goal: " + goals.trim().replace(/\.?\s*$/, ".") : ""}`.trim();
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = projectBlurb;
+      Object.assign(ta.style, { position: "fixed", left: "-9999px", top: "-9999px", opacity: "0" });
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      document.execCommand("copy"); document.body.removeChild(ta);
+      setCopiedBlurb(true); setTimeout(() => setCopiedBlurb(false), 2000);
+    } catch {
+      try { await navigator.clipboard.writeText(projectBlurb); setCopiedBlurb(true); setTimeout(() => setCopiedBlurb(false), 2000); }
+      catch { showError("Copy failed."); }
+    }
+  };
+
+  const handleDragStart = (idx) => setDragIdx(idx);
   const handleDragOver = (e, idx) => { e.preventDefault(); setDragOverIdx(idx); };
   const handleDragEnd = () => {
     if (dragIdx !== null && dragOverIdx !== null && dragIdx !== dragOverIdx) {
-      const arr = [...priorities];
-      const [moved] = arr.splice(dragIdx, 1);
-      arr.splice(dragOverIdx, 0, moved);
-      setPriorities(arr);
+      const arr = [...priorities]; const [moved] = arr.splice(dragIdx, 1); arr.splice(dragOverIdx, 0, moved); setPriorities(arr);
     }
-    setDragIdx(null);
-    setDragOverIdx(null);
-  };
-  const projectBlurb = `${projectDesc}${goals ? " Goal: " + goals.trim().replace(/\.?\s*$/, ".") : ""}`.trim();
-  const copyBlurb = async () => {
-    try {
-      const textArea = document.createElement("textarea");
-      textArea.value = projectBlurb;
-      textArea.style.position = "fixed";
-      textArea.style.left = "-9999px";
-      textArea.style.top = "-9999px";
-      textArea.style.opacity = "0";
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textArea);
-      setCopiedBlurb(true);
-      setTimeout(() => setCopiedBlurb(false), 2000);
-    } catch (err) {
-      try {
-        await navigator.clipboard.writeText(projectBlurb);
-        setCopiedBlurb(true);
-        setTimeout(() => setCopiedBlurb(false), 2000);
-      } catch (err2) {
-        showError("Copy failed. Try selecting the text manually.");
-      }
-    }
+    setDragIdx(null); setDragOverIdx(null);
   };
   const movePriority = (idx, dir) => {
     const arr = [...priorities]; const target = idx + dir;
@@ -730,7 +576,9 @@ export default function PromptEngine() {
     [arr[idx], arr[target]] = [arr[target], arr[idx]]; setPriorities(arr);
   };
 
-  // ── UI components ──
+  const projectBlurb = `${projectDesc}${goals ? " Goal: " + goals.trim().replace(/\.?\s*$/, ".") : ""}`.trim();
+  const canAdvance = () => step === 0 ? (projectName && domain && projectDesc) : true;
+
   const RefinePanel = ({ field, suggestion }) => {
     if (!suggestion) return null;
     return (
@@ -776,60 +624,35 @@ export default function PromptEngine() {
       {refineLoading[field] ? <Loader2 size={12} className="spin" /> : <Wand2 size={12} />} Refine
     </Btn>
   );
-
   const GenerateBtn = ({ field }) => (
     <Btn small onClick={() => generateField(field)} disabled={generateLoading[field]}>
       {generateLoading[field] ? <Loader2 size={12} className="spin" /> : <Sparkles size={12} />} Generate
     </Btn>
   );
 
-  // ── Step renderers ──
   const renderContext = () => (
     <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
-      <div>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "8px", flexWrap: "wrap", gap: "6px" }}>
-          <SectionLabel>Project Name</SectionLabel>
-          <div style={{ display: "flex", gap: "6px" }}>
-            <GenerateBtn field="name" />
-            <RefineBtn field="name" disabled={!projectName} />
+      {[
+        ["Project Name", "name", projectName, setProjectName, false, "My AI project"],
+        ["Domain", "domain", domain, setDomain, false, "e.g. B2B SaaS sales, medical research, creative writing..."],
+        ["Project Description", "description", projectDesc, setProjectDesc, true, "What is this Claude project designed to do?"],
+        ["Goals", "goals", goals, setGoals, true, "What outcomes should this project produce?"],
+      ].map(([label, field, val, setter, isTextarea, placeholder]) => (
+        <div key={field}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "8px", flexWrap: "wrap", gap: "6px" }}>
+            <SectionLabel>{label}</SectionLabel>
+            <div style={{ display: "flex", gap: "6px" }}>
+              <GenerateBtn field={field} />
+              <RefineBtn field={field} disabled={!val} />
+            </div>
           </div>
+          {isTextarea
+            ? <TextArea value={val} onChange={v => { setter(v); trackActivity(); }} placeholder={placeholder} />
+            : <Input value={val} onChange={v => { setter(v); trackActivity(); }} placeholder={placeholder} />
+          }
+          <RefinePanel field={field} suggestion={refineSuggestions[field]} />
         </div>
-        <Input value={projectName} onChange={v => { setProjectName(v); trackActivity(); }} placeholder="My AI project" />
-        <RefinePanel field="name" suggestion={refineSuggestions.name} />
-      </div>
-      <div>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "8px", flexWrap: "wrap", gap: "6px" }}>
-          <SectionLabel>Domain</SectionLabel>
-          <div style={{ display: "flex", gap: "6px" }}>
-            <GenerateBtn field="domain" />
-            <RefineBtn field="domain" disabled={!domain} />
-          </div>
-        </div>
-        <Input value={domain} onChange={v => { setDomain(v); trackActivity(); }} placeholder="e.g. B2B SaaS sales, medical research, creative writing..." />
-        <RefinePanel field="domain" suggestion={refineSuggestions.domain} />
-      </div>
-      <div>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "8px", flexWrap: "wrap", gap: "6px" }}>
-          <SectionLabel>Project Description</SectionLabel>
-          <div style={{ display: "flex", gap: "6px" }}>
-            <GenerateBtn field="description" />
-            <RefineBtn field="description" disabled={!projectDesc} />
-          </div>
-        </div>
-        <TextArea value={projectDesc} onChange={v => { setProjectDesc(v); trackActivity(); }} placeholder="What is this Claude project designed to do?" />
-        <RefinePanel field="description" suggestion={refineSuggestions.description} />
-      </div>
-      <div>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "8px", flexWrap: "wrap", gap: "6px" }}>
-          <SectionLabel>Goals</SectionLabel>
-          <div style={{ display: "flex", gap: "6px" }}>
-            <GenerateBtn field="goals" />
-            <RefineBtn field="goals" disabled={!goals} />
-          </div>
-        </div>
-        <TextArea value={goals} onChange={v => { setGoals(v); trackActivity(); }} placeholder="What outcomes should this project produce?" />
-        <RefinePanel field="goals" suggestion={refineSuggestions.goals} />
-      </div>
+      ))}
     </div>
   );
 
@@ -899,7 +722,7 @@ export default function PromptEngine() {
       {negativeSuggestions.length > 0 && selectedNegatives.size === negativeSuggestions.length && (
         <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", background: "rgba(80,180,80,0.06)", border: "1px solid rgba(80,180,80,0.2)", borderRadius: "8px" }}>
           <CheckCircle2 size={16} color="#50b450" style={{ flexShrink: 0 }} />
-          <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)" }}>All behaviors are selected by default. These are the most common pitfalls for your domain. Deselect any that don't apply to your project.</span>
+          <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)" }}>All behaviors selected by default. Deselect any that don't apply to your project.</span>
         </div>
       )}
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -960,24 +783,13 @@ export default function PromptEngine() {
       {priorities.length > 0 && <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.35)", fontStyle: "italic" }}>Drag to reorder or use arrows. Higher position = higher priority.</div>}
       <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
         {priorities.map((p, i) => (
-          <Card key={i} style={{
-            display: "flex", alignItems: "center", gap: "12px",
-            cursor: "grab",
-            opacity: dragIdx === i ? 0.5 : 1,
-            borderColor: dragOverIdx === i ? "rgba(212,162,78,0.5)" : undefined,
-            transform: dragOverIdx === i ? "scale(1.02)" : "scale(1)",
-            transition: "transform 0.2s ease, border-color 0.2s ease, opacity 0.2s ease",
-          }}
-            draggable
-            onDragStart={() => handleDragStart(i)}
-            onDragOver={(e) => handleDragOver(e, i)}
-            onDragEnd={handleDragEnd}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "2px", flexShrink: 0, color: "rgba(255,255,255,0.2)" }}>
-              <Sliders size={14} style={{ cursor: "grab", marginRight: "4px" }} />
+          <Card key={i} style={{ display: "flex", alignItems: "center", gap: "12px", cursor: "grab", opacity: dragIdx === i ? 0.5 : 1, borderColor: dragOverIdx === i ? "rgba(212,162,78,0.5)" : undefined, transform: dragOverIdx === i ? "scale(1.02)" : "scale(1)", transition: "transform 0.2s, border-color 0.2s, opacity 0.2s" }}
+            draggable onDragStart={() => handleDragStart(i)} onDragOver={e => handleDragOver(e, i)} onDragEnd={handleDragEnd}>
+            <div style={{ display: "flex", alignItems: "center", gap: "2px", flexShrink: 0 }}>
+              <Sliders size={14} color="rgba(255,255,255,0.2)" style={{ cursor: "grab", marginRight: "4px" }} />
               <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
-                <button onClick={(e) => { e.stopPropagation(); movePriority(i, -1); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", lineHeight: 0, borderRadius: "4px" }}><ArrowUp size={12} color="rgba(255,255,255,0.35)" /></button>
-                <button onClick={(e) => { e.stopPropagation(); movePriority(i, 1); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", lineHeight: 0, borderRadius: "4px" }}><ArrowDown size={12} color="rgba(255,255,255,0.35)" /></button>
+                <button onClick={e => { e.stopPropagation(); movePriority(i, -1); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", lineHeight: 0 }}><ArrowUp size={12} color="rgba(255,255,255,0.35)" /></button>
+                <button onClick={e => { e.stopPropagation(); movePriority(i, 1); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", lineHeight: 0 }}><ArrowDown size={12} color="rgba(255,255,255,0.35)" /></button>
               </div>
             </div>
             <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "12px", color: "#d4a24e", minWidth: "20px" }}>P{i + 1}</span>
@@ -1002,7 +814,7 @@ export default function PromptEngine() {
       {failures.length > 0 && (
         <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", background: "rgba(212,162,78,0.06)", border: "1px solid rgba(212,162,78,0.15)", borderRadius: "8px" }}>
           <ShieldOff size={16} color="#d4a24e" style={{ flexShrink: 0 }} />
-          <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)" }}>All failure patterns below will be included in your compiled instructions. Use "Redo" to replace any that don't fit.</span>
+          <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)" }}>All patterns will be included in your compiled instructions. Use "Redo" to replace any that don't fit.</span>
         </div>
       )}
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -1064,11 +876,7 @@ export default function PromptEngine() {
       {!examples.length && !loading && <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "14px", fontStyle: "italic" }}>Examples anchor Claude's behavior. Approve the ones that represent ideal responses.</div>}
       <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
         {examples.map((e, i) => (
-          <Card key={i} highlight={approvedExamples.has(i)} style={approvedExamples.has(i) ? {
-            boxShadow: "0 0 20px rgba(212,162,78,0.15), 0 0 40px rgba(212,162,78,0.05)",
-            border: "1px solid rgba(212,162,78,0.4)",
-            transition: "all 0.4s ease",
-          } : { transition: "all 0.4s ease" }}>
+          <Card key={i} highlight={approvedExamples.has(i)} style={approvedExamples.has(i) ? { boxShadow: "0 0 20px rgba(212,162,78,0.15)", border: "1px solid rgba(212,162,78,0.4)", transition: "all 0.4s ease" } : { transition: "all 0.4s ease" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "10px" }}>
               <span style={{ fontSize: "12px", fontFamily: "'JetBrains Mono', monospace", color: "rgba(255,255,255,0.3)" }}>Example {i + 1}</span>
               <Btn small onClick={() => { const next = new Set(approvedExamples); next.has(i) ? next.delete(i) : next.add(i); setApprovedExamples(next); trackActivity(); }}>
@@ -1110,7 +918,7 @@ export default function PromptEngine() {
         {!customInjection && compiledOutput.length > 100 && (
           <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", background: "rgba(80,180,80,0.06)", border: "1px solid rgba(80,180,80,0.15)", borderRadius: "8px", marginBottom: "10px" }}>
             <CheckCircle2 size={16} color="#50b450" style={{ flexShrink: 0 }} />
-            <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.55)" }}>Looking good. Your levers cover the core behaviors. Add anything specific below, or leave empty if the engine captured everything.</span>
+            <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.55)" }}>Looking good. Add anything specific below, or leave empty if the engine captured everything.</span>
           </div>
         )}
         <TextArea value={customInjection} onChange={v => { setCustomInjection(v); trackActivity(); }} placeholder="e.g. Always respond in English. Never use bullet points..." rows={4} />
@@ -1127,8 +935,7 @@ export default function PromptEngine() {
           <pre style={{ color: "#e0e0e0", fontSize: "13px", fontFamily: "'JetBrains Mono', monospace", margin: 0, whiteSpace: "pre-wrap", lineHeight: 1.7 }}>{compiledOutput}</pre>
         </div>
       </div>
-
-      {/* Feedback */}
+      {/* Feedback — from their version */}
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: "24px" }}>
         <SectionLabel>Feedback</SectionLabel>
         <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.35)", fontFamily: "'JetBrains Mono', monospace", marginTop: "-10px", marginBottom: "10px" }}>How was your experience? What would make this better?</div>
@@ -1154,20 +961,9 @@ export default function PromptEngine() {
     </div>
   );
 
-  const stepRenderers = [
-    renderContext, renderIdentity, renderKnowledge, renderNegativeSpace,
-    renderModes, renderPriority, renderFailure, renderTemplates,
-    renderExamples, renderExport,
-  ];
+  const stepRenderers = [renderContext, renderIdentity, renderKnowledge, renderNegativeSpace, renderModes, renderPriority, renderFailure, renderTemplates, renderExamples, renderExport];
 
-  const canAdvance = () => step === 0 ? (projectName && domain && projectDesc) : true;
-
-  // ── Edit mode ──
-  const SECTION_LABELS = {
-    context: "Project Context", identity: "Identity", knowledge: "Knowledge",
-    negatives: "Negative Space", modes: "Modes", priorities: "Priorities",
-    failures: "Failure Preemption", templates: "Templates", examples: "Examples",
-  };
+  const SECTION_LABELS = { context: "Project Context", identity: "Identity", knowledge: "Knowledge", negatives: "Negative Space", modes: "Modes", priorities: "Priorities", failures: "Failure Preemption", templates: "Templates", examples: "Examples" };
 
   const renderParsedPreview = () => {
     const r = parsedPreview;
@@ -1180,34 +976,22 @@ export default function PromptEngine() {
           </div>
           <Btn small onClick={() => setParsedPreview(null)}><X size={14} /> Cancel</Btn>
         </div>
-
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           {Object.entries(SECTION_LABELS).map(([key, label]) => {
-            const hasContent = (() => {
-              if (key === "context") return r.projectName || r.domain || r.description || r.goals;
-              if (key === "identity") return r.identity?.title;
-              return r[key]?.length > 0;
-            })();
+            const hasContent = key === "context" ? (r.projectName || r.domain || r.description || r.goals) : key === "identity" ? r.identity?.title : r[key]?.length > 0;
             if (!hasContent) return null;
             const isSelected = selectedSections.has(key);
             return (
               <Card key={key} highlight={isSelected} style={{ cursor: "pointer" }}>
                 <div onClick={() => { const next = new Set(selectedSections); next.has(key) ? next.delete(key) : next.add(key); setSelectedSections(next); }} style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                  <div style={{ marginTop: "2px", flexShrink: 0 }}>
-                    {isSelected ? <CheckCircle2 size={16} color="#d4a24e" /> : <Circle size={16} color="rgba(255,255,255,0.2)" />}
-                  </div>
+                  <div style={{ marginTop: "2px", flexShrink: 0 }}>{isSelected ? <CheckCircle2 size={16} color="#d4a24e" /> : <Circle size={16} color="rgba(255,255,255,0.2)" />}</div>
                   <div style={{ flex: 1 }}>
                     <div style={{ color: "#e0e0e0", fontSize: "13px", fontWeight: 600, marginBottom: "6px" }}>{label}</div>
                     <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono', monospace", lineHeight: 1.5 }}>
                       {key === "context" && `${r.projectName ? `Name: ${r.projectName}  ` : ""}${r.domain ? `Domain: ${r.domain}` : ""}`}
                       {key === "identity" && r.identity?.title}
-                      {key === "knowledge" && `${r.knowledge?.length} item${r.knowledge?.length !== 1 ? "s" : ""}`}
-                      {key === "negatives" && `${r.negatives?.length} behavior${r.negatives?.length !== 1 ? "s" : ""} to block`}
                       {key === "modes" && r.modes?.map(m => m.name).join(", ")}
-                      {key === "priorities" && `${r.priorities?.length} rule${r.priorities?.length !== 1 ? "s" : ""}`}
-                      {key === "failures" && `${r.failures?.length} pattern${r.failures?.length !== 1 ? "s" : ""}`}
-                      {key === "templates" && `${r.templates?.length} template${r.templates?.length !== 1 ? "s" : ""}`}
-                      {key === "examples" && `${r.examples?.length} example${r.examples?.length !== 1 ? "s" : ""}`}
+                      {["knowledge","negatives","priorities","failures","templates","examples"].includes(key) && `${r[key]?.length} item${r[key]?.length !== 1 ? "s" : ""}`}
                     </div>
                   </div>
                 </div>
@@ -1215,10 +999,7 @@ export default function PromptEngine() {
             );
           })}
         </div>
-
-        <Btn primary onClick={applyParsed} disabled={selectedSections.size === 0}>
-          <Check size={16} /> Apply {selectedSections.size} Section{selectedSections.size !== 1 ? "s" : ""} & Open in Builder
-        </Btn>
+        <Btn primary onClick={applyParsed} disabled={selectedSections.size === 0}><Check size={16} /> Apply {selectedSections.size} Section{selectedSections.size !== 1 ? "s" : ""} & Open in Builder</Btn>
       </div>
     );
   };
@@ -1237,20 +1018,8 @@ export default function PromptEngine() {
     );
   };
 
-  // ── Preview panel ──
   const renderPreviewPanel = () => (
-    <div style={{
-      ...(isMobile ? {
-        position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 50,
-        background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)",
-        display: showPreview ? "flex" : "none", flexDirection: "column",
-      } : {
-        width: showPreview ? "300px" : "0px", minWidth: showPreview ? "300px" : "0px",
-        borderLeft: showPreview ? "1px solid rgba(255,255,255,0.06)" : "none",
-        background: "rgba(0,0,0,0.15)", overflow: "hidden", transition: "all 0.3s",
-        display: "flex", flexDirection: "column",
-      }),
-    }}>
+    <div style={isMobile ? { position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 50, background: "rgba(0,0,0,0.9)", backdropFilter: "blur(10px)", display: showPreview ? "flex" : "none", flexDirection: "column" } : { width: showPreview ? "300px" : "0px", minWidth: showPreview ? "300px" : "0px", borderLeft: showPreview ? "1px solid rgba(255,255,255,0.06)" : "none", background: "rgba(0,0,0,0.15)", overflow: "hidden", transition: "all 0.3s", display: "flex", flexDirection: "column" }}>
       {showPreview && (
         <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
           <div style={{ padding: "14px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -1278,17 +1047,11 @@ export default function PromptEngine() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes glow { 0%, 100% { box-shadow: 0 0 8px rgba(212,162,78,0.1); } 50% { box-shadow: 0 0 20px rgba(212,162,78,0.3); } }
+        @keyframes glow { 0%,100% { box-shadow: 0 0 8px rgba(212,162,78,0.1); } 50% { box-shadow: 0 0 20px rgba(212,162,78,0.3); } }
         @keyframes shimmerBar { 0% { transform: translateX(-100%); } 100% { transform: translateX(300%); } }
-        @keyframes fadeInScale {
-          0% { opacity: 0; transform: scale(0.5); }
-          50% { opacity: 1; transform: scale(1.1); }
-          100% { opacity: 1; transform: scale(1); }
-        }
+        @keyframes fadeInScale { 0% { opacity:0; transform:scale(0.5); } 50% { opacity:1; transform:scale(1.1); } 100% { opacity:1; transform:scale(1); } }
         @keyframes gateFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .spin { animation: spin 1s linear infinite; }
         .gate-fade { animation: gateFade 0.6s ease forwards; }
@@ -1296,28 +1059,16 @@ export default function PromptEngine() {
         .gate-fade-3 { animation: gateFade 0.6s 0.3s ease forwards; opacity: 0; }
         textarea:focus, input:focus { border-color: rgba(212,162,78,0.4) !important; }
         button:hover:not(:disabled) { opacity: 0.85; }
-        @media (max-width: 767px) {
-          textarea, input { font-size: 16px !important; }
-        }
+        @media (max-width: 767px) { textarea, input { font-size: 16px !important; } }
       `}</style>
 
       {error && <Toast msg={error} />}
       {showFireworks && <Fireworks />}
 
       {!gateUnlocked ? (
-        /* ── Landing Page Gate ── */
-        <div style={{
-          flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
-          justifyContent: "center", padding: isMobile ? "32px 20px" : "60px 24px",
-          position: "relative", overflow: "hidden",
-        }}>
-          <div style={{
-            position: "absolute", top: "20%", left: "50%", transform: "translateX(-50%)",
-            width: "500px", height: "500px", borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(212,162,78,0.06) 0%, transparent 70%)",
-            pointerEvents: "none",
-          }} />
-
+        /* ── Email Gate ── */
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: isMobile ? "32px 20px" : "60px 24px", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", top: "20%", left: "50%", transform: "translateX(-50%)", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(212,162,78,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
           <div className="gate-fade" style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "32px" }}>
             <div style={{ width: "48px", height: "48px", borderRadius: "14px", background: "linear-gradient(135deg, #d4a24e, #b8862e)", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <Zap size={26} color="#1a1a1a" />
@@ -1327,45 +1078,25 @@ export default function PromptEngine() {
               <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono', monospace" }}>Project Instructions Builder · {VERSION}</div>
             </div>
           </div>
-
-          <p className="gate-fade-2" style={{
-            fontSize: isMobile ? "15px" : "17px", color: "rgba(255,255,255,0.55)", textAlign: "center",
-            maxWidth: "480px", lineHeight: 1.7, marginBottom: "36px",
-          }}>
+          <p className="gate-fade-2" style={{ fontSize: isMobile ? "15px" : "17px", color: "rgba(255,255,255,0.55)", textAlign: "center", maxWidth: "480px", lineHeight: 1.7, marginBottom: "36px" }}>
             Build structured, high-quality Claude project instructions in minutes. Walk through 9 guided levers and export a complete instruction set, ready to paste.
           </p>
-
-          <div className="gate-fade-3" style={{
-            display: "flex", flexDirection: "column", alignItems: "center", gap: "12px",
-            width: "100%", maxWidth: "380px",
-          }}>
+          <div className="gate-fade-3" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", width: "100%", maxWidth: "380px" }}>
             <input
               type="email"
               value={userEmail}
               onChange={e => { setUserEmail(e.target.value); setGateError(""); }}
               onKeyDown={e => e.key === "Enter" && unlockGate()}
               placeholder="Enter your email to get started"
-              style={{
-                width: "100%", padding: "14px 18px", background: "rgba(255,255,255,0.05)",
-                border: gateError ? "1.5px solid rgba(220,80,80,0.5)" : "1.5px solid rgba(212,162,78,0.2)",
-                borderRadius: "12px", color: "#e0e0e0", fontSize: "15px",
-                fontFamily: "'DM Sans', sans-serif", outline: "none",
-                textAlign: "center", boxSizing: "border-box",
-              }}
+              style={{ width: "100%", padding: "14px 18px", background: "rgba(255,255,255,0.05)", border: gateError ? "1.5px solid rgba(220,80,80,0.5)" : "1.5px solid rgba(212,162,78,0.2)", borderRadius: "12px", color: "#e0e0e0", fontSize: "15px", fontFamily: "'DM Sans', sans-serif", outline: "none", textAlign: "center", boxSizing: "border-box" }}
             />
             {gateError && <div style={{ fontSize: "12px", color: "#dc5050" }}>{gateError}</div>}
             <Btn primary onClick={unlockGate} style={{ width: "100%", justifyContent: "center", padding: "14px 20px", fontSize: "15px", borderRadius: "12px" }}>
               <Sparkles size={18} /> Launch Engine
             </Btn>
           </div>
-
           <div className="gate-fade-3" style={{ marginTop: "48px", display: "flex", gap: "24px", flexWrap: "wrap", justifyContent: "center" }}>
-            {[
-              { icon: Target, label: "Identity" },
-              { icon: Brain, label: "Knowledge" },
-              { icon: ShieldOff, label: "Guardrails" },
-              { icon: Sliders, label: "Modes" },
-            ].map(({ icon: Icon, label }) => (
+            {[{ icon: Target, label: "Identity" }, { icon: Brain, label: "Knowledge" }, { icon: ShieldOff, label: "Guardrails" }, { icon: Sliders, label: "Modes" }].map(({ icon: Icon, label }) => (
               <div key={label} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                 <Icon size={14} color="rgba(212,162,78,0.4)" />
                 <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)", fontFamily: "'JetBrains Mono', monospace" }}>{label}</span>
@@ -1374,141 +1105,120 @@ export default function PromptEngine() {
           </div>
         </div>
       ) : (
-      <>
-      {/* Header */}
-      <div style={{ padding: isMobile ? "12px 16px" : "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(0,0,0,0.2)", flexWrap: "wrap", gap: "8px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? "10px" : "14px" }}>
-          <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "linear-gradient(135deg, #d4a24e, #b8862e)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-            <Zap size={18} color="#1a1a1a" />
+        <>
+        {/* Header */}
+        <div style={{ padding: isMobile ? "12px 16px" : "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(0,0,0,0.2)", flexWrap: "wrap", gap: "8px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: isMobile ? "10px" : "14px" }}>
+            <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "linear-gradient(135deg, #d4a24e, #b8862e)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><Zap size={18} color="#1a1a1a" /></div>
+            <div>
+              <div style={{ fontSize: isMobile ? "14px" : "16px", fontWeight: 700, letterSpacing: "-0.3px" }}>Prompt Engine</div>
+              {!isMobile && <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono', monospace" }}>Project Instructions Builder · {VERSION}</div>}
+            </div>
           </div>
-          <div>
-            <div style={{ fontSize: isMobile ? "14px" : "16px", fontWeight: 700, letterSpacing: "-0.3px" }}>Prompt Engine</div>
-            {!isMobile && <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono', monospace" }}>Project Instructions Builder · {VERSION}</div>}
+          <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+            <Badge active={appMode === "create"} onClick={() => { setAppMode("create"); setParsedPreview(null); }}>Create</Badge>
+            <Badge active={appMode === "edit"} onClick={() => setAppMode("edit")}>Edit</Badge>
+            {!isMobile && <div style={{ width: "1px", height: "24px", background: "rgba(255,255,255,0.1)", margin: "0 4px" }} />}
+            <button onClick={() => setShowPreview(!showPreview)} style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", display: "flex", alignItems: "center", gap: "4px" }}>
+              {showPreview ? <PanelRightClose size={18} color="rgba(255,255,255,0.5)" /> : <PanelRightOpen size={18} color="rgba(255,255,255,0.5)" />}
+              {!isMobile && <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.35)", fontFamily: "'JetBrains Mono', monospace" }}>Preview</span>}
+            </button>
           </div>
         </div>
-        <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
-          <Badge active={appMode === "create"} onClick={() => { setAppMode("create"); setParsedPreview(null); }}>Create</Badge>
-          <Badge active={appMode === "edit"} onClick={() => setAppMode("edit")}>Edit</Badge>
-          {!isMobile && <div style={{ width: "1px", height: "24px", background: "rgba(255,255,255,0.1)", margin: "0 4px" }} />}
-          <button onClick={() => setShowPreview(!showPreview)} style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", display: "flex", alignItems: "center", gap: "4px" }}>
-            {showPreview ? <PanelRightClose size={18} color="rgba(255,255,255,0.5)" /> : <PanelRightOpen size={18} color="rgba(255,255,255,0.5)" />}
-            {!isMobile && <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.35)", fontFamily: "'JetBrains Mono', monospace" }}>Preview</span>}
-          </button>
-        </div>
-      </div>
 
-      {/* Body */}
-      <div style={{ display: "flex", flex: 1, overflow: "hidden", flexDirection: isMobile ? "column" : "row" }}>
-        {/* Navigation */}
-        {appMode === "create" && (
-          isMobile ? (
-            <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", background: "rgba(0,0,0,0.1)" }}>
-              {/* Progress bar */}
-              <div style={{ height: "3px", background: "rgba(255,255,255,0.04)" }}>
-                <div style={{ height: "100%", width: `${((step + 1) / STEPS.length) * 100}%`, background: "linear-gradient(90deg, #d4a24e, #b8862e)", borderRadius: "0 2px 2px 0", transition: "width 0.3s ease" }} />
-              </div>
-              <button onClick={() => setShowMobileNav(!showMobileNav)} style={{
-                width: "100%", padding: "12px 16px", background: "none", border: "none",
-                display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer",
-              }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "8px", flex: 1 }}>
-                  {(() => { const Icon = STEPS[step].icon; return <Icon size={14} color="#d4a24e" />; })()}
-                  <div style={{ textAlign: "left" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span style={{ fontSize: "13px", fontWeight: 600, color: "#e0e0e0" }}>{STEPS[step].label}</span>
-                      <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.25)", fontFamily: "'JetBrains Mono', monospace" }}>{step + 1}/{STEPS.length}</span>
+        {/* Body */}
+        <div style={{ display: "flex", flex: 1, overflow: "hidden", flexDirection: isMobile ? "column" : "row" }}>
+          {appMode === "create" && (
+            isMobile ? (
+              <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", background: "rgba(0,0,0,0.1)" }}>
+                <div style={{ height: "3px", background: "rgba(255,255,255,0.04)" }}>
+                  <div style={{ height: "100%", width: `${((step + 1) / STEPS.length) * 100}%`, background: "linear-gradient(90deg, #d4a24e, #b8862e)", borderRadius: "0 2px 2px 0", transition: "width 0.3s ease" }} />
+                </div>
+                <button onClick={() => setShowMobileNav(!showMobileNav)} style={{ width: "100%", padding: "12px 16px", background: "none", border: "none", display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", flex: 1 }}>
+                    {(() => { const Icon = STEPS[step].icon; return <Icon size={14} color="#d4a24e" />; })()}
+                    <div style={{ textAlign: "left" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <span style={{ fontSize: "13px", fontWeight: 600, color: "#e0e0e0" }}>{STEPS[step].label}</span>
+                        <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.25)", fontFamily: "'JetBrains Mono', monospace" }}>{step + 1}/{STEPS.length}</span>
+                      </div>
+                      <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.35)", marginTop: "2px" }}>{STEPS[step].desc}</div>
                     </div>
-                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.35)", marginTop: "2px" }}>{STEPS[step].desc}</div>
                   </div>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                  <span style={{
-                    fontSize: "11px", color: "#d4a24e", fontFamily: "'JetBrains Mono', monospace",
-                    fontWeight: 600, padding: "4px 10px", borderRadius: "6px",
-                    background: "rgba(212,162,78,0.1)", border: "1px solid rgba(212,162,78,0.25)",
-                    letterSpacing: "0.5px",
-                  }}>All Steps</span>
-                  <ChevronRight size={14} color="#d4a24e" style={{ transform: showMobileNav ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s" }} />
-                </div>
-              </button>
-              {showMobileNav && (
-                <div style={{ padding: "0 0 8px", maxHeight: "300px", overflowY: "auto", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
-                  {STEPS.map((s, i) => {
-                    const Icon = s.icon;
-                    const active = step === i;
-                    const completed = i < step;
-                    return (
-                      <button key={s.id} onClick={() => { setStep(i); setShowMobileNav(false); trackActivity(); }} style={{
-                        width: "100%", padding: "10px 16px", background: active ? "rgba(212,162,78,0.08)" : "transparent",
-                        border: "none", borderLeft: active ? "3px solid #d4a24e" : "3px solid transparent",
-                        cursor: "pointer", display: "flex", alignItems: "center", gap: "10px", textAlign: "left",
-                      }}>
-                        <div style={{ position: "relative", flexShrink: 0 }}>
-                          <Icon size={14} color={active ? "#d4a24e" : completed ? "#50b450" : "rgba(255,255,255,0.2)"} />
-                          {completed && <CheckCircle2 size={8} color="#50b450" style={{ position: "absolute", top: -3, right: -3 }} />}
-                        </div>
-                        <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: "13px", fontWeight: active ? 600 : 400, color: active ? "#e0e0e0" : "rgba(255,255,255,0.5)" }}>{s.label}</div>
-                          <div style={{ fontSize: "10px", color: active ? "rgba(212,162,78,0.6)" : "rgba(255,255,255,0.25)", fontFamily: "'JetBrains Mono', monospace", marginTop: "1px" }}>{s.desc}</div>
-                        </div>
-                        {active && <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#d4a24e", flexShrink: 0 }} />}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          ) : (
-            <div style={{ width: "220px", minWidth: "220px", borderRight: "1px solid rgba(255,255,255,0.06)", padding: "16px 0", background: "rgba(0,0,0,0.1)", overflowY: "auto" }}>
-              {STEPS.map((s, i) => {
-                const Icon = s.icon;
-                const active = step === i;
-                const completed = i < step;
-                return (
-                  <button key={s.id} onClick={() => { setStep(i); trackActivity(); }} style={{ width: "100%", padding: "10px 16px", background: active ? "rgba(212,162,78,0.08)" : "transparent", border: "none", borderLeft: active ? "2px solid #d4a24e" : "2px solid transparent", cursor: "pointer", display: "flex", alignItems: "center", gap: "10px", transition: "all 0.15s", textAlign: "left" }}>
-                    <Icon size={16} color={active ? "#d4a24e" : completed ? "#50b450" : "rgba(255,255,255,0.3)"} />
-                    <div>
-                      <div style={{ fontSize: "13px", fontWeight: active ? 600 : 400, color: active ? "#e0e0e0" : "rgba(255,255,255,0.5)" }}>{s.label}</div>
-                      <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.3)", fontFamily: "'JetBrains Mono', monospace" }}>{s.desc}</div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          )
-        )}
-
-        {/* Main content */}
-        <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column" }}>
-          {appMode === "edit" ? renderEditMode() : (
-            <div style={{ padding: isMobile ? "16px" : "24px 30px", flex: 1 }}>
-              <div style={{ marginBottom: "24px" }}>
-                <span style={{ fontSize: "11px", fontFamily: "'JetBrains Mono', monospace", color: "rgba(255,255,255,0.3)" }}>STEP {step + 1} / {STEPS.length}</span>
-                <h2 style={{ fontSize: "22px", fontWeight: 700, letterSpacing: "-0.5px", marginTop: "4px" }}>{STEPS[step].label}</h2>
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                    <span style={{ fontSize: "11px", color: "#d4a24e", fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, padding: "4px 10px", borderRadius: "6px", background: "rgba(212,162,78,0.1)", border: "1px solid rgba(212,162,78,0.25)" }}>All Steps</span>
+                    <ChevronRight size={14} color="#d4a24e" style={{ transform: showMobileNav ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s" }} />
+                  </div>
+                </button>
+                {showMobileNav && (
+                  <div style={{ padding: "0 0 8px", maxHeight: "300px", overflowY: "auto", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+                    {STEPS.map((s, i) => {
+                      const Icon = s.icon; const active = step === i; const completed = i < step;
+                      return (
+                        <button key={s.id} onClick={() => { setStep(i); setShowMobileNav(false); trackActivity(); }} style={{ width: "100%", padding: "10px 16px", background: active ? "rgba(212,162,78,0.08)" : "transparent", border: "none", borderLeft: active ? "3px solid #d4a24e" : "3px solid transparent", cursor: "pointer", display: "flex", alignItems: "center", gap: "10px", textAlign: "left" }}>
+                          <div style={{ position: "relative", flexShrink: 0 }}>
+                            <Icon size={14} color={active ? "#d4a24e" : completed ? "#50b450" : "rgba(255,255,255,0.2)"} />
+                            {completed && <CheckCircle2 size={8} color="#50b450" style={{ position: "absolute", top: -3, right: -3 }} />}
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: "13px", fontWeight: active ? 600 : 400, color: active ? "#e0e0e0" : "rgba(255,255,255,0.5)" }}>{s.label}</div>
+                            <div style={{ fontSize: "10px", color: active ? "rgba(212,162,78,0.6)" : "rgba(255,255,255,0.25)", fontFamily: "'JetBrains Mono', monospace", marginTop: "1px" }}>{s.desc}</div>
+                          </div>
+                          {active && <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#d4a24e", flexShrink: 0 }} />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-              {showAssist && step < 9 && (
-                <div style={{ background: "rgba(212,162,78,0.08)", border: "1px solid rgba(212,162,78,0.25)", borderRadius: "10px", padding: "14px 18px", display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
-                  <Lightbulb size={18} color="#d4a24e" />
-                  <span style={{ flex: 1, fontSize: "13px", color: "rgba(255,255,255,0.7)" }}>Looks like you might be stuck. Want me to auto-generate this section?</span>
-                  <Btn small primary onClick={autoFillCurrent}><Wand2 size={14} /> Auto-fill</Btn>
-                </div>
-              )}
-              {loading && <LoadingIndicator />}
-              {stepRenderers[step]()}
-              <div style={{ display: "flex", justifyContent: "space-between", marginTop: "32px", paddingTop: "16px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-                <Btn onClick={() => { setStep(Math.max(0, step - 1)); trackActivity(); }} disabled={step === 0}><ChevronLeft size={16} /> Previous</Btn>
-                {step < 9
-                  ? <Btn primary onClick={() => { setStep(Math.min(9, step + 1)); trackActivity(); }} disabled={!canAdvance()}>Next <ChevronRight size={16} /></Btn>
-                  : <Btn primary onClick={copyToClipboard}>{copied ? <><Check size={16} /> Copied!</> : <><Copy size={16} /> Copy Instructions</>}</Btn>
-                }
+            ) : (
+              <div style={{ width: "220px", minWidth: "220px", borderRight: "1px solid rgba(255,255,255,0.06)", padding: "16px 0", background: "rgba(0,0,0,0.1)", overflowY: "auto" }}>
+                {STEPS.map((s, i) => {
+                  const Icon = s.icon; const active = step === i; const completed = i < step;
+                  return (
+                    <button key={s.id} onClick={() => { setStep(i); trackActivity(); }} style={{ width: "100%", padding: "10px 16px", background: active ? "rgba(212,162,78,0.08)" : "transparent", border: "none", borderLeft: active ? "2px solid #d4a24e" : "2px solid transparent", cursor: "pointer", display: "flex", alignItems: "center", gap: "10px", transition: "all 0.15s", textAlign: "left" }}>
+                      <Icon size={16} color={active ? "#d4a24e" : completed ? "#50b450" : "rgba(255,255,255,0.3)"} />
+                      <div>
+                        <div style={{ fontSize: "13px", fontWeight: active ? 600 : 400, color: active ? "#e0e0e0" : "rgba(255,255,255,0.5)" }}>{s.label}</div>
+                        <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.3)", fontFamily: "'JetBrains Mono', monospace" }}>{s.desc}</div>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
-            </div>
+            )
           )}
-        </div>
 
-        {renderPreviewPanel()}
-      </div>
-      </>
+          <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column" }}>
+            {appMode === "edit" ? renderEditMode() : (
+              <div style={{ padding: isMobile ? "16px" : "24px 30px", flex: 1 }}>
+                <div style={{ marginBottom: "24px" }}>
+                  <span style={{ fontSize: "11px", fontFamily: "'JetBrains Mono', monospace", color: "rgba(255,255,255,0.3)" }}>STEP {step + 1} / {STEPS.length}</span>
+                  <h2 style={{ fontSize: "22px", fontWeight: 700, letterSpacing: "-0.5px", marginTop: "4px" }}>{STEPS[step].label}</h2>
+                </div>
+                {showAssist && step < 9 && (
+                  <div style={{ background: "rgba(212,162,78,0.08)", border: "1px solid rgba(212,162,78,0.25)", borderRadius: "10px", padding: "14px 18px", display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
+                    <Lightbulb size={18} color="#d4a24e" />
+                    <span style={{ flex: 1, fontSize: "13px", color: "rgba(255,255,255,0.7)" }}>Looks like you might be stuck. Want me to auto-generate this section?</span>
+                    <Btn small primary onClick={autoFillCurrent}><Wand2 size={14} /> Auto-fill</Btn>
+                  </div>
+                )}
+                {loading && <LoadingIndicator />}
+                {stepRenderers[step]()}
+                <div style={{ display: "flex", justifyContent: "space-between", marginTop: "32px", paddingTop: "16px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                  <Btn onClick={() => { setStep(Math.max(0, step - 1)); trackActivity(); }} disabled={step === 0}><ChevronLeft size={16} /> Previous</Btn>
+                  {step < 9
+                    ? <Btn primary onClick={() => { setStep(Math.min(9, step + 1)); trackActivity(); }} disabled={!canAdvance()}>Next <ChevronRight size={16} /></Btn>
+                    : <Btn primary onClick={copyToClipboard}>{copied ? <><Check size={16} /> Copied!</> : <><Copy size={16} /> Copy Instructions</>}</Btn>
+                  }
+                </div>
+              </div>
+            )}
+          </div>
+
+          {renderPreviewPanel()}
+        </div>
+        </>
       )}
     </div>
   );
