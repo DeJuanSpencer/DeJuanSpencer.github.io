@@ -436,9 +436,9 @@ export default function PromptEngine() {
     const r = await callClaude(
       `You extract structured information from any Claude project instructions or context document — whether it is a compiled lever output, strategic prose, or a mix of both. Do your best to populate as many fields as possible. If a field cannot be determined, use an empty string or empty array. Never omit a key. Return ONLY valid JSON with exactly this shape, no preamble, no markdown:
 {"projectName":"","domain":"","description":"","goals":"","identity":{"title":"","description":"","traits":[]},"knowledge":[],"negatives":[{"behavior":"","instruction":"","reason":""}],"modes":[{"name":"","trigger":"","description":"","characteristics":[]}],"priorities":[{"rule":"","overrides":"","exception":""}],"failures":[{"pattern":"","prevention":"","severity":"medium"}],"templates":[],"examples":[]}`,
-      `Extract everything you can from this document into the JSON structure:\n\n${pastedInstructions}`, 3000
+      `Extract everything you can from this document into the JSON structure:\n\n${pastedInstructions.slice(0, 8000)}`, 4000
     );
-    if (r) {
+    if (r && !r._error) {
       setParsedPreview(r);
       const available = new Set();
       if (r.projectName || r.domain || r.description || r.goals) available.add("context");
@@ -452,7 +452,7 @@ export default function PromptEngine() {
       if (r.examples?.length) available.add("examples");
       if (available.size === 0) { showError("Nothing could be extracted. Check your instructions format."); return; }
       setSelectedSections(available);
-    } else showError("Parse failed. Check your input format.");
+    } else showError(r?._error ? `Parse error: ${r._error}` : "Parse failed. Check your input format.");
   });
 
   const applyParsed = () => {
