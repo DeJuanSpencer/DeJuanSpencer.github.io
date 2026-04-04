@@ -2,22 +2,21 @@ const experience = [
   {
     title: "Independent Software Engineer",
     company: "Freelance",
-    duration: "Nov 2024 – Present",
+    duration: "Nov 2024 - Present",
     bullets: [
-      "Built and deployed self-initiated full-stack projects using .NET, Angular, and Python to explore scalable architecture patterns and business use cases.",
-      "Created a library of reusable UI components based on Atomic Design, enhancing consistency and speed across personal app interfaces.",
-      "Developed automation tools with Power Platform to streamline repetitive tasks and integrate personal workflows with external APIs.",
-      "Prototyped GenAI tools and prompt engineering frameworks, experimenting with use cases for chat interfaces, content generation, and research assistants.",
-      "Led all phases of the software lifecycle independently, from architecture and coding to testing, deployment, and iteration, applying Agile principles to personal project sprints.",
-      "Explored advanced system design techniques including event-driven microservices, layered architecture, and domain-driven design across experimental builds.",
+      "Built and deployed full-stack projects using .NET, Angular, and Python to explore scalable architecture patterns and business use cases.",
+      "Created a library of reusable UI components based on Atomic Design, enhancing consistency and speed across app interfaces.",
+      "Developed automation tools with Power Platform to streamline repetitive tasks and integrate workflows with external APIs.",
+      "Prototyped GenAI tools and prompt engineering frameworks for chat interfaces, content generation, and research assistants.",
+      "Led all phases of the software lifecycle independently, from architecture and coding to testing, deployment, and iteration.",
+      "Explored advanced system design techniques including event-driven microservices, layered architecture, and domain-driven design.",
       "Maintained high-quality documentation, GitHub repositories, and demos to showcase technical decisions and design rationale.",
     ],
   },
-
   {
     title: "Software Development Consultant",
     company: "Insight Enterprises",
-    duration: "May 2022 – Nov 2024",
+    duration: "May 2022 - Nov 2024",
     bullets: [
       "Built full-stack features using .NET, Angular, and Python for enterprise clients.",
       "Developed reusable UI components and modular architecture using Atomic Design.",
@@ -28,7 +27,7 @@ const experience = [
   {
     title: "Intelligence Analyst",
     company: "Ohio Army National Guard",
-    duration: "Feb 2017 – Feb 2025",
+    duration: "Feb 2017 - Feb 2025",
     bullets: [
       "Conducted strategic/tactical intelligence analysis using SIGINT, HUMINT, and mapping tools.",
       "Delivered time-sensitive briefings to leadership in mission-critical settings.",
@@ -40,18 +39,42 @@ const experience = [
 export default function Experience() {
   return (
     <section className="max-w-4xl mx-auto px-6">
-      <h2 className="text-3xl font-bold text-center mb-10">Experience</h2>
+      <h2
+        className="text-3xl font-bold text-center mb-10"
+        style={{ color: "var(--text-primary)", letterSpacing: "-0.5px" }}
+      >
+        Experience
+      </h2>
 
-      <div className="space-y-10">
+      <div className="space-y-6">
         {experience.map((job, index) => (
-          <div key={index} className="bg-white shadow-md rounded-xl p-6">
-            <h3 className="text-xl font-semibold text-gray-800">{job.title}</h3>
-            <p className="text-gray-600">
-              {job.company} • <span className="italic">{job.duration}</span>
+          <div
+            key={index}
+            className="rounded-xl p-6"
+            style={{
+              background: "var(--brand-surface)",
+              border: "1px solid var(--border-subtle)",
+            }}
+          >
+            <h3 className="text-xl font-semibold" style={{ color: "var(--text-primary)" }}>
+              {job.title}
+            </h3>
+            <p className="mt-1" style={{ color: "var(--text-tertiary)", fontSize: "14px" }}>
+              {job.company} &bull;{" "}
+              <span style={{ fontStyle: "italic" }}>{job.duration}</span>
             </p>
-            <ul className="list-disc list-inside mt-3 space-y-1 text-gray-700">
+            <ul className="mt-4 space-y-2">
               {job.bullets.map((item, i) => (
-                <li key={i}>{item}</li>
+                <li
+                  key={i}
+                  className="text-sm flex gap-3"
+                  style={{ color: "var(--text-secondary)", lineHeight: 1.6 }}
+                >
+                  <span style={{ color: "var(--brand-gold)", flexShrink: 0, marginTop: "2px" }}>
+                    &bull;
+                  </span>
+                  {item}
+                </li>
               ))}
             </ul>
           </div>
