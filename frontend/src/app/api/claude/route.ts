@@ -15,6 +15,12 @@ export async function POST(req: Request) {
     });
 
     const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Anthropic error:", data);
+      return NextResponse.json(data, { status: response.status });
+    }
+
     return NextResponse.json(data);
   } catch (error) {
     console.error("Claude proxy error:", error);

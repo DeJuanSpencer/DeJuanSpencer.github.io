@@ -60,8 +60,10 @@ const callClaude = async (systemPrompt, userPrompt, maxTokens = 2000) => {
         messages: [{ role: "user", content: userPrompt }],
       }),
     });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();
+    if (!response.ok || data.type === "error") {
+      throw new Error(data?.error?.message || `HTTP ${response.status}`);
+    }
     if (data.stop_reason === "max_tokens") throw new Error("Response truncated");
     const text = data.content?.map(i => i.type === "text" ? i.text : "").join("\n") || "";
     const json = extractJSON(text);
