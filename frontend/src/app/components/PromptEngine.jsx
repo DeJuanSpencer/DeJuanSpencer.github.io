@@ -434,9 +434,9 @@ export default function PromptEngine() {
 
   const handleEditParse = () => withLoading(async () => {
     const r = await callClaude(
-      `You decompose existing Claude project instructions into their structured component levers. Extract every piece of information you can find. Return ONLY valid JSON with this exact shape:
-{"projectName":"...","domain":"...","description":"...","goals":"...","identity":{"title":"...","description":"...","traits":[]},"knowledge":[],"negatives":[{"behavior":"...","instruction":"...","reason":"..."}],"modes":[{"name":"...","trigger":"...","description":"...","characteristics":[]}],"priorities":[{"rule":"...","overrides":"...","exception":"..."}],"failures":[{"pattern":"...","prevention":"...","severity":"medium"}],"templates":[],"examples":[]}`,
-      `Decompose these project instructions into structured levers:\n\n${pastedInstructions}`, 3000
+      `You extract structured information from any Claude project instructions or context document — whether it is a compiled lever output, strategic prose, or a mix of both. Do your best to populate as many fields as possible. If a field cannot be determined, use an empty string or empty array. Never omit a key. Return ONLY valid JSON with exactly this shape, no preamble, no markdown:
+{"projectName":"","domain":"","description":"","goals":"","identity":{"title":"","description":"","traits":[]},"knowledge":[],"negatives":[{"behavior":"","instruction":"","reason":""}],"modes":[{"name":"","trigger":"","description":"","characteristics":[]}],"priorities":[{"rule":"","overrides":"","exception":""}],"failures":[{"pattern":"","prevention":"","severity":"medium"}],"templates":[],"examples":[]}`,
+      `Extract everything you can from this document into the JSON structure:\n\n${pastedInstructions}`, 3000
     );
     if (r) {
       setParsedPreview(r);
