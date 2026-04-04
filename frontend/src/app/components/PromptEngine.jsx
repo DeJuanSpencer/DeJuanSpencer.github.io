@@ -1,4 +1,3 @@
-"use client";
 import { useState, useEffect, useCallback, useRef } from "react";
 import {
   ChevronRight, ChevronLeft, Layers, Target, Brain, ShieldOff,
@@ -49,11 +48,11 @@ const extractJSON = (text) => {
 
 const callClaude = async (systemPrompt, userPrompt, maxTokens = 2000) => {
   try {
-    const response = await fetch("/api/claude", {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
+        model: "claude-sonnet-4-6",
         max_tokens: maxTokens,
         system: systemPrompt,
         messages: [{ role: "user", content: userPrompt }],
@@ -519,6 +518,7 @@ export default function PromptEngine() {
   const projectBlurb = `${projectDesc}${goals ? " Goal: " + goals.trim().replace(/\.?\s*$/, ".") : ""}`.trim();
   const canAdvance = () => step === 0 ? (projectName && domain && projectDesc) : true;
 
+  // ── UI helpers ──
   const RefinePanel = ({ field, suggestion }) => {
     if (!suggestion) return null;
     return (
@@ -570,14 +570,10 @@ export default function PromptEngine() {
     </Btn>
   );
 
+  // ── Step renderers ──
   const renderContext = () => (
     <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
-      {[
-        ["Project Name", "name", projectName, setProjectName, false, "My AI project"],
-        ["Domain", "domain", domain, setDomain, false, "e.g. B2B SaaS sales, medical research, creative writing..."],
-        ["Project Description", "description", projectDesc, setProjectDesc, true, "What is this Claude project designed to do?"],
-        ["Goals", "goals", goals, setGoals, true, "What outcomes should this project produce?"],
-      ].map(([label, field, val, setter, isTextarea, placeholder]) => (
+      {[["Project Name", "name", projectName, setProjectName, false], ["Domain", "domain", domain, setDomain, false], ["Project Description", "description", projectDesc, setProjectDesc, true], ["Goals", "goals", goals, setGoals, true]].map(([label, field, val, setter, isTextarea]) => (
         <div key={field}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "8px", flexWrap: "wrap", gap: "6px" }}>
             <SectionLabel>{label}</SectionLabel>
@@ -587,8 +583,8 @@ export default function PromptEngine() {
             </div>
           </div>
           {isTextarea
-            ? <TextArea value={val} onChange={v => { setter(v); trackActivity(); }} placeholder={placeholder} />
-            : <Input value={val} onChange={v => { setter(v); trackActivity(); }} placeholder={placeholder} />
+            ? <TextArea value={val} onChange={v => { setter(v); trackActivity(); }} placeholder={field === "description" ? "What is this Claude project designed to do?" : "What outcomes should this project produce?"} />
+            : <Input value={val} onChange={v => { setter(v); trackActivity(); }} placeholder={field === "name" ? "My AI project" : "e.g. B2B SaaS sales, medical research, creative writing..."} />
           }
           <RefinePanel field={field} suggestion={refineSuggestions[field]} />
         </div>
@@ -725,8 +721,8 @@ export default function PromptEngine() {
         {priorities.map((p, i) => (
           <Card key={i} style={{ display: "flex", alignItems: "center", gap: "12px", cursor: "grab", opacity: dragIdx === i ? 0.5 : 1, borderColor: dragOverIdx === i ? "rgba(212,162,78,0.5)" : undefined, transform: dragOverIdx === i ? "scale(1.02)" : "scale(1)", transition: "transform 0.2s, border-color 0.2s, opacity 0.2s" }}
             draggable onDragStart={() => handleDragStart(i)} onDragOver={e => handleDragOver(e, i)} onDragEnd={handleDragEnd}>
-            <div style={{ display: "flex", alignItems: "center", gap: "2px", flexShrink: 0 }}>
-              <Sliders size={14} color="rgba(255,255,255,0.2)" style={{ cursor: "grab", marginRight: "4px" }} />
+            <div style={{ display: "flex", alignItems: "center", gap: "2px", flexShrink: 0, color: "rgba(255,255,255,0.2)" }}>
+              <Sliders size={14} style={{ cursor: "grab", marginRight: "4px" }} />
               <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
                 <button onClick={e => { e.stopPropagation(); movePriority(i, -1); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", lineHeight: 0, borderRadius: "4px" }}><ArrowUp size={12} color="rgba(255,255,255,0.35)" /></button>
                 <button onClick={e => { e.stopPropagation(); movePriority(i, 1); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", lineHeight: 0, borderRadius: "4px" }}><ArrowDown size={12} color="rgba(255,255,255,0.35)" /></button>
@@ -880,6 +876,7 @@ export default function PromptEngine() {
 
   const stepRenderers = [renderContext, renderIdentity, renderKnowledge, renderNegativeSpace, renderModes, renderPriority, renderFailure, renderTemplates, renderExamples, renderExport];
 
+  // ── Edit mode ──
   const SECTION_LABELS = { context: "Project Context", identity: "Identity", knowledge: "Knowledge", negatives: "Negative Space", modes: "Modes", priorities: "Priorities", failures: "Failure Preemption", templates: "Templates", examples: "Examples" };
 
   const renderParsedPreview = () => {
@@ -907,8 +904,8 @@ export default function PromptEngine() {
                     <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono', monospace", lineHeight: 1.5 }}>
                       {key === "context" && `${r.projectName ? `Name: ${r.projectName}  ` : ""}${r.domain ? `Domain: ${r.domain}` : ""}`}
                       {key === "identity" && r.identity?.title}
-                      {key === "modes" && r.modes?.map(m => m.name).join(", ")}
                       {["knowledge","negatives","priorities","failures","templates","examples"].includes(key) && `${r[key]?.length} item${r[key]?.length !== 1 ? "s" : ""}`}
+                      {key === "modes" && r.modes?.map(m => m.name).join(", ")}
                     </div>
                   </div>
                 </div>
@@ -936,7 +933,7 @@ export default function PromptEngine() {
   };
 
   const renderPreviewPanel = () => (
-    <div style={isMobile ? { position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 50, background: "rgba(0,0,0,0.9)", backdropFilter: "blur(10px)", display: showPreview ? "flex" : "none", flexDirection: "column" } : { width: showPreview ? "300px" : "0px", minWidth: showPreview ? "300px" : "0px", borderLeft: showPreview ? "1px solid rgba(255,255,255,0.06)" : "none", background: "rgba(0,0,0,0.15)", overflow: "hidden", transition: "all 0.3s", display: "flex", flexDirection: "column" }}>
+    <div style={isMobile ? { position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 50, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: showPreview ? "flex" : "none", flexDirection: "column" } : { width: showPreview ? "300px" : "0px", minWidth: showPreview ? "300px" : "0px", borderLeft: showPreview ? "1px solid rgba(255,255,255,0.06)" : "none", background: "rgba(0,0,0,0.15)", overflow: "hidden", transition: "all 0.3s", display: "flex", flexDirection: "column" }}>
       {showPreview && (
         <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
           <div style={{ padding: "14px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -1018,7 +1015,7 @@ export default function PromptEngine() {
                   </div>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                  <span style={{ fontSize: "11px", color: "#d4a24e", fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, padding: "4px 10px", borderRadius: "6px", background: "rgba(212,162,78,0.1)", border: "1px solid rgba(212,162,78,0.25)" }}>All Steps</span>
+                  <span style={{ fontSize: "11px", color: "#d4a24e", fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, padding: "4px 10px", borderRadius: "6px", background: "rgba(212,162,78,0.1)", border: "1px solid rgba(212,162,78,0.25)", letterSpacing: "0.5px" }}>All Steps</span>
                   <ChevronRight size={14} color="#d4a24e" style={{ transform: showMobileNav ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s" }} />
                 </div>
               </button>
