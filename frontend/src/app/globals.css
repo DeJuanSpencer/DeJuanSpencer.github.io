@@ -3,30 +3,33 @@
 
 :root {
   /* Brand palette */
-  --brand-foundation: #0D0D0F;
-  --brand-surface: #1A1A1E;
-  --brand-surface-hover: #222226;
-  --brand-gold: #C9A84C;
-  --brand-gold-muted: rgba(201,168,76,0.15);
-  --brand-gold-subtle: rgba(201,168,76,0.06);
+  --brand-foundation: #FAFAF7;
+  --brand-surface: #FFFFFF;
+  --brand-surface-hover: #F5F4F0;
+  --brand-gold: #B8972F;
+  --brand-gold-muted: rgba(184,151,47,0.1);
+  --brand-gold-subtle: rgba(184,151,47,0.04);
   --brand-red: #C0392B;
   --brand-red-hover: #A33025;
   --brand-violet: #4A3A6B;
-  --brand-violet-muted: rgba(74,58,107,0.2);
-  --brand-violet-text: #B8A9D4;
+  --brand-violet-muted: rgba(74,58,107,0.08);
+  --brand-violet-text: #5B4A82;
 
   /* Text */
-  --text-primary: #F0ECE2;
-  --text-secondary: #8A8279;
-  --text-tertiary: #555550;
+  --text-primary: #1A1A1A;
+  --text-secondary: #555555;
+  --text-tertiary: #999999;
 
   /* Borders */
-  --border-subtle: rgba(255,255,255,0.06);
-  --border-medium: rgba(255,255,255,0.12);
+  --border-subtle: rgba(0,0,0,0.06);
+  --border-medium: rgba(0,0,0,0.12);
 
   /* Backgrounds */
   --background: var(--brand-foundation);
   --foreground: var(--text-primary);
+
+  /* Section alternating */
+  --section-alt: #F3F2EE;
 }
 
 @theme inline {
@@ -45,12 +48,12 @@ body {
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
 
 /* Selection */
 ::selection {
   background: var(--brand-gold);
-  color: var(--brand-foundation);
+  color: #fff;
 }
 
 /* Focus */

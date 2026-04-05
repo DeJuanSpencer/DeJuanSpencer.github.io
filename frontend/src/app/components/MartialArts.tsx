@@ -21,6 +21,7 @@ export default function MartialArts() {
         style={{
           background: "var(--brand-surface)",
           border: "1px solid var(--border-subtle)",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
           position: "relative",
         }}
       >

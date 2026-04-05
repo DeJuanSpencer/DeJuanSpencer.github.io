@@ -32,7 +32,7 @@ export default function ContactForm() {
   const inputStyle = {
     width: "100%",
     padding: "12px 16px",
-    background: "rgba(255,255,255,0.04)",
+    background: "rgba(0,0,0,0.02)",
     border: "1px solid var(--border-medium)",
     borderRadius: "10px",
     color: "var(--text-primary)",
@@ -55,7 +55,7 @@ export default function ContactForm() {
       {submitted ? (
         <div
           className="text-center rounded-xl p-8"
-          style={{ background: "var(--brand-surface)", border: "1px solid var(--border-subtle)" }}
+          style={{ background: "var(--brand-surface)", border: "1px solid var(--border-subtle)", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}
         >
           <p style={{ color: "var(--brand-gold)", fontSize: "16px", fontWeight: 600 }}>
             Thanks for reaching out! I'll be in touch soon.
@@ -95,8 +95,8 @@ export default function ContactForm() {
             disabled={loading}
             className="w-full py-3 rounded-lg font-semibold transition-all duration-200"
             style={{
-              background: loading ? "rgba(201,168,76,0.3)" : "linear-gradient(135deg, var(--brand-gold), #a8862e)",
-              color: loading ? "rgba(255,255,255,0.4)" : "var(--brand-foundation)",
+              background: loading ? "rgba(184,151,47,0.3)" : "var(--brand-gold)",
+              color: loading ? "rgba(255,255,255,0.4)" : "#fff",
               fontSize: "15px",
               border: "none",
               cursor: loading ? "not-allowed" : "pointer",

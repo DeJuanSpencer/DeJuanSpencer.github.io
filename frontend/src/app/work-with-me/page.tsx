@@ -63,7 +63,7 @@ const inputStyle: React.CSSProperties = {
   fontFamily: "'DM Sans', sans-serif",
   border: "1px solid var(--border-medium)", borderRadius: "10px",
   outline: "none", boxSizing: "border-box",
-  color: "var(--text-primary)", background: "rgba(255,255,255,0.04)",
+  color: "var(--text-primary)", background: "rgba(0,0,0,0.02)",
   transition: "border-color 0.2s",
 };
 
@@ -75,7 +75,7 @@ const chipBase: React.CSSProperties = {
   padding: "8px 16px", fontSize: "13px",
   fontFamily: "'DM Sans', sans-serif",
   border: "1.5px solid var(--border-medium)", borderRadius: "24px",
-  background: "rgba(255,255,255,0.03)", cursor: "pointer",
+  background: "rgba(0,0,0,0.02)", cursor: "pointer",
   color: "var(--text-secondary)", transition: "all 0.15s ease", lineHeight: 1.3,
 };
 
@@ -88,7 +88,7 @@ const chipOn: React.CSSProperties = {
 const cardBase: React.CSSProperties = {
   display: "flex", flexDirection: "column", alignItems: "flex-start",
   padding: "14px", border: "1.5px solid var(--border-medium)",
-  borderRadius: "10px", background: "rgba(255,255,255,0.03)", cursor: "pointer",
+  borderRadius: "10px", background: "rgba(0,0,0,0.02)", cursor: "pointer",
   textAlign: "left", transition: "all 0.15s ease",
 };
 
@@ -188,10 +188,10 @@ export default function WorkWithMePage() {
           width: "100%", maxWidth: 540, background: "var(--brand-surface)",
           borderRadius: 14, border: "1px solid var(--border-subtle)",
           padding: "0 36px 36px",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.2), 0 0.5px 1px rgba(0,0,0,0.15)",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.06), 0 0.5px 1px rgba(0,0,0,0.04)",
         }}>
           {/* Progress bar */}
-          <div style={{ height: 2, background: "rgba(255,255,255,0.06)", margin: "0 -36px 28px", borderRadius: "14px 14px 0 0", overflow: "hidden" }}>
+          <div style={{ height: 2, background: "rgba(0,0,0,0.04)", margin: "0 -36px 28px", borderRadius: "14px 14px 0 0", overflow: "hidden" }}>
             <div style={{ height: "100%", background: "var(--brand-gold)", transition: "width 0.5s cubic-bezier(0.4,0,0.2,1)", width: `${progress}%` }} />
           </div>
 
@@ -214,8 +214,8 @@ export default function WorkWithMePage() {
                 </p>
                 <button onClick={next} style={{
                   padding: "12px 30px", fontSize: "14.5px", fontWeight: 500,
-                  background: "linear-gradient(135deg, var(--brand-gold), #a8862e)",
-                  color: "var(--brand-foundation)", border: "none", borderRadius: 8, cursor: "pointer",
+                  background: "var(--brand-gold)",
+                  color: "#fff", border: "none", borderRadius: 8, cursor: "pointer",
                   fontFamily: "'DM Sans', sans-serif",
                 }}>Get Started</button>
               </div>
@@ -318,7 +318,7 @@ export default function WorkWithMePage() {
                   placeholder="Special requirements, questions, ideas..." rows={3} />
               </Field>
               {sendError && (
-                <p style={{ fontSize: 13, color: "#dc5050", marginTop: 14, padding: "10px 14px", background: "rgba(220,80,80,0.08)", borderRadius: 8, border: "1px solid rgba(220,80,80,0.2)" }}>
+                <p style={{ fontSize: 13, color: "#dc5050", marginTop: 14, padding: "10px 14px", background: "rgba(220,80,80,0.05)", borderRadius: 8, border: "1px solid rgba(220,80,80,0.15)" }}>
                   {sendError}
                 </p>
               )}
@@ -366,8 +366,8 @@ export default function WorkWithMePage() {
                 <button
                   style={{
                     padding: "12px 30px", fontSize: "14.5px", fontWeight: 500,
-                    background: canAdvance() ? "linear-gradient(135deg, var(--brand-gold), #a8862e)" : "rgba(201,168,76,0.2)",
-                    color: canAdvance() ? "var(--brand-foundation)" : "rgba(255,255,255,0.3)",
+                    background: canAdvance() ? "var(--brand-gold)" : "rgba(184,151,47,0.2)",
+                    color: canAdvance() ? "#fff" : "rgba(0,0,0,0.25)",
                     border: "none", borderRadius: 8,
                     cursor: canAdvance() ? "pointer" : "not-allowed",
                     fontFamily: "'DM Sans', sans-serif",
@@ -377,8 +377,8 @@ export default function WorkWithMePage() {
                 <button
                   style={{
                     padding: "12px 30px", fontSize: "14.5px", fontWeight: 500,
-                    background: (canAdvance() && !sending) ? "linear-gradient(135deg, var(--brand-gold), #a8862e)" : "rgba(201,168,76,0.2)",
-                    color: (canAdvance() && !sending) ? "var(--brand-foundation)" : "rgba(255,255,255,0.3)",
+                    background: (canAdvance() && !sending) ? "var(--brand-gold)" : "rgba(184,151,47,0.2)",
+                    color: (canAdvance() && !sending) ? "#fff" : "rgba(0,0,0,0.25)",
                     border: "none", borderRadius: 8, minWidth: 150,
                     cursor: (canAdvance() && !sending) ? "pointer" : "not-allowed",
                     fontFamily: "'DM Sans', sans-serif",
@@ -388,7 +388,7 @@ export default function WorkWithMePage() {
                     <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                       <span style={{
                         display: "inline-block", width: 14, height: 14,
-                        border: "2px solid rgba(0,0,0,0.2)", borderTopColor: "var(--brand-foundation)",
+                        border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff",
                         borderRadius: "50%", animation: "spin 0.6s linear infinite",
                       }} /> Sending...
                     </span>
@@ -410,7 +410,7 @@ export default function WorkWithMePage() {
         @keyframes spin { to { transform: rotate(360deg); } }
         input:focus, textarea:focus {
           border-color: var(--brand-gold) !important;
-          box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+          box-shadow: 0 0 0 3px rgba(184,151,47,0.08);
         }
         button:hover:not(:disabled) { opacity: 0.88; }
       `}</style>

@@ -16,7 +16,7 @@ export default function Hero() {
           width: "600px",
           height: "600px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(184,151,47,0.06) 0%, transparent 70%)",
           pointerEvents: "none",
         }}
       />
@@ -70,8 +70,8 @@ export default function Hero() {
           href="#projects"
           className="px-7 py-3 rounded-lg font-semibold transition-all duration-200"
           style={{
-            background: "linear-gradient(135deg, var(--brand-gold), #a8862e)",
-            color: "var(--brand-foundation)",
+            background: "var(--brand-gold)",
+            color: "#fff",
             fontSize: "15px",
           }}
         >

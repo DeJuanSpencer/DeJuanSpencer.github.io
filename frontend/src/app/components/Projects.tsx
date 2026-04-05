@@ -19,14 +19,15 @@ export default function Projects() {
             style={{
               background: "var(--brand-surface)",
               border: "1px solid var(--border-subtle)",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.borderColor = "rgba(201,168,76,0.2)";
-              (e.currentTarget as HTMLElement).style.background = "var(--brand-surface-hover)";
+              (e.currentTarget as HTMLElement).style.borderColor = "rgba(184,151,47,0.3)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 12px rgba(0,0,0,0.06)";
             }}
             onMouseLeave={(e) => {
               (e.currentTarget as HTMLElement).style.borderColor = "var(--border-subtle)";
-              (e.currentTarget as HTMLElement).style.background = "var(--brand-surface)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 1px 3px rgba(0,0,0,0.04)";
             }}
           >
             <h3

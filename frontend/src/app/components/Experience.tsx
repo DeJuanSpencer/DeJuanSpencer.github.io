@@ -54,6 +54,7 @@ export default function Experience() {
             style={{
               background: "var(--brand-surface)",
               border: "1px solid var(--border-subtle)",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
             }}
           >
             <h3 className="text-xl font-semibold" style={{ color: "var(--text-primary)" }}>
