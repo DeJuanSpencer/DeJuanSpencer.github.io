@@ -7,6 +7,7 @@ import {
   Zap, ToggleLeft, ToggleRight, ArrowUp, ArrowDown,
   CheckCircle2, Circle, X, Lightbulb, Wand2, Download
 } from "lucide-react";
+import Header from "./Header";
 
 const VERSION = "v1.6";
 
@@ -47,7 +48,6 @@ const extractJSON = (text) => {
   return null;
 };
 
-// FIX 3: safeParseJSON with fallbacks
 const safeParseJSON = (str) => {
   try { return JSON.parse(str); } catch {}
   try { return JSON.parse(str.replace(/[\x00-\x1F\x7F]/g, " ")); } catch {}
@@ -58,7 +58,6 @@ const safeParseJSON = (str) => {
   return null;
 };
 
-// FIX 1: /api/claude proxy | FIX 2: claude-sonnet-4-6 | FIX 4: _error propagation
 const callClaude = async (systemPrompt, userPrompt, maxTokens = 2000) => {
   try {
     const response = await fetch("/api/claude", {
@@ -226,7 +225,6 @@ export default function PromptEngine() {
   const lastActivity = useRef(Date.now());
   const idleTimer = useRef(null);
 
-  // Gate & feedback (from their version)
   const [userEmail, setUserEmail] = useState("");
   const [gateUnlocked, setGateUnlocked] = useState(false);
   const [gateError, setGateError] = useState("");
@@ -487,7 +485,6 @@ export default function PromptEngine() {
     if (id === "examples" && !examples.length) await generateExamples();
   });
 
-  // FIX 5: improved prompt, 8000 char slice, 4000 tokens, _error check
   const handleEditParse = () => withLoading(async () => {
     const r = await callClaude(
       `You extract structured information from any Claude project instructions or context document — whether it is a compiled lever output, strategic prose, or a mix of both. Do your best to populate as many fields as possible. If a field cannot be determined, use an empty string or empty array. Never omit a key. Return ONLY valid JSON with exactly this shape, no preamble, no markdown:
@@ -935,7 +932,6 @@ export default function PromptEngine() {
           <pre style={{ color: "#e0e0e0", fontSize: "13px", fontFamily: "'JetBrains Mono', monospace", margin: 0, whiteSpace: "pre-wrap", lineHeight: 1.7 }}>{compiledOutput}</pre>
         </div>
       </div>
-      {/* Feedback — from their version */}
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: "24px" }}>
         <SectionLabel>Feedback</SectionLabel>
         <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.35)", fontFamily: "'JetBrains Mono', monospace", marginTop: "-10px", marginBottom: "10px" }}>How was your experience? What would make this better?</div>
@@ -1043,6 +1039,8 @@ export default function PromptEngine() {
   );
 
   return (
+    <>
+    {!gateUnlocked && <Header />}
     <div style={{ minHeight: "100vh", background: "#111113", color: "#e0e0e0", fontFamily: "'DM Sans', sans-serif", display: "flex", flexDirection: "column" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
@@ -1066,7 +1064,6 @@ export default function PromptEngine() {
       {showFireworks && <Fireworks />}
 
       {!gateUnlocked ? (
-        /* ── Email Gate ── */
         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: isMobile ? "32px 20px" : "60px 24px", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", top: "20%", left: "50%", transform: "translateX(-50%)", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(212,162,78,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
           <div className="gate-fade" style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "32px" }}>
@@ -1106,7 +1103,6 @@ export default function PromptEngine() {
         </div>
       ) : (
         <>
-        {/* Header */}
         <div style={{ padding: isMobile ? "12px 16px" : "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(0,0,0,0.2)", flexWrap: "wrap", gap: "8px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: isMobile ? "10px" : "14px" }}>
             <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "linear-gradient(135deg, #d4a24e, #b8862e)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><Zap size={18} color="#1a1a1a" /></div>
@@ -1126,7 +1122,6 @@ export default function PromptEngine() {
           </div>
         </div>
 
-        {/* Body */}
         <div style={{ display: "flex", flex: 1, overflow: "hidden", flexDirection: isMobile ? "column" : "row" }}>
           {appMode === "create" && (
             isMobile ? (
@@ -1221,5 +1216,6 @@ export default function PromptEngine() {
         </>
       )}
     </div>
+    </>
   );
 }
