@@ -43,6 +43,12 @@ export default function MartialArts() {
         >
           &ldquo;Discipline bridges the gap between vision and execution.&rdquo;
         </p>
+        <p
+          className="mt-3 text-sm"
+          style={{ color: "var(--text-tertiary)", fontFamily: "var(--font-mono)", fontSize: "12px" }}
+        >
+          &mdash; Jim Rohn
+        </p>
       </div>
     </section>
   );

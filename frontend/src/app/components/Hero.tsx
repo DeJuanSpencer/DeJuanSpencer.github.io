@@ -31,6 +31,8 @@ export default function Hero() {
         }}
       >
         &ldquo;Be the designer of your world and not merely the consumer of it.&rdquo;
+        <br />
+        <span style={{ fontSize: "10px", fontWeight: 400, letterSpacing: "1.5px", opacity: 0.7 }}>&mdash; James Clear</span>
       </p>
 
       <h1
