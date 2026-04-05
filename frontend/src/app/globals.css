@@ -63,3 +63,17 @@ input:focus, textarea:focus {
 html {
   scroll-behavior: smooth;
 }
+
+/* Nav layouts */
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.mobile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
+}

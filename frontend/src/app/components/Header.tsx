@@ -26,7 +26,7 @@ export default function Header() {
         </Link>
 
         <div className="hidden md:flex">
-          <Links />
+          <Links className="desktop-nav" />
         </div>
 
         <button
@@ -45,7 +45,7 @@ export default function Header() {
           style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
         >
           <Links
-            className="flex flex-col space-y-3 pt-3"
+            className="mobile-nav"
             onClick={() => setMenuOpen(false)}
           />
         </div>

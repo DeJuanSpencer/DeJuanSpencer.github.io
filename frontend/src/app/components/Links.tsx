@@ -18,12 +18,12 @@ type Props = {
 
 export default function Links({ className = "", onClick }: Props) {
   return (
-    <nav className={`space-x-0 md:space-x-6 font-medium ${className}`}>
+    <nav className={className}>
       {navLinks.map((link) => (
         <Link
           key={link.href}
           href={link.href}
-          className="block md:inline transition-colors duration-200"
+          className="transition-colors duration-200"
           style={{
             color: link.highlight
               ? "var(--brand-red)"
