@@ -3,10 +3,10 @@
 import Link from "next/link";
 
 const navLinks = [
-  { name: "About", href: "#about" },
-  { name: "Projects", href: "#projects" },
-  { name: "Experience", href: "#experience" },
-  { name: "Contact", href: "#contact" },
+  { name: "About", href: "/#about" },
+  { name: "Projects", href: "/#projects" },
+  { name: "Experience", href: "/#experience" },
+  { name: "Contact", href: "/#contact" },
   { name: "Work With Me", href: "/work-with-me", highlight: true },
   { name: "Prompt Engine", href: "/prompt-engine", accent: true },
 ];
