@@ -1,4 +1,5 @@
 "use client";
+
 export default function Hero() {
   return (
     <section
@@ -29,7 +30,7 @@ export default function Hero() {
           fontSize: "12px",
         }}
       >
-        Built in Cleveland. Refined in Irvine.
+        &ldquo;Be the designer of your world and not merely the consumer of it.&rdquo;
       </p>
 
       <h1
