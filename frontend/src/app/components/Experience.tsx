@@ -16,7 +16,7 @@ const experience = [
   {
     title: "Software Development Consultant",
     company: "Insight Enterprises",
-    duration: "May 2022 - Nov 2024",
+    duration: "Dec 2025 - Present",
     bullets: [
       "Built full-stack features using .NET, Angular, and Python for enterprise clients.",
       "Developed reusable UI components and modular architecture using Atomic Design.",

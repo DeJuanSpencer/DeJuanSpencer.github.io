@@ -51,7 +51,7 @@ export default function Hero() {
           lineHeight: 1.7,
         }}
       >
-        Software Engineer &bull; Systems Thinker &bull; Martial Arts Instructor
+        Software Engineer &bull; Systems Thinker &bull; Veteran &bull; Martial Arts Instructor
         <br />
         Building scalable, intelligent systems at the intersection of tech and strategy.
       </p>

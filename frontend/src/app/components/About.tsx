@@ -10,15 +10,14 @@ export default function About() {
       </h2>
 
       <p className="text-lg leading-relaxed" style={{ color: "var(--text-secondary)", lineHeight: 1.8 }}>
-        I'm a Software Engineer and Intelligence Analyst with a Top
+        I'm a Software Engineer and U.S. Army Veteran with a Top
         Secret Security Clearance. I bring a unique blend of problem-solving,
         discipline, and innovation from both the tech industry and military
         intelligence space. My toolkit includes technologies like{" "}
         <span style={{ color: "var(--brand-gold)", fontWeight: 600 }}>
-          Java, .NET, Python, Next, Azure, and Power Platform
+          Java, .NET, Python, React, Angular, Next, Azure, and Power Platform
         </span>
-        , and I'm passionate about building scalable, mission-critical software
-        for public and private sector clients.
+        , and I'm passionate about building scalable, mission-critical software.
       </p>
 
       <p className="text-lg leading-relaxed mt-5" style={{ color: "var(--text-secondary)", lineHeight: 1.8 }}>
