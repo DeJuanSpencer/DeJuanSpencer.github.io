@@ -89,14 +89,7 @@ export default function Hero() {
         >
           Contact Me
         </a>
-        <a
-          href="/resume.pdf"
-          className="text-sm pt-2 md:pt-3 block transition-colors duration-200"
-          style={{ color: "var(--text-tertiary)", textDecoration: "underline" }}
-          download
-        >
-          Download Resume
-        </a>
+
       </div>
     </section>
   );
