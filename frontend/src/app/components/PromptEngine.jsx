@@ -7,7 +7,7 @@ import {
   Zap, ToggleLeft, ToggleRight, ArrowUp, ArrowDown,
   CheckCircle2, Circle, X, Lightbulb, Wand2, Download
 } from "lucide-react";
-import Header from "./Header";
+
 
 const VERSION = "v1.6";
 
@@ -1039,8 +1039,6 @@ export default function PromptEngine() {
   );
 
   return (
-    <>
-    {!gateUnlocked && <Header />}
     <div style={{ minHeight: "100vh", background: "#111113", color: "#e0e0e0", fontFamily: "'DM Sans', sans-serif", display: "flex", flexDirection: "column" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
@@ -1065,6 +1063,9 @@ export default function PromptEngine() {
 
       {!gateUnlocked ? (
         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: isMobile ? "32px 20px" : "60px 24px", position: "relative", overflow: "hidden" }}>
+          <a href="/" style={{ position: "absolute", top: isMobile ? "16px" : "24px", left: isMobile ? "16px" : "24px", display: "flex", alignItems: "center", gap: "6px", color: "rgba(255,255,255,0.4)", fontSize: "13px", textDecoration: "none", fontFamily: "'DM Sans', sans-serif", transition: "color 0.2s", zIndex: 1 }} onMouseEnter={e => (e.currentTarget.style.color = "#d4a24e")} onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.4)")}>
+            <ChevronLeft size={16} /> dejuanspencer.com
+          </a>
           <div style={{ position: "absolute", top: "20%", left: "50%", transform: "translateX(-50%)", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(212,162,78,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
           <div className="gate-fade" style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "32px" }}>
             <div style={{ width: "48px", height: "48px", borderRadius: "14px", background: "linear-gradient(135deg, #d4a24e, #b8862e)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -1119,6 +1120,10 @@ export default function PromptEngine() {
               {showPreview ? <PanelRightClose size={18} color="rgba(255,255,255,0.5)" /> : <PanelRightOpen size={18} color="rgba(255,255,255,0.5)" />}
               {!isMobile && <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.35)", fontFamily: "'JetBrains Mono', monospace" }}>Preview</span>}
             </button>
+            <div style={{ width: "1px", height: "24px", background: "rgba(255,255,255,0.1)", margin: "0 2px" }} />
+            <a href="/" style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", display: "flex", alignItems: "center", gap: "4px", textDecoration: "none" }} title="Back to site">
+              <X size={18} color="rgba(255,255,255,0.4)" />
+            </a>
           </div>
         </div>
 
@@ -1216,6 +1221,5 @@ export default function PromptEngine() {
         </>
       )}
     </div>
-    </>
   );
 }
