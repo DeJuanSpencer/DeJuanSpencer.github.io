@@ -1076,9 +1076,21 @@ export default function PromptEngine() {
               <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono', monospace" }}>Project Instructions Builder · {VERSION}</div>
             </div>
           </div>
-          <p className="gate-fade-2" style={{ fontSize: isMobile ? "15px" : "17px", color: "rgba(255,255,255,0.55)", textAlign: "center", maxWidth: "480px", lineHeight: 1.7, marginBottom: "36px" }}>
+          <p className="gate-fade-2" style={{ fontSize: isMobile ? "15px" : "17px", color: "rgba(255,255,255,0.55)", textAlign: "center", maxWidth: "480px", lineHeight: 1.7, marginBottom: "28px" }}>
             Build structured, high-quality Claude project instructions in minutes. Walk through 9 guided levers and export a complete instruction set, ready to paste.
           </p>
+          <div className="gate-fade-2" style={{ maxWidth: "440px", marginBottom: "32px", display: "flex", flexDirection: "column", gap: "12px" }}>
+            {[
+              { q: "What are project instructions?", a: "A set of rules you give Claude before any conversation starts. They define who it is, what it knows, and how it should operate." },
+              { q: "Why do they matter?", a: "Without them, Claude guesses what you need every time. With them, it executes like a specialist from the first message." },
+              { q: "What does this tool do?", a: "It walks you through 9 guided steps to generate those instructions automatically, so you don't have to write them from scratch." },
+            ].map(({ q, a }) => (
+              <div key={q} style={{ textAlign: "left" }}>
+                <div style={{ fontSize: "12px", fontFamily: "'JetBrains Mono', monospace", color: "#d4a24e", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "4px", fontWeight: 600 }}>{q}</div>
+                <div style={{ fontSize: "14px", color: "rgba(255,255,255,0.45)", lineHeight: 1.6 }}>{a}</div>
+              </div>
+            ))}
+          </div>
           <div className="gate-fade-3" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", width: "100%", maxWidth: "380px" }}>
             <input
               type="email"
