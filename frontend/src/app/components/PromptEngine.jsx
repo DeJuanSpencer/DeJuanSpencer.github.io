@@ -222,6 +222,7 @@ export default function PromptEngine() {
   const [dragOverIdx, setDragOverIdx] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   const [showMobileNav, setShowMobileNav] = useState(false);
+  const [flippedCards, setFlippedCards] = useState({ without: false, with: false });
   const lastActivity = useRef(Date.now());
   const idleTimer = useRef(null);
 
@@ -1055,6 +1056,11 @@ export default function PromptEngine() {
         .gate-fade-3 { animation: gateFade 0.6s 0.3s ease forwards; opacity: 0; }
         textarea:focus, input:focus { border-color: rgba(212,162,78,0.4) !important; }
         button:hover:not(:disabled) { opacity: 0.85; }
+        .flip-card { perspective: 800px; cursor: pointer; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .flip-card-inner.flipped { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { position: absolute; top: 0; left: 0; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 12px; box-sizing: border-box; overflow: hidden; }
+        .flip-card-back { transform: rotateY(180deg); }
         @media (max-width: 767px) { textarea, input { font-size: 16px !important; } }
       `}</style>
 
@@ -1077,19 +1083,90 @@ export default function PromptEngine() {
             </div>
           </div>
           <p className="gate-fade-2" style={{ fontSize: isMobile ? "15px" : "17px", color: "rgba(255,255,255,0.55)", textAlign: "center", maxWidth: "480px", lineHeight: 1.7, marginBottom: "28px" }}>
-            Build structured, high-quality Claude project instructions in minutes. Walk through 9 guided levers and export a complete instruction set, ready to paste.
+            Claude projects let you set custom instructions that shape every conversation. Most people skip them because writing them from scratch is hard. This tool builds them for you.
           </p>
-          <div className="gate-fade-2" style={{ maxWidth: "440px", marginBottom: "32px", display: "flex", flexDirection: "column", gap: "12px" }}>
-            {[
-              { q: "What are project instructions?", a: "A set of rules you give Claude before any conversation starts. They define who it is, what it knows, and how it should operate." },
-              { q: "Why do they matter?", a: "Without them, Claude guesses what you need every time. With them, it executes like a specialist from the first message." },
-              { q: "What does this tool do?", a: "It walks you through 9 guided steps to generate those instructions automatically, so you don't have to write them from scratch." },
-            ].map(({ q, a }) => (
-              <div key={q} style={{ textAlign: "left" }}>
-                <div style={{ fontSize: "12px", fontFamily: "'JetBrains Mono', monospace", color: "#d4a24e", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "4px", fontWeight: 600 }}>{q}</div>
-                <div style={{ fontSize: "14px", color: "rgba(255,255,255,0.45)", lineHeight: 1.6 }}>{a}</div>
+          <div className="gate-fade-2" style={{ maxWidth: isMobile ? "100%" : "580px", width: "100%", marginBottom: "32px", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? "12px" : "16px" }}>
+            <div className="flip-card" style={{ height: isMobile ? "280px" : "300px" }} onClick={() => setFlippedCards(p => ({ ...p, without: !p.without }))}>
+              <div className={`flip-card-inner${flippedCards.without ? " flipped" : ""}`}>
+                <div className="flip-card-front" style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.02)", padding: "16px", display: "flex", flexDirection: "column" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                    <div style={{ fontSize: "10px", fontFamily: "'JetBrains Mono', monospace", color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "1.5px", fontWeight: 600 }}>Without instructions</div>
+                    <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.2)", fontFamily: "'JetBrains Mono', monospace" }}>tap to flip</div>
+                  </div>
+                  <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: "8px", padding: "10px 12px", marginBottom: "8px" }}>
+                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", marginBottom: "4px", fontFamily: "'JetBrains Mono', monospace" }}>PROMPT</div>
+                    <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)", lineHeight: 1.5 }}>"Help me write a cold email to a prospect"</div>
+                  </div>
+                  <div style={{ background: "rgba(255,255,255,0.02)", borderRadius: "8px", padding: "10px 12px", flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.25)", textAlign: "center" }}>No project instructions set.<br />Claude uses default behavior.</div>
+                  </div>
+                </div>
+                <div className="flip-card-back" style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", padding: "16px", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                    <div style={{ fontSize: "10px", fontFamily: "'JetBrains Mono', monospace", color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "1.5px", fontWeight: 600 }}>Claude's response</div>
+                    <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.2)", fontFamily: "'JetBrains Mono', monospace" }}>tap to flip</div>
+                  </div>
+                  <div style={{ background: "rgba(255,255,255,0.02)", borderRadius: "8px", padding: "12px", flex: 1, overflowY: "auto" }}>
+                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.45)", lineHeight: 1.7, fontFamily: "'JetBrains Mono', monospace" }}>
+                      <div style={{ color: "rgba(255,255,255,0.3)", marginBottom: "6px" }}>Subject: Introduction and Opportunity</div>
+                      <div>Hi [Name],</div>
+                      <br />
+                      <div>I hope this email finds you well. My name is [Your Name] and I work at [Company]. We help businesses like yours achieve [value proposition].</div>
+                      <br />
+                      <div>I'd love to schedule a quick 15-minute call to discuss how we might be able to help.</div>
+                      <br />
+                      <div>Looking forward to hearing from you.</div>
+                      <br />
+                      <div>Best regards,<br />[Your Name]</div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            ))}
+            </div>
+            <div className="flip-card" style={{ height: isMobile ? "280px" : "300px" }} onClick={() => setFlippedCards(p => ({ ...p, with: !p.with }))}>
+              <div className={`flip-card-inner${flippedCards.with ? " flipped" : ""}`}>
+                <div className="flip-card-front" style={{ border: "1px solid rgba(212,162,78,0.25)", background: "rgba(212,162,78,0.04)", padding: "16px", display: "flex", flexDirection: "column" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                    <div style={{ fontSize: "10px", fontFamily: "'JetBrains Mono', monospace", color: "#d4a24e", textTransform: "uppercase", letterSpacing: "1.5px", fontWeight: 600 }}>With instructions</div>
+                    <div style={{ fontSize: "10px", color: "rgba(212,162,78,0.4)", fontFamily: "'JetBrains Mono', monospace" }}>tap to flip</div>
+                  </div>
+                  <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: "8px", padding: "10px 12px", marginBottom: "8px" }}>
+                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", marginBottom: "4px", fontFamily: "'JetBrains Mono', monospace" }}>PROMPT</div>
+                    <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)", lineHeight: 1.5 }}>"Help me write a cold email to a prospect"</div>
+                  </div>
+                  <div style={{ background: "rgba(212,162,78,0.06)", borderRadius: "8px", padding: "10px 12px", flex: 1, overflowY: "auto" }}>
+                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", marginBottom: "6px", fontFamily: "'JetBrains Mono', monospace" }}>PROJECT INSTRUCTIONS</div>
+                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", lineHeight: 1.6, fontFamily: "'JetBrains Mono', monospace" }}>
+                      Identity: B2B sales consultant<br />
+                      Tone: direct, conversational, no fluff<br />
+                      Never use "I hope this finds you well"<br />
+                      Lead with the prospect's problem<br />
+                      Keep under 80 words
+                    </div>
+                  </div>
+                </div>
+                <div className="flip-card-back" style={{ border: "1px solid rgba(212,162,78,0.25)", background: "rgba(212,162,78,0.04)", padding: "16px", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                    <div style={{ fontSize: "10px", fontFamily: "'JetBrains Mono', monospace", color: "#d4a24e", textTransform: "uppercase", letterSpacing: "1.5px", fontWeight: 600 }}>Claude's response</div>
+                    <div style={{ fontSize: "10px", color: "rgba(212,162,78,0.4)", fontFamily: "'JetBrains Mono', monospace" }}>tap to flip</div>
+                  </div>
+                  <div style={{ background: "rgba(212,162,78,0.06)", borderRadius: "8px", padding: "12px", flex: 1, overflowY: "auto" }}>
+                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, fontFamily: "'JetBrains Mono', monospace" }}>
+                      <div style={{ color: "#d4a24e", marginBottom: "6px" }}>Subject: Cutting your onboarding time in half</div>
+                      <div>[First Name],</div>
+                      <br />
+                      <div>Most SaaS teams lose 3-4 weeks onboarding each new client. That's revenue sitting idle.</div>
+                      <br />
+                      <div>We built a system that cuts that window to under 10 days. [Company X] used it to onboard 40% more clients last quarter without adding headcount.</div>
+                      <br />
+                      <div>Worth a 10-minute look?</div>
+                      <br />
+                      <div>[Your Name]</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div className="gate-fade-3" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", width: "100%", maxWidth: "380px" }}>
             <input
