@@ -965,7 +965,7 @@ export default function PromptEngine() {
   const renderParsedPreview = () => {
     const r = parsedPreview;
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: isMobile ? "16px" : "30px" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: isMobile ? "16px" : "32px 40px", maxWidth: "640px", margin: "0 auto" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
             <SectionLabel>Import Preview</SectionLabel>
@@ -1004,7 +1004,7 @@ export default function PromptEngine() {
   const renderEditMode = () => {
     if (parsedPreview) return renderParsedPreview();
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: isMobile ? "16px" : "30px" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: isMobile ? "16px" : "32px 40px", maxWidth: "640px", margin: "0 auto" }}>
         <SectionLabel>Paste Existing Project Instructions</SectionLabel>
         <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "13px", margin: 0 }}>Paste your current project instructions. Claude will extract each section so you can review and selectively import before anything is overwritten.</p>
         <TextArea value={pastedInstructions} onChange={setPastedInstructions} placeholder="Paste your project instructions here..." rows={12} />
@@ -1280,7 +1280,7 @@ export default function PromptEngine() {
 
           <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column" }}>
             {appMode === "edit" ? renderEditMode() : (
-              <div style={{ padding: isMobile ? "16px" : "24px 30px", flex: 1, maxWidth: "720px" }}>
+              <div style={{ padding: isMobile ? "16px" : "32px 40px", flex: 1, maxWidth: "640px", margin: "0 auto" }}>
                 <div style={{ marginBottom: "24px" }}>
                   <span style={{ fontSize: "11px", fontFamily: "'JetBrains Mono', monospace", color: "rgba(255,255,255,0.3)" }}>STEP {step + 1} / {STEPS.length}</span>
                   <h2 style={{ fontSize: "22px", fontWeight: 700, letterSpacing: "-0.5px", marginTop: "4px" }}>{STEPS[step].label}</h2>
