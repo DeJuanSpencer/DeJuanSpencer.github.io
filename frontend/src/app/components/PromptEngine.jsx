@@ -1280,7 +1280,7 @@ export default function PromptEngine() {
 
           <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column" }}>
             {appMode === "edit" ? renderEditMode() : (
-              <div style={{ padding: isMobile ? "16px" : "24px 30px", flex: 1 }}>
+              <div style={{ padding: isMobile ? "16px" : "24px 30px", flex: 1, maxWidth: "720px" }}>
                 <div style={{ marginBottom: "24px" }}>
                   <span style={{ fontSize: "11px", fontFamily: "'JetBrains Mono', monospace", color: "rgba(255,255,255,0.3)" }}>STEP {step + 1} / {STEPS.length}</span>
                   <h2 style={{ fontSize: "22px", fontWeight: 700, letterSpacing: "-0.5px", marginTop: "4px" }}>{STEPS[step].label}</h2>
