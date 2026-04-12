@@ -276,6 +276,7 @@ export default function PromptEngine() {
                   <div style={{ marginBottom: "24px" }}>
                     <span style={{ fontSize: "11px", fontFamily: "'JetBrains Mono', monospace", color: "rgba(255,255,255,0.4)" }}>STEP {pe.step + 1} / {STEPS.length}</span>
                     <h2 style={{ fontSize: "22px", fontWeight: 700, letterSpacing: "-0.5px", marginTop: "4px" }}>{STEPS[pe.step].label}</h2>
+                    <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.45)", marginTop: "6px", lineHeight: 1.6, fontFamily: "'DM Sans', sans-serif" }}>{STEPS[pe.step].desc}</p>
                   </div>
 
                   {/* Idle assist nudge */}

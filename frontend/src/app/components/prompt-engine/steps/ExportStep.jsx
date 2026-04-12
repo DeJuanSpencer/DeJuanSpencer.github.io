@@ -9,7 +9,8 @@ export function ExportStep({ projectBlurb, compiledOutput, customInjection, setC
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "10px" }}>
           <div>
             <SectionLabel>Step 1: Project Description</SectionLabel>
-            <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)", fontFamily: "'DM Sans', sans-serif", marginTop: "-10px", marginBottom: "10px" }}>Copy this and paste it into <strong style={{ color: "rgba(255,255,255,0.8)" }}>"What are you trying to achieve?"</strong> in Claude project settings.</div>
+            <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)", fontFamily: "'DM Sans', sans-serif", marginTop: "-10px", marginBottom: "6px" }}>Paste into <strong style={{ color: "rgba(255,255,255,0.8)" }}>"What are you trying to achieve?"</strong> in Claude project settings.</div>
+            <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.35)", fontFamily: "'JetBrains Mono', monospace", marginBottom: "10px" }}>Go to claude.ai → Projects → New project → Settings</div>
           </div>
           <Btn small primary onClick={onCopyBlurb}>{copiedBlurb ? <><Check size={14} /> Copied!</> : <><Copy size={14} /> Copy</>}</Btn>
         </div>
@@ -32,7 +33,7 @@ export function ExportStep({ projectBlurb, compiledOutput, customInjection, setC
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "10px" }}>
           <div>
             <SectionLabel>Step 2: Project Instructions</SectionLabel>
-            <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)", fontFamily: "'DM Sans', sans-serif", marginTop: "-10px", marginBottom: "10px" }}>Copy this and paste it into <strong style={{ color: "rgba(255,255,255,0.8)" }}>Custom Instructions</strong> in the same project settings page.</div>
+            <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)", fontFamily: "'DM Sans', sans-serif", marginTop: "-10px", marginBottom: "10px" }}>Paste into <strong style={{ color: "rgba(255,255,255,0.8)" }}>Custom Instructions</strong> in the same project settings page.</div>
           </div>
           <Btn small primary onClick={onCopy}>{copied ? <><Check size={14} /> Copied!</> : <><Copy size={14} /> Copy</>}</Btn>
         </div>
