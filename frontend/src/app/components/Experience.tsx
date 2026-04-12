@@ -4,7 +4,7 @@ const experience = [
     company: "Freelance",
     duration: "Nov 2024 – Present",
     bullets: [
-      "Designed and shipped full-stack applications using .NET, Angular, Next.js, and Python — covering architecture, CI/CD, and deployment.",
+      "Designed and shipped full-stack applications using .NET, Angular, Next.js, and Python, handling architecture, CI/CD, and deployment end to end.",
       "Built a reusable Atomic Design component library that accelerated UI development across multiple projects.",
       "Delivered GenAI tooling and prompt engineering frameworks for chat interfaces, content generation, and automation workflows.",
       "Applied Agile practices across solo sprints: scoping, building, testing, and iterating on production-grade software.",

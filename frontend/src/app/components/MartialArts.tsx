@@ -12,8 +12,7 @@ export default function MartialArts() {
         As a Sifu of Kuntao-Silat, I have trained and taught martial arts for
         years, cultivating discipline, patience, and precision. My approach to
         software mirrors my practice: methodical, adaptive, and rooted in
-        mastery of fundamentals. I build software the same way I train &mdash;
-        with a long view.
+        mastery of fundamentals. I build software the same way I train: with a long view.
       </p>
 
       <div

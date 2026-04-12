@@ -9,7 +9,7 @@ const services = [
     ),
     title: "Full-Stack Development",
     description:
-      "End-to-end web applications built with modern stacks — .NET, Angular, React/Next.js, and cloud-native architectures designed to scale.",
+      "End-to-end web applications built with .NET, Angular, React/Next.js, and cloud-native architectures designed to scale.",
   },
   {
     icon: (
@@ -29,7 +29,7 @@ const services = [
     ),
     title: "Cloud & Platform Engineering",
     description:
-      "Azure, AWS, and GCP deployments — CI/CD pipelines, infrastructure setup, SharePoint/Power Platform solutions, and DevOps best practices.",
+      "Azure, AWS, and GCP deployments: CI/CD pipelines, infrastructure setup, SharePoint/Power Platform solutions, and DevOps best practices.",
   },
 ];
 
@@ -43,9 +43,8 @@ export default function Services() {
         What I Do
       </h2>
       <p className="text-center mb-10 max-w-xl mx-auto" style={{ color: "var(--text-secondary)" }}>
-        I take projects from idea to production &mdash; whether you need a new
-        product built, an existing system improved, or intelligent automation
-        wired into your workflows.
+        I take projects from idea to production. Whether you need something new
+        built, an existing system improved, or automation wired into your workflows.
       </p>
 
       <div className="grid md:grid-cols-3 gap-6">

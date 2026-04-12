@@ -13,7 +13,7 @@ export default function About() {
         I'm a Software Engineer and U.S. Army Veteran with 5+ years of professional
         software delivery and a{" "}
         <span style={{ color: "var(--brand-gold)", fontWeight: 600 }}>Top Secret Security Clearance</span>.
-        I bring a rare combination of engineering precision and strategic analysis &mdash; honed
+        I bring a rare combination of engineering precision and strategic analysis, honed
         across enterprise consulting, military intelligence, and independent product development.
         My toolkit spans{" "}
         <span style={{ color: "var(--brand-gold)", fontWeight: 600 }}>

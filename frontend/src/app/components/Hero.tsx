@@ -85,7 +85,7 @@ export default function Hero() {
       >
         Software Engineer &bull; Systems Thinker &bull; Veteran &bull; Martial Arts Instructor
         <br />
-        I build scalable, secure software for ambitious teams &mdash; from enterprise platforms to AI-powered tools.
+        I build scalable, secure software for ambitious teams, from enterprise platforms to AI-powered tools.
       </p>
 
       <div className="flex flex-wrap justify-center gap-4 mb-6">
@@ -119,14 +119,6 @@ export default function Hero() {
         </a>
       </div>
 
-      <a
-        href="/resume.pdf"
-        download
-        style={{ color: "var(--text-tertiary)", fontSize: "13px" }}
-        className="hover:underline transition"
-      >
-        Download Resume
-      </a>
     </section>
   );
 }
