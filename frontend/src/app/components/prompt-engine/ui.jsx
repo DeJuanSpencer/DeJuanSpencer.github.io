@@ -14,12 +14,12 @@ export const Badge = ({ children, active, onClick }) => (
   }}>{children}</button>
 );
 
-export const Card = ({ children, style, highlight }) => (
+export const Card = ({ children, style, highlight, ...rest }) => (
   <div style={{
     background: highlight ? "rgba(212,162,78,0.06)" : "rgba(255,255,255,0.03)",
     border: highlight ? "1px solid rgba(212,162,78,0.3)" : "1px solid rgba(255,255,255,0.06)",
     borderRadius: "10px", padding: "16px", ...style,
-  }}>{children}</div>
+  }} {...rest}>{children}</div>
 );
 
 export const Btn = ({ children, onClick, primary, disabled, small, style: s }) => (
