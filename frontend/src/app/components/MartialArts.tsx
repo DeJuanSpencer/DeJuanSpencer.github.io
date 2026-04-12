@@ -9,6 +9,10 @@ export default function MartialArts() {
         thinking I bring to every software project. I build software the same
         way I train: methodically, with a long view.
       </p>
+
+      <p className="text-sm text-gray-500 italic mt-4">
+        &ldquo;Discipline bridges the gap between vision and execution.&rdquo;
+      </p>
     </section>
   );
 }
