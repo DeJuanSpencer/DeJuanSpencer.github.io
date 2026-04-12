@@ -1,26 +1,81 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand palette */
+  --brand-foundation: #FAFAF7;
+  --brand-surface: #FFFFFF;
+  --brand-surface-hover: #F5F4F0;
+  --brand-gold: #B8972F;
+  --brand-gold-muted: rgba(184,151,47,0.1);
+  --brand-gold-subtle: rgba(184,151,47,0.04);
+  --brand-red: #C0392B;
+  --brand-red-hover: #A33025;
+  --brand-violet: #4A3A6B;
+  --brand-violet-muted: rgba(74,58,107,0.08);
+  --brand-violet-text: #5B4A82;
+
+  /* Text */
+  --text-primary: #1A1A1A;
+  --text-secondary: #555555;
+  --text-tertiary: #999999;
+
+  /* Borders */
+  --border-subtle: rgba(0,0,0,0.06);
+  --border-medium: rgba(0,0,0,0.12);
+
+  /* Backgrounds */
+  --background: var(--brand-foundation);
+  --foreground: var(--text-primary);
+
+  /* Section alternating */
+  --section-alt: #F3F2EE;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--brand-foundation);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
+
+/* Selection */
+::selection {
+  background: var(--brand-gold);
+  color: #fff;
+}
+
+/* Focus */
+input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--brand-gold) !important;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Nav layouts */
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.mobile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
 }
