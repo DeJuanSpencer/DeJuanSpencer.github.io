@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 const FREE_TIER_LIMIT = 50;
 
