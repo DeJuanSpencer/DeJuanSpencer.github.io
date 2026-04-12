@@ -1,4 +1,5 @@
 import About from "./components/About";
+import BestFit from "./components/BestFit";
 import ContactForm from "./components/ContactForm";
 import Experience from "./components/Experience";
 import Footer from "./components/Footer";
@@ -8,6 +9,7 @@ import MartialArts from "./components/MartialArts";
 import Projects from "./components/Projects";
 import Services from "./components/Services";
 import Skills from "./components/Skills";
+import WorkProcess from "./components/WorkProcess";
 
 export default function HomePage() {
   return (
@@ -16,10 +18,6 @@ export default function HomePage() {
 
       <section id="hero">
         <Hero />
-      </section>
-
-      <section id="services" className="py-20" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-        <Services />
       </section>
 
       <section id="about" className="py-20" style={{ background: "var(--section-alt)", borderTop: "1px solid var(--border-subtle)" }}>
@@ -34,15 +32,27 @@ export default function HomePage() {
         <Experience />
       </section>
 
-      <section id="skills" className="py-20" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+      <section id="services" className="py-20" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+        <Services />
+      </section>
+
+      <section id="process" className="py-20" style={{ background: "var(--section-alt)", borderTop: "1px solid var(--border-subtle)" }}>
+        <WorkProcess />
+      </section>
+
+      <section id="best-fit" className="py-20" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+        <BestFit />
+      </section>
+
+      <section id="skills" className="py-20" style={{ background: "var(--section-alt)", borderTop: "1px solid var(--border-subtle)" }}>
         <Skills />
       </section>
 
-      <section id="martial-arts" className="py-20" style={{ background: "var(--section-alt)", borderTop: "1px solid var(--border-subtle)" }}>
+      <section id="martial-arts" className="py-20" style={{ borderTop: "1px solid var(--border-subtle)" }}>
         <MartialArts />
       </section>
 
-      <section id="contact" className="py-20" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+      <section id="contact" className="py-20" style={{ background: "var(--section-alt)", borderTop: "1px solid var(--border-subtle)" }}>
         <ContactForm />
       </section>
 

@@ -7,6 +7,7 @@ export default function ContactForm() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -17,14 +18,21 @@ export default function ContactForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const res = await fetch("/api/contact", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-    if (res.ok) {
-      setSubmitted(true);
-      setForm({ name: "", email: "", message: "" });
+    setError(null);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (res.ok) {
+        setSubmitted(true);
+        setForm({ name: "", email: "", message: "" });
+      } else {
+        setError("Something went wrong — your message wasn't sent. Try again or email me directly at dejuanspencer@gmail.com.");
+      }
+    } catch {
+      setError("Something went wrong — your message wasn't sent. Try again or email me directly at dejuanspencer@gmail.com.");
     }
     setLoading(false);
   };
@@ -49,10 +57,16 @@ export default function ContactForm() {
         className="text-3xl font-bold text-center mb-2"
         style={{ color: "var(--text-primary)", letterSpacing: "-0.5px" }}
       >
-        Let&apos;s Work Together
+        Get In Touch
       </h2>
-      <p className="text-center mb-8" style={{ color: "var(--text-secondary)", fontSize: "15px" }}>
-        Have a project in mind? Send me a message and I&apos;ll get back to you within 24 hours.
+      <p className="text-center mb-2" style={{ color: "var(--text-secondary)", fontSize: "15px" }}>
+        Have a project in mind? Send a message and I'll get back to you within 24 hours.
+      </p>
+      <p className="text-center mb-8" style={{ color: "var(--text-tertiary)", fontSize: "13px" }}>
+        Prefer a structured intake?{" "}
+        <a href="/work-with-me" style={{ color: "var(--brand-gold)", textDecoration: "none", fontWeight: 600 }}>
+          Use the Work With Me form &rarr;
+        </a>
       </p>
 
       {submitted ? (
@@ -65,7 +79,7 @@ export default function ContactForm() {
           }}
         >
           <p style={{ color: "var(--brand-gold)", fontSize: "16px", fontWeight: 600 }}>
-            Thanks for reaching out! I'll be in touch soon.
+            Thanks for reaching out! I'll be in touch within 24 hours.
           </p>
         </div>
       ) : (
@@ -91,12 +105,17 @@ export default function ContactForm() {
           <textarea
             name="message"
             rows={5}
-            placeholder="Your Message"
+            placeholder="Tell me about your project"
             value={form.message}
             onChange={handleChange}
             required
             style={{ ...inputStyle, resize: "vertical" as const }}
           />
+          {error && (
+            <p className="text-sm" style={{ color: "var(--brand-red)" }}>
+              {error}
+            </p>
+          )}
           <button
             type="submit"
             disabled={loading}

@@ -8,7 +8,7 @@ export default function Projects() {
         className="text-3xl font-bold text-center mb-3"
         style={{ color: "var(--text-primary)", letterSpacing: "-0.5px" }}
       >
-        Projects
+        Selected Work
       </h2>
       <p className="text-center mb-10 max-w-xl mx-auto text-sm" style={{ color: "var(--text-secondary)" }}>
         A selection of work spanning enterprise consulting, government, and independent builds.
@@ -36,10 +36,27 @@ export default function Projects() {
             <h3 className="text-lg font-semibold mb-2" style={{ color: "var(--text-primary)" }}>
               {project.title}
             </h3>
-            <p className="mb-4 text-sm flex-1" style={{ color: "var(--text-secondary)", lineHeight: 1.6 }}>
+            <p className="mb-4 text-sm" style={{ color: "var(--text-secondary)", lineHeight: 1.6 }}>
               {project.description}
             </p>
-            <div className="flex flex-wrap gap-2 mb-4">
+
+            {/* Outcome callout */}
+            {project.outcome && (
+              <div
+                className="rounded-lg px-4 py-3 mb-4 text-sm"
+                style={{
+                  background: "rgba(184,151,47,0.06)",
+                  border: "1px solid rgba(184,151,47,0.15)",
+                  color: "var(--brand-gold)",
+                  lineHeight: 1.6,
+                }}
+              >
+                <span style={{ fontWeight: 600, fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.5px", display: "block", marginBottom: "2px", opacity: 0.7 }}>Result</span>
+                {project.outcome}
+              </div>
+            )}
+
+            <div className="flex flex-wrap gap-2 mt-auto">
               {project.stack.map((tech, i) => (
                 <span
                   key={i}
@@ -55,20 +72,6 @@ export default function Projects() {
                 </span>
               ))}
             </div>
-            {project.link && (
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-sm font-medium hover:underline mt-auto"
-                style={{ color: "var(--brand-gold)", fontSize: "13px" }}
-              >
-                View on GitHub
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                </svg>
-              </a>
-            )}
           </div>
         ))}
       </div>

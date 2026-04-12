@@ -58,7 +58,7 @@ export default function Footer() {
           className="text-xs italic text-center"
           style={{ color: "var(--text-tertiary)", fontFamily: "var(--font-mono)", fontSize: "11px", letterSpacing: "0.3px" }}
         >
-          &ldquo;Be the designer of your world and not merely the consumer of it.&rdquo; &mdash; James Clear
+          Built in Cleveland. Refined in Irvine.
         </p>
       </div>
     </footer>

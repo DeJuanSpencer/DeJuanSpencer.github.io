@@ -10,6 +10,7 @@ const services = [
     title: "Full-Stack Development",
     description:
       "End-to-end web applications built with .NET, Angular, React/Next.js, and cloud-native architectures designed to scale.",
+    plain: "One engineer who handles backend, frontend, and deployment — no managing three separate contractors.",
   },
   {
     icon: (
@@ -20,6 +21,7 @@ const services = [
     title: "AI & Automation Tooling",
     description:
       "Custom GenAI integrations, prompt engineering frameworks, and workflow automation using Azure OpenAI, Power Platform, and Python.",
+    plain: "Replace manual, repetitive work with software that runs itself — built and handed off, not locked in a subscription.",
   },
   {
     icon: (
@@ -30,6 +32,7 @@ const services = [
     title: "Cloud & Platform Engineering",
     description:
       "Azure, AWS, and GCP deployments: CI/CD pipelines, infrastructure setup, SharePoint/Power Platform solutions, and DevOps best practices.",
+    plain: "Your software deployed, monitored, and maintained in the cloud — without needing a dedicated DevOps hire.",
   },
 ];
 
@@ -40,18 +43,18 @@ export default function Services() {
         className="text-3xl font-bold text-center mb-3"
         style={{ color: "var(--text-primary)", letterSpacing: "-0.5px" }}
       >
-        What I Do
+        What I Build
       </h2>
       <p className="text-center mb-10 max-w-xl mx-auto" style={{ color: "var(--text-secondary)" }}>
-        I take projects from idea to production. Whether you need something new
-        built, an existing system improved, or automation wired into your workflows.
+        From idea to production. Fixed-scope projects and ongoing retainer arrangements available.{" "}
+        <span style={{ color: "var(--brand-gold)", fontWeight: 600 }}>Projects typically start at $5,000.</span>
       </p>
 
       <div className="grid md:grid-cols-3 gap-6">
         {services.map((service, index) => (
           <div
             key={index}
-            className="rounded-xl p-6 transition-all duration-300"
+            className="rounded-xl p-6 transition-all duration-300 flex flex-col"
             style={{
               background: "var(--brand-surface)",
               border: "1px solid var(--border-subtle)",
@@ -70,8 +73,19 @@ export default function Services() {
             <h3 className="text-lg font-semibold mb-2" style={{ color: "var(--text-primary)" }}>
               {service.title}
             </h3>
-            <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)", lineHeight: 1.7 }}>
+            <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--text-secondary)", lineHeight: 1.7 }}>
               {service.description}
+            </p>
+            <p
+              className="text-xs mt-auto pt-4"
+              style={{
+                color: "var(--brand-gold)",
+                borderTop: "1px solid var(--border-subtle)",
+                lineHeight: 1.6,
+                fontStyle: "italic",
+              }}
+            >
+              {service.plain}
             </p>
           </div>
         ))}

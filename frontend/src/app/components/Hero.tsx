@@ -60,25 +60,11 @@ export default function Hero() {
         }}
       >
         <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-        Available for Projects
+        Available for New Projects
       </span>
 
-      <p
-        className="text-sm font-semibold tracking-widest uppercase mb-6"
-        style={{
-          color: "var(--brand-gold)",
-          fontFamily: "var(--font-mono)",
-          letterSpacing: "3px",
-          fontSize: "12px",
-        }}
-      >
-        &ldquo;Be the designer of your world and not merely the consumer of it.&rdquo;
-        <br />
-        <span style={{ fontSize: "10px", fontWeight: 400, letterSpacing: "1.5px", opacity: 0.7 }}>&mdash; James Clear</span>
-      </p>
-
       <h1
-        className="text-4xl md:text-6xl font-bold mb-5"
+        className="text-4xl md:text-6xl font-bold mb-4"
         style={{
           color: "var(--text-primary)",
           letterSpacing: "-1.5px",
@@ -89,34 +75,40 @@ export default function Hero() {
       </h1>
 
       <p
-        className="text-lg md:text-xl max-w-2xl mb-10"
-        style={{ color: "var(--text-secondary)", lineHeight: 1.7 }}
+        className="text-sm font-medium mb-3"
+        style={{ color: "var(--text-tertiary)", letterSpacing: "0.5px" }}
       >
-        Software Engineer &bull; Systems Thinker &bull; Veteran &bull; Martial Arts Instructor
-        <br />
-        I build scalable, secure software for ambitious teams, from enterprise platforms to AI-powered tools.
+        Software Engineer &nbsp;&middot;&nbsp; Army Veteran &nbsp;&middot;&nbsp; Top Secret Cleared
       </p>
 
-      <div className="flex flex-wrap justify-center gap-4 mb-6">
+      <p
+        className="text-xl md:text-2xl font-semibold max-w-2xl mb-4"
+        style={{ color: "var(--text-primary)", lineHeight: 1.4, letterSpacing: "-0.3px" }}
+      >
+        Production-grade software for organizations that can&apos;t afford to cut corners.
+      </p>
+
+      <p
+        className="text-base max-w-xl mb-10"
+        style={{ color: "var(--text-secondary)", lineHeight: 1.7 }}
+      >
+        Full-stack development, AI integrations, and cloud systems &mdash; delivered with the
+        precision of an intelligence analyst and the accountability of a veteran.
+      </p>
+
+      <div className="flex flex-wrap justify-center gap-4 mb-8">
         <a
           href="/work-with-me"
-          className="px-7 py-3 rounded-lg font-semibold text-white transition-all duration-200"
+          className="px-8 py-3 rounded-lg font-semibold text-white transition-all duration-200"
           style={{ background: "var(--brand-red)", fontSize: "15px" }}
-          onMouseEnter={(e) => ((e.target as HTMLElement).style.background = "var(--brand-red-hover)")}
-          onMouseLeave={(e) => ((e.target as HTMLElement).style.background = "var(--brand-red)")}
+          onMouseEnter={(e) => ((e.target as HTMLElement).style.opacity = "0.9")}
+          onMouseLeave={(e) => ((e.target as HTMLElement).style.opacity = "1")}
         >
           Work With Me
         </a>
         <a
           href="#projects"
-          className="px-7 py-3 rounded-lg font-semibold text-white transition-all duration-200"
-          style={{ background: "var(--brand-gold)", fontSize: "15px" }}
-        >
-          View Projects
-        </a>
-        <a
-          href="#contact"
-          className="px-7 py-3 rounded-lg font-semibold transition-all duration-200"
+          className="px-8 py-3 rounded-lg font-semibold transition-all duration-200"
           style={{
             background: "transparent",
             color: "var(--text-primary)",
@@ -124,10 +116,17 @@ export default function Hero() {
             fontSize: "15px",
           }}
         >
-          Contact Me
+          View My Work
         </a>
       </div>
 
+      {/* Social proof signal */}
+      <p
+        className="text-xs"
+        style={{ color: "var(--text-tertiary)", fontStyle: "italic", letterSpacing: "0.2px" }}
+      >
+        Trusted by enterprise teams at Insight Enterprises and state government agencies
+      </p>
     </section>
   );
 }
