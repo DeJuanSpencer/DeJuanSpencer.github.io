@@ -1,9 +1,18 @@
+import Image from "next/image";
+
 export default function Hero() {
   return (
     <section className="min-h-[80vh] flex flex-col justify-center items-center text-center px-6 bg-gradient-to-b from-white via-blue-50 to-white">
-      {/* Avatar */}
-      <div className="w-28 h-28 rounded-full bg-blue-600 flex items-center justify-center mb-6 shadow-lg ring-4 ring-blue-100">
-        <span className="text-3xl font-bold text-white select-none">DS</span>
+      {/* Profile Photo */}
+      <div className="w-32 h-32 rounded-full overflow-hidden mb-6 shadow-lg ring-4 ring-blue-100">
+        <Image
+          src="/profile.jpg"
+          alt="DeJuan Spencer"
+          width={128}
+          height={128}
+          className="object-cover object-top w-full h-full"
+          priority
+        />
       </div>
 
       {/* Availability badge */}
