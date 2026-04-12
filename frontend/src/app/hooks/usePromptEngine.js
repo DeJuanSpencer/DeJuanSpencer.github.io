@@ -328,7 +328,7 @@ export function usePromptEngine(user) {
   });
   const generateExamples = () => withLoading(async () => {
     const ctx = getContext();
-    const r = await callClaude(`You create ideal example interactions for AI assistants. Keep each idealResponse concise (2-4 sentences max). Return ONLY valid JSON array of 3 objects: [{"userMessage":"realistic user input","idealResponse":"ideal assistant response","reasoning":"why this response is ideal"}]`, `Project: ${projectName}\nDomain: ${domain}\nIdentity: ${JSON.stringify(ctx.identity)}\nNegatives: ${JSON.stringify(ctx.negatives)}`, 4000);
+    const r = await callClaude(`You create ideal example interactions for AI assistants. Return ONLY valid JSON array of 3 objects: [{"userMessage":"realistic user input","idealResponse":"ideal assistant response","reasoning":"why this response is ideal"}]`, `Project: ${projectName}\nDomain: ${domain}\nIdentity: ${JSON.stringify(ctx.identity)}\nNegatives: ${JSON.stringify(ctx.negatives)}`, 4000);
     if (r && !r._error) { setExamples(r); setApprovedExamples(new Set()); } else showError(r?._error || "Example generation failed. Try again.");
   });
 
