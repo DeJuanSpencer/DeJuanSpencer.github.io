@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npx next:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)",
+      "Bash(git push:*)",
+      "Read(//c/Users/dejua/code/.claude/skills//**)",
+      "Read(//c/Users/dejua/code/**)",
+      "Bash(mkdir -p /c/Users/dejua/.claude/agents)",
+      "Bash(cp /c/Users/dejua/code/.claude/skills/agent-team-setup/agents/*.md /c/Users/dejua/.claude/agents/)",
+      "Bash(cp /c/Users/dejua/code/.claude/skills/agent-team-setup/CLAUDE-AGENT-TEAMS.md /c/Users/dejua/.claude/CLAUDE-AGENT-TEAMS.md)",
+      "Read(//c/Users/dejua/.claude/**)"
+    ]
+  }
+}

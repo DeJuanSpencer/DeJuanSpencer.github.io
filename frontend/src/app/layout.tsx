@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "DeJuan Spencer",
-  description: "Combining Tech & Strategy",
+  description: "Software Engineer. Systems Thinker. Builder. Built in Cleveland. Refined in Irvine.",
 };
 
 export default function RootLayout({
