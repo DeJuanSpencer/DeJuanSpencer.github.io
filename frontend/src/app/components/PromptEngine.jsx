@@ -180,9 +180,11 @@ export default function PromptEngine() {
                     )}
                     <button
                       className="stepper-node"
-                      onClick={() => { pe.setStep(i); pe.trackActivity(); }}
+                      onClick={() => { if (i <= pe.step) { pe.setStep(i); pe.trackActivity(); } }}
+                      disabled={i > pe.step}
                       aria-current={active ? "step" : undefined}
-                      style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", background: "none", border: "none", cursor: "pointer", padding: "4px 6px", position: "relative", flexShrink: 0 }}
+                      title={i > pe.step ? "Complete the current step first" : undefined}
+                      style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", background: "none", border: "none", cursor: i > pe.step ? "not-allowed" : active ? "default" : "pointer", padding: "4px 6px", position: "relative", flexShrink: 0, opacity: i > pe.step ? 0.38 : 1, transition: "opacity 0.2s" }}
                     >
                       {/* Circle */}
                       <div style={{ width: "26px", height: "26px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", background: active ? "#d4a24e" : completed ? "rgba(212,162,78,0.12)" : "rgba(255,255,255,0.05)", border: active ? "none" : completed ? "1.5px solid rgba(212,162,78,0.55)" : "1.5px solid rgba(255,255,255,0.14)", transition: "all 0.2s", flexShrink: 0 }}>
@@ -234,7 +236,7 @@ export default function PromptEngine() {
                   {STEPS.map((s, i) => {
                     const Icon = s.icon; const active = pe.step === i; const completed = i < pe.step;
                     return (
-                      <button key={s.id} onClick={() => { pe.setStep(i); pe.setShowMobileNav(false); pe.trackActivity(); }} aria-current={active ? "step" : undefined} style={{ width: "100%", padding: "10px 16px", background: active ? "rgba(212,162,78,0.08)" : "transparent", border: "none", borderLeft: active ? "3px solid #d4a24e" : "3px solid transparent", cursor: "pointer", display: "flex", alignItems: "center", gap: "10px", textAlign: "left" }}>
+                      <button key={s.id} onClick={() => { if (i <= pe.step) { pe.setStep(i); pe.setShowMobileNav(false); pe.trackActivity(); } }} disabled={i > pe.step} aria-current={active ? "step" : undefined} style={{ width: "100%", padding: "10px 16px", background: active ? "rgba(212,162,78,0.08)" : "transparent", border: "none", borderLeft: active ? "3px solid #d4a24e" : "3px solid transparent", cursor: i > pe.step ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: "10px", textAlign: "left", opacity: i > pe.step ? 0.4 : 1 }}>
                         <div style={{ position: "relative", flexShrink: 0 }}>
                           <Icon size={14} color={active ? "#d4a24e" : completed ? "#50b450" : "rgba(255,255,255,0.3)"} />
                           {completed && <CheckCircle2 size={8} color="#50b450" style={{ position: "absolute", top: -3, right: -3 }} />}
