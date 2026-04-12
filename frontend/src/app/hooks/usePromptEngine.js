@@ -469,7 +469,7 @@ export function usePromptEngine(user) {
   }, []);
 
   const projectBlurb = `${projectDesc}${goals ? " Goal: " + goals.trim().replace(/\.?\s*$/, ".") : ""}`.trim();
-  const canAdvance = () => step === 0 ? (projectName && domain && projectDesc) : true;
+  const canAdvance = () => step === 0 ? !!(projectName || domain || projectDesc || goals) : true;
 
   return {
     // Navigation
