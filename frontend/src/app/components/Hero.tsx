@@ -1,8 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 
 export default function Hero() {
+  const [imgError, setImgError] = useState(false);
+
   return (
     <section
       className="min-h-[85vh] flex flex-col justify-center items-center text-center px-6 relative overflow-hidden"
@@ -23,21 +26,27 @@ export default function Hero() {
         }}
       />
 
-      {/* Profile photo */}
+      {/* Profile photo / initials fallback */}
       <div
-        className="w-28 h-28 rounded-full overflow-hidden mb-6 relative"
+        className="w-28 h-28 rounded-full overflow-hidden mb-6 relative flex items-center justify-center"
         style={{
           boxShadow: "0 0 0 3px var(--brand-gold), 0 4px 20px rgba(0,0,0,0.1)",
+          background: imgError ? "var(--brand-gold)" : "transparent",
         }}
       >
-        <Image
-          src="/profile.jpg"
-          alt="DeJuan Spencer"
-          width={112}
-          height={112}
-          className="object-cover object-top w-full h-full"
-          priority
-        />
+        {imgError ? (
+          <span className="text-2xl font-bold text-white select-none">DS</span>
+        ) : (
+          <Image
+            src="/profile.jpg"
+            alt="DeJuan Spencer"
+            width={112}
+            height={112}
+            className="object-cover object-top w-full h-full"
+            priority
+            onError={() => setImgError(true)}
+          />
+        )}
       </div>
 
       {/* Availability badge */}
