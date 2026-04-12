@@ -2,32 +2,12 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { callClaude } from "../lib/claudeApi";
 import { buildOutput, STEPS } from "../lib/outputBuilder";
+import { getSupabaseClient } from "../lib/supabase/client";
 
-const STORAGE_KEY = "prompt-engine-state";
+const TABLE = "prompt_engine_states";
 
-function loadSavedState() {
-  if (typeof window === "undefined") return null;
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : null;
-  } catch { return null; }
-}
-
-function usePersisted(key, initial, savedState) {
-  return useState(() => {
-    if (savedState && key in savedState) {
-      const val = savedState[key];
-      if (initial instanceof Set) return new Set(val);
-      return val;
-    }
-    return initial;
-  });
-}
-
-export function usePromptEngine() {
-  const savedState = useRef(loadSavedState()).current;
-
-  const [step, setStep] = usePersisted("step", 0, savedState);
+export function usePromptEngine(user) {
+  // Non-persisted UI state
   const [appMode, setAppMode] = useState("create");
   const [showPreview, setShowPreview] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -46,12 +26,13 @@ export function usePromptEngine() {
   const lastActivity = useRef(Date.now());
   const idleTimer = useRef(null);
 
-  const [userEmail, setUserEmail] = usePersisted("userEmail", "", savedState);
-  const [gateUnlocked, setGateUnlocked] = usePersisted("gateUnlocked", false, savedState);
-  const [gateError, setGateError] = useState("");
   const [feedbackText, setFeedbackText] = useState("");
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [feedbackSending, setFeedbackSending] = useState(false);
+
+  // Hydration tracking — don't save until initial load from Supabase completes
+  const [hydrating, setHydrating] = useState(true);
+  const hydratedRef = useRef(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -60,42 +41,102 @@ export function usePromptEngine() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  const [projectName, setProjectName] = usePersisted("projectName", "", savedState);
-  const [projectDesc, setProjectDesc] = usePersisted("projectDesc", "", savedState);
-  const [domain, setDomain] = usePersisted("domain", "", savedState);
-  const [goals, setGoals] = usePersisted("goals", "", savedState);
-  const [customInjection, setCustomInjection] = usePersisted("customInjection", "", savedState);
+  // Persisted state (server-backed)
+  const [step, setStep] = useState(0);
+  const [projectName, setProjectName] = useState("");
+  const [projectDesc, setProjectDesc] = useState("");
+  const [domain, setDomain] = useState("");
+  const [goals, setGoals] = useState("");
+  const [customInjection, setCustomInjection] = useState("");
   const [refineLoading, setRefineLoading] = useState({});
   const [refineSuggestions, setRefineSuggestions] = useState({});
-  const [identityOptions, setIdentityOptions] = usePersisted("identityOptions", [], savedState);
-  const [selectedIdentity, setSelectedIdentity] = usePersisted("selectedIdentity", null, savedState);
-  const [quizQuestions, setQuizQuestions] = usePersisted("quizQuestions", [], savedState);
-  const [quizAnswers, setQuizAnswers] = usePersisted("quizAnswers", {}, savedState);
-  const [knowledgeResult, setKnowledgeResult] = usePersisted("knowledgeResult", [], savedState);
-  const [negativeSuggestions, setNegativeSuggestions] = usePersisted("negativeSuggestions", [], savedState);
-  const [selectedNegatives, setSelectedNegatives] = usePersisted("selectedNegatives", new Set(), savedState);
-  const [modes, setModes] = usePersisted("modes", [], savedState);
-  const [defaultModeIdx, setDefaultModeIdx] = usePersisted("defaultModeIdx", 0, savedState);
-  const [priorities, setPriorities] = usePersisted("priorities", [], savedState);
-  const [failures, setFailures] = usePersisted("failures", [], savedState);
-  const [templates, setTemplates] = usePersisted("templates", [], savedState);
-  const [templatesEnabled, setTemplatesEnabled] = usePersisted("templatesEnabled", false, savedState);
-  const [selectedTemplates, setSelectedTemplates] = usePersisted("selectedTemplates", new Set(), savedState);
-  const [examples, setExamples] = usePersisted("examples", [], savedState);
-  const [approvedExamples, setApprovedExamples] = usePersisted("approvedExamples", new Set(), savedState);
+  const [identityOptions, setIdentityOptions] = useState([]);
+  const [selectedIdentity, setSelectedIdentity] = useState(null);
+  const [quizQuestions, setQuizQuestions] = useState([]);
+  const [quizAnswers, setQuizAnswers] = useState({});
+  const [knowledgeResult, setKnowledgeResult] = useState([]);
+  const [negativeSuggestions, setNegativeSuggestions] = useState([]);
+  const [selectedNegatives, setSelectedNegatives] = useState(new Set());
+  const [modes, setModes] = useState([]);
+  const [defaultModeIdx, setDefaultModeIdx] = useState(0);
+  const [priorities, setPriorities] = useState([]);
+  const [failures, setFailures] = useState([]);
+  const [templates, setTemplates] = useState([]);
+  const [templatesEnabled, setTemplatesEnabled] = useState(false);
+  const [selectedTemplates, setSelectedTemplates] = useState(new Set());
+  const [examples, setExamples] = useState([]);
+  const [approvedExamples, setApprovedExamples] = useState(new Set());
   const [compiledOutput, setCompiledOutput] = useState("");
   const [pastedInstructions, setPastedInstructions] = useState("");
   const [parsedPreview, setParsedPreview] = useState(null);
   const [selectedSections, setSelectedSections] = useState(new Set());
 
-  // Persist state to localStorage
+  // Load state from Supabase when user becomes available
+  useEffect(() => {
+    if (!user) {
+      hydratedRef.current = false;
+      setHydrating(true);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      try {
+        const supabase = getSupabaseClient();
+        const { data, error: fetchErr } = await supabase
+          .from(TABLE)
+          .select("state")
+          .eq("user_id", user.id)
+          .maybeSingle();
+        if (cancelled) return;
+        if (fetchErr) {
+          console.error("Failed to load state:", fetchErr);
+        } else if (data?.state) {
+          const s = data.state;
+          if (typeof s.step === "number") setStep(s.step);
+          if (typeof s.projectName === "string") setProjectName(s.projectName);
+          if (typeof s.projectDesc === "string") setProjectDesc(s.projectDesc);
+          if (typeof s.domain === "string") setDomain(s.domain);
+          if (typeof s.goals === "string") setGoals(s.goals);
+          if (typeof s.customInjection === "string") setCustomInjection(s.customInjection);
+          if (Array.isArray(s.identityOptions)) setIdentityOptions(s.identityOptions);
+          if (s.selectedIdentity === null || typeof s.selectedIdentity === "number") setSelectedIdentity(s.selectedIdentity);
+          if (Array.isArray(s.quizQuestions)) setQuizQuestions(s.quizQuestions);
+          if (s.quizAnswers && typeof s.quizAnswers === "object") setQuizAnswers(s.quizAnswers);
+          if (Array.isArray(s.knowledgeResult)) setKnowledgeResult(s.knowledgeResult);
+          if (Array.isArray(s.negativeSuggestions)) setNegativeSuggestions(s.negativeSuggestions);
+          if (Array.isArray(s.selectedNegatives)) setSelectedNegatives(new Set(s.selectedNegatives));
+          if (Array.isArray(s.modes)) setModes(s.modes);
+          if (typeof s.defaultModeIdx === "number") setDefaultModeIdx(s.defaultModeIdx);
+          if (Array.isArray(s.priorities)) setPriorities(s.priorities);
+          if (Array.isArray(s.failures)) setFailures(s.failures);
+          if (Array.isArray(s.templates)) setTemplates(s.templates);
+          if (typeof s.templatesEnabled === "boolean") setTemplatesEnabled(s.templatesEnabled);
+          if (Array.isArray(s.selectedTemplates)) setSelectedTemplates(new Set(s.selectedTemplates));
+          if (Array.isArray(s.examples)) setExamples(s.examples);
+          if (Array.isArray(s.approvedExamples)) setApprovedExamples(new Set(s.approvedExamples));
+        }
+      } catch (e) {
+        console.error("Supabase load error:", e);
+      } finally {
+        if (!cancelled) {
+          hydratedRef.current = true;
+          setHydrating(false);
+        }
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [user]);
+
+  // Debounced upsert to Supabase whenever persisted state changes
   const saveTimeoutRef = useRef(null);
   useEffect(() => {
+    if (!user || !hydratedRef.current) return;
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-    saveTimeoutRef.current = setTimeout(() => {
+    saveTimeoutRef.current = setTimeout(async () => {
       try {
+        const supabase = getSupabaseClient();
         const state = {
-          step, userEmail, gateUnlocked,
+          step,
           projectName, projectDesc, domain, goals, customInjection,
           identityOptions, selectedIdentity,
           quizQuestions, quizAnswers, knowledgeResult,
@@ -104,35 +145,26 @@ export function usePromptEngine() {
           templates, templatesEnabled, selectedTemplates: [...selectedTemplates],
           examples, approvedExamples: [...approvedExamples],
         };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      } catch { /* quota exceeded or private mode */ }
+        const { error: saveErr } = await supabase
+          .from(TABLE)
+          .upsert(
+            { user_id: user.id, state, updated_at: new Date().toISOString() },
+            { onConflict: "user_id" }
+          );
+        if (saveErr) console.error("Failed to save state:", saveErr);
+      } catch (e) {
+        console.error("Supabase save error:", e);
+      }
     }, 500);
     return () => { if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current); };
-  }, [step, userEmail, gateUnlocked, projectName, projectDesc, domain, goals, customInjection, identityOptions, selectedIdentity, quizQuestions, quizAnswers, knowledgeResult, negativeSuggestions, selectedNegatives, modes, defaultModeIdx, priorities, failures, templates, templatesEnabled, selectedTemplates, examples, approvedExamples]);
-
-  // Warn before closing with unsaved work
-  useEffect(() => {
-    const hasWork = projectName || projectDesc || domain || identityOptions.length || modes.length || priorities.length;
-    if (!hasWork) return;
-    const handler = (e) => { e.preventDefault(); e.returnValue = ""; };
-    window.addEventListener("beforeunload", handler);
-    return () => window.removeEventListener("beforeunload", handler);
-  }, [projectName, projectDesc, domain, identityOptions, modes, priorities]);
+  }, [user, step, projectName, projectDesc, domain, goals, customInjection, identityOptions, selectedIdentity, quizQuestions, quizAnswers, knowledgeResult, negativeSuggestions, selectedNegatives, modes, defaultModeIdx, priorities, failures, templates, templatesEnabled, selectedTemplates, examples, approvedExamples]);
 
   const showError = (msg) => { setError(msg); setTimeout(() => setError(null), 6000); };
-
-  const unlockGate = () => {
-    if (!userEmail || !userEmail.includes("@") || !userEmail.includes(".")) {
-      setGateError("Please enter a valid email address.");
-      return;
-    }
-    setGateError("");
-    setGateUnlocked(true);
-  };
 
   const submitFeedback = async () => {
     if (!feedbackText.trim()) return;
     setFeedbackSending(true);
+    const fromEmail = user?.email || "anonymous";
     try {
       await fetch("https://api.emailjs.com/api/v1.0/email/send", {
         method: "POST",
@@ -142,8 +174,8 @@ export function usePromptEngine() {
           template_id: "template_y15185ka",
           user_id: "gOPO4EaCND8y0uBjl",
           template_params: {
-            from_name: userEmail,
-            message: `PROMPT ENGINE FEEDBACK\n\nFrom: ${userEmail}\n\n${feedbackText}`,
+            from_name: fromEmail,
+            message: `PROMPT ENGINE FEEDBACK\n\nFrom: ${fromEmail}\n\n${feedbackText}`,
             to_name: "DeJuan",
           },
         }),
@@ -436,10 +468,9 @@ export function usePromptEngine() {
     // Drag
     dragIdx,
     dragOverIdx,
-    // Gate
-    userEmail, setUserEmail,
-    gateUnlocked,
-    gateError, setGateError,
+    // Hydration (true while initial load from Supabase is in flight)
+    hydrating,
+    // Feedback
     feedbackText, setFeedbackText,
     feedbackSubmitted,
     feedbackSending,
@@ -484,7 +515,6 @@ export function usePromptEngine() {
     canAdvance,
     // Handlers
     showError,
-    unlockGate,
     submitFeedback,
     trackActivity,
     generateField,
