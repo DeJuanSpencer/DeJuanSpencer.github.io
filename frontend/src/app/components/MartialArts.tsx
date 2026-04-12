@@ -5,15 +5,14 @@ export default function MartialArts() {
         className="text-3xl font-bold mb-6"
         style={{ color: "var(--text-primary)", letterSpacing: "-0.5px" }}
       >
-        Martial Arts Philosophy
+        Beyond the Code
       </h2>
 
       <p className="text-lg leading-relaxed mb-8" style={{ color: "var(--text-secondary)", lineHeight: 1.8 }}>
         As a Sifu of Kuntao-Silat, I have trained and taught martial arts for
         years, cultivating discipline, patience, and precision. My approach to
         software mirrors my practice: methodical, adaptive, and rooted in
-        mastery of fundamentals. Whether writing code or refining a stance, I
-        believe in sharpening the edge daily.
+        mastery of fundamentals. I build software the same way I train: with a long view.
       </p>
 
       <div

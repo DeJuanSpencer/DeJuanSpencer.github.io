@@ -10,21 +10,21 @@ export default function About() {
       </h2>
 
       <p className="text-lg leading-relaxed" style={{ color: "var(--text-secondary)", lineHeight: 1.8 }}>
-        I'm a Software Engineer and U.S. Army Veteran with a Top
-        Secret Security Clearance. I bring a unique blend of problem-solving,
-        discipline, and innovation from both the tech industry and military
-        intelligence space. My toolkit includes technologies like{" "}
+        I'm a Software Engineer and U.S. Army Veteran with 5+ years of professional
+        software delivery and a{" "}
+        <span style={{ color: "var(--brand-gold)", fontWeight: 600 }}>Top Secret Security Clearance</span>.
+        I bring a rare combination of engineering precision and strategic analysis, honed
+        across enterprise consulting, military intelligence, and independent product development.
+        My toolkit spans{" "}
         <span style={{ color: "var(--brand-gold)", fontWeight: 600 }}>
-          Java, .NET, Python, React, Angular, Next, Azure, and Power Platform
-        </span>
-        , and I'm passionate about building scalable, mission-critical software.
+          Java, .NET, Python, React, Angular, Next.js, Azure, and Power Platform
+        </span>.
       </p>
 
       <p className="text-lg leading-relaxed mt-5" style={{ color: "var(--text-secondary)", lineHeight: 1.8 }}>
-        Outside of coding, I'm a martial arts instructor and systems thinker who
-        applies AI tools to real-world problems. Whether I'm
-        architecting full-stack solutions, or automating
-        workflows, I deliver high-performance outcomes with clarity and purpose.
+        Whether I'm architecting full-stack solutions, building AI-powered tools, or automating
+        mission-critical workflows, I deliver with clarity and purpose. Clients get a partner
+        who thinks in systems, communicates clearly, and ships quality software on time.
       </p>
     </section>
   );

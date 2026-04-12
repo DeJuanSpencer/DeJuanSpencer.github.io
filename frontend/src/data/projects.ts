@@ -9,23 +9,30 @@ export type Project = {
   const projects: Project[] = [
     {
       title: "GenAI Internal Tooling",
-      description: "Developed a prompt framework for consistent AI output across internal tools.",
+      description:
+        "Designed and implemented a prompt engineering framework that standardized AI output quality across multiple internal tools. Reduced prompt iteration time and improved consistency for a team of engineers building on top of Azure OpenAI.",
       stack: ["Python", "Azure OpenAI", "Prompt Engineering"],
+      link: "https://github.com/DeJuanSpencer",
     },
     {
       title: "ChatGPT Scheduling Plug-In",
-      description: "Automates calendar scheduling using natural language with Google Calendar API.",
-      stack: ["Python", "Google Calendar API"],
+      description:
+        "Built a natural language scheduling assistant that parses user intent and creates calendar events via the Google Calendar API. Eliminated manual scheduling overhead for recurring coordination tasks.",
+      stack: ["Python", "Google Calendar API", "OpenAI"],
+      link: "https://github.com/DeJuanSpencer",
     },
     {
       title: "Skills Matrix App",
-      description: "Visualized teammate strengths using Angular and C# for development teams.",
-      stack: ["Angular", "C#", "Atomic Design"],
+      description:
+        "Developed a full-stack application for development teams to map and visualize individual skill sets, enabling managers to identify gaps and optimize team composition. Built with Atomic Design principles for a scalable, reusable component library.",
+      stack: ["Angular", "C#", ".NET", "Atomic Design"],
+      link: "https://github.com/DeJuanSpencer",
     },
     {
       title: "State of New Mexico Power Platform App",
-      description: "Built centralized Power Query app to streamline workflows for state use cases.",
-      stack: ["Power Platform", "Dataverse", "Power Query"],
+      description:
+        "Delivered a centralized Power Platform solution for a state government client, consolidating disparate workflows into a single, auditable app. Integrated Dataverse for structured data management and Power Query for automated reporting.",
+      stack: ["Power Platform", "Dataverse", "Power Query", "SharePoint"],
     },
   ];
   

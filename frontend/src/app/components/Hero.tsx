@@ -1,6 +1,11 @@
 "use client";
 
+import Image from "next/image";
+import { useState } from "react";
+
 export default function Hero() {
+  const [imgError, setImgError] = useState(false);
+
   return (
     <section
       className="min-h-[85vh] flex flex-col justify-center items-center text-center px-6 relative overflow-hidden"
@@ -20,6 +25,43 @@ export default function Hero() {
           pointerEvents: "none",
         }}
       />
+
+      {/* Profile photo / initials fallback */}
+      <div
+        className="w-28 h-28 rounded-full overflow-hidden mb-6 relative flex items-center justify-center"
+        style={{
+          boxShadow: "0 0 0 3px var(--brand-gold), 0 4px 20px rgba(0,0,0,0.1)",
+          background: imgError ? "var(--brand-gold)" : "transparent",
+        }}
+      >
+        {imgError ? (
+          <span className="text-2xl font-bold text-white select-none">DS</span>
+        ) : (
+          <Image
+            src="/profile.jpg"
+            alt="DeJuan Spencer"
+            width={112}
+            height={112}
+            className="object-cover object-top w-full h-full"
+            priority
+            onError={() => setImgError(true)}
+          />
+        )}
+      </div>
+
+      {/* Availability badge */}
+      <span
+        className="inline-flex items-center gap-2 text-xs font-semibold px-4 py-1 rounded-full mb-6"
+        style={{
+          background: "rgba(184,151,47,0.08)",
+          color: "var(--brand-gold)",
+          border: "1px solid rgba(184,151,47,0.2)",
+          letterSpacing: "0.5px",
+        }}
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+        Available for Projects
+      </span>
 
       <p
         className="text-sm font-semibold tracking-widest uppercase mb-6"
@@ -48,17 +90,14 @@ export default function Hero() {
 
       <p
         className="text-lg md:text-xl max-w-2xl mb-10"
-        style={{
-          color: "var(--text-secondary)",
-          lineHeight: 1.7,
-        }}
+        style={{ color: "var(--text-secondary)", lineHeight: 1.7 }}
       >
         Software Engineer &bull; Systems Thinker &bull; Veteran &bull; Martial Arts Instructor
         <br />
-        Building scalable, intelligent systems at the intersection of tech and strategy.
+        I build scalable, secure software for ambitious teams, from enterprise platforms to AI-powered tools.
       </p>
 
-      <div className="flex flex-wrap justify-center gap-4">
+      <div className="flex flex-wrap justify-center gap-4 mb-6">
         <a
           href="/work-with-me"
           className="px-7 py-3 rounded-lg font-semibold text-white transition-all duration-200"
@@ -70,12 +109,8 @@ export default function Hero() {
         </a>
         <a
           href="#projects"
-          className="px-7 py-3 rounded-lg font-semibold transition-all duration-200"
-          style={{
-            background: "var(--brand-gold)",
-            color: "#fff",
-            fontSize: "15px",
-          }}
+          className="px-7 py-3 rounded-lg font-semibold text-white transition-all duration-200"
+          style={{ background: "var(--brand-gold)", fontSize: "15px" }}
         >
           View Projects
         </a>
@@ -91,8 +126,8 @@ export default function Hero() {
         >
           Contact Me
         </a>
-
       </div>
+
     </section>
   );
 }

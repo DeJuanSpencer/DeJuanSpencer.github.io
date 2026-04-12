@@ -46,16 +46,23 @@ export default function ContactForm() {
   return (
     <div className="max-w-2xl mx-auto px-6">
       <h2
-        className="text-3xl font-bold text-center mb-8"
+        className="text-3xl font-bold text-center mb-2"
         style={{ color: "var(--text-primary)", letterSpacing: "-0.5px" }}
       >
-        Contact Me
+        Let&apos;s Work Together
       </h2>
+      <p className="text-center mb-8" style={{ color: "var(--text-secondary)", fontSize: "15px" }}>
+        Have a project in mind? Send me a message and I&apos;ll get back to you within 24 hours.
+      </p>
 
       {submitted ? (
         <div
           className="text-center rounded-xl p-8"
-          style={{ background: "var(--brand-surface)", border: "1px solid var(--border-subtle)", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}
+          style={{
+            background: "var(--brand-surface)",
+            border: "1px solid var(--border-subtle)",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+          }}
         >
           <p style={{ color: "var(--brand-gold)", fontSize: "16px", fontWeight: 600 }}>
             Thanks for reaching out! I'll be in touch soon.
