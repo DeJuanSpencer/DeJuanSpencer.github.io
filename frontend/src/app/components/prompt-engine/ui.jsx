@@ -24,7 +24,8 @@ export const Card = ({ children, style, highlight }) => (
 
 export const Btn = ({ children, onClick, primary, disabled, small, style: s }) => (
   <button onClick={onClick} disabled={disabled} style={{
-    padding: small ? "6px 14px" : "10px 20px", borderRadius: "8px",
+    padding: small ? "8px 14px" : "10px 20px", borderRadius: "8px",
+    minHeight: small ? "36px" : "auto",
     border: primary ? "none" : "1px solid rgba(255,255,255,0.12)",
     background: primary
       ? disabled ? "rgba(212,162,78,0.3)" : "linear-gradient(135deg, #d4a24e, #b8862e)"
@@ -37,9 +38,12 @@ export const Btn = ({ children, onClick, primary, disabled, small, style: s }) =
   }}>{children}</button>
 );
 
-export const TextArea = ({ value, onChange, placeholder, rows = 4 }) => (
+export const TextArea = ({ value, onChange, placeholder, rows = 4, id, label }) => (
   <textarea value={value} onChange={e => onChange(e.target.value)}
-    placeholder={placeholder} rows={rows} style={{
+    placeholder={placeholder} rows={rows}
+    id={id}
+    aria-label={label || placeholder}
+    style={{
       width: "100%", background: "rgba(0,0,0,0.3)",
       border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px",
       padding: "12px 14px", color: "#e0e0e0", fontSize: "14px",
@@ -48,9 +52,12 @@ export const TextArea = ({ value, onChange, placeholder, rows = 4 }) => (
     }} />
 );
 
-export const Input = ({ value, onChange, placeholder }) => (
+export const Input = ({ value, onChange, placeholder, id, label }) => (
   <input value={value} onChange={e => onChange(e.target.value)}
-    placeholder={placeholder} style={{
+    placeholder={placeholder}
+    id={id}
+    aria-label={label || placeholder}
+    style={{
       width: "100%", background: "rgba(0,0,0,0.3)",
       border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px",
       padding: "10px 14px", color: "#e0e0e0", fontSize: "14px",
@@ -58,18 +65,22 @@ export const Input = ({ value, onChange, placeholder }) => (
     }} />
 );
 
-export const SectionLabel = ({ children, sub }) => (
-  <div style={{ marginBottom: sub ? "8px" : "16px" }}>
-    <div style={{
-      fontSize: sub ? "12px" : "13px", fontFamily: "'JetBrains Mono', monospace",
-      color: sub ? "rgba(255,255,255,0.4)" : "#d4a24e",
-      textTransform: "uppercase", letterSpacing: "1.5px", fontWeight: 600,
-    }}>{children}</div>
-  </div>
-);
+export const SectionLabel = ({ children, sub, htmlFor }) => {
+  const Tag = htmlFor ? "label" : "div";
+  return (
+    <div style={{ marginBottom: sub ? "8px" : "16px" }}>
+      <Tag htmlFor={htmlFor} style={{
+        fontSize: sub ? "12px" : "13px", fontFamily: "'JetBrains Mono', monospace",
+        color: sub ? "rgba(255,255,255,0.55)" : "#d4a24e",
+        textTransform: "uppercase", letterSpacing: "1.5px", fontWeight: 600,
+        cursor: htmlFor ? "pointer" : "default",
+      }}>{children}</Tag>
+    </div>
+  );
+};
 
 export const Toast = ({ msg }) => (
-  <div style={{
+  <div role="alert" aria-live="assertive" style={{
     position: "fixed", bottom: "24px", left: "50%", transform: "translateX(-50%)",
     background: "#dc5050", color: "#fff", padding: "10px 18px",
     borderRadius: "8px", fontSize: "13px", fontWeight: 600, zIndex: 9999,
@@ -86,13 +97,13 @@ export const LoadingIndicator = () => {
     return () => { clearInterval(phraseTimer); clearInterval(dotTimer); };
   }, []);
   return (
-    <div style={{ padding: "20px 24px", marginBottom: "16px", background: "linear-gradient(135deg, rgba(212,162,78,0.08), rgba(212,162,78,0.03))", border: "1px solid rgba(212,162,78,0.2)", borderRadius: "12px", display: "flex", alignItems: "center", gap: "16px" }}>
+    <div role="status" aria-live="polite" style={{ padding: "20px 24px", marginBottom: "16px", background: "linear-gradient(135deg, rgba(212,162,78,0.08), rgba(212,162,78,0.03))", border: "1px solid rgba(212,162,78,0.2)", borderRadius: "12px", display: "flex", alignItems: "center", gap: "16px" }}>
       <div style={{ width: "40px", height: "40px", borderRadius: "12px", background: "rgba(212,162,78,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, animation: "glow 2s ease-in-out infinite" }}>
         <Loader2 size={20} color="#d4a24e" className="spin" />
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: "14px", fontWeight: 600, color: "#d4a24e", fontFamily: "'DM Sans', sans-serif", marginBottom: "4px" }}>{LOADING_PHRASES[phraseIdx]}</div>
-        <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.35)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.5px" }}>claude-sonnet generating{dots}</div>
+        <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.55)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.5px" }}>claude-sonnet generating{dots}</div>
       </div>
       <div style={{ width: "60px", height: "4px", borderRadius: "2px", background: "rgba(255,255,255,0.06)", overflow: "hidden", flexShrink: 0 }}>
         <div style={{ width: "40%", height: "100%", borderRadius: "2px", background: "linear-gradient(90deg, #d4a24e, #b8862e)", animation: "shimmerBar 1.5s ease-in-out infinite" }} />
@@ -102,7 +113,10 @@ export const LoadingIndicator = () => {
 };
 
 export const Fireworks = () => {
-  const [particles] = useState(() => Array.from({ length: 30 }, (_, i) => {
+  const [prefersReduced] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+  );
+  const [particles] = useState(() => prefersReduced ? [] : Array.from({ length: 30 }, (_, i) => {
     const angle = (i / 30) * 360;
     const distance = 60 + Math.random() * 80;
     const colors = ["#d4a24e", "#f0c674", "#b8862e", "#ffd700", "#ff9500", "#50b450"];
@@ -110,9 +124,19 @@ export const Fireworks = () => {
   }));
   const [positions, setPositions] = useState({});
   useEffect(() => {
+    if (prefersReduced) return;
     const timers = particles.map(p => setTimeout(() => setPositions(prev => ({ ...prev, [p.id]: true })), p.delay));
     return () => timers.forEach(t => clearTimeout(t));
   }, []);
+
+  if (prefersReduced) {
+    return (
+      <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, pointerEvents: "none", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ fontSize: "18px", fontWeight: 700, color: "#d4a24e", fontFamily: "'DM Sans', sans-serif", background: "rgba(17,17,19,0.9)", padding: "12px 24px", borderRadius: "10px", border: "1px solid rgba(212,162,78,0.3)" }}>Instructions Copied!</div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, pointerEvents: "none", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center" }}>
       {particles.map(p => (

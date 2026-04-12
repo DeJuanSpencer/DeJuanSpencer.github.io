@@ -9,7 +9,7 @@ export function ExamplesStep({ loading, examples, approvedExamples, setApprovedE
         <SectionLabel>Approve Reference Examples</SectionLabel>
         <Btn small onClick={generateExamples} disabled={loading}>{loading ? <Loader2 size={14} className="spin" /> : <Sparkles size={14} />}{examples.length ? "Regenerate" : "Generate"}</Btn>
       </div>
-      {!examples.length && !loading && <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "14px", fontStyle: "italic" }}>Examples anchor Claude's behavior. Approve the ones that represent ideal responses.</div>}
+      {!examples.length && !loading && <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "14px", fontStyle: "italic" }}>Examples anchor Claude's behavior. Approve the ones that represent ideal responses.</div>}
       <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
         {examples.map((e, i) => (
           <Card key={i} highlight={approvedExamples.has(i)} style={approvedExamples.has(i) ? { boxShadow: "0 0 20px rgba(212,162,78,0.15)", border: "1px solid rgba(212,162,78,0.4)", transition: "all 0.4s ease" } : { transition: "all 0.4s ease" }}>
@@ -27,7 +27,7 @@ export function ExamplesStep({ loading, examples, approvedExamples, setApprovedE
               <div style={{ fontSize: "11px", color: "rgba(212,162,78,0.6)", marginBottom: "4px" }}>ASSISTANT</div>
               <div style={{ color: "rgba(255,255,255,0.8)", fontSize: "13px", lineHeight: 1.5 }}>{e.idealResponse}</div>
             </div>
-            {e.reasoning && <div style={{ color: "rgba(255,255,255,0.35)", fontSize: "12px", fontStyle: "italic", marginTop: "8px" }}>{e.reasoning}</div>}
+            {e.reasoning && <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "12px", fontStyle: "italic", marginTop: "8px" }}>{e.reasoning}</div>}
           </Card>
         ))}
       </div>

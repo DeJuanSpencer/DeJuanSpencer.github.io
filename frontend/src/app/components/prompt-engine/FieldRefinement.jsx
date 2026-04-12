@@ -17,7 +17,7 @@ export const RefinePanel = ({ field, suggestion, onAccept, onDismiss }) => {
       </div>
       {suggestion.alternatives?.length > 0 && (
         <div style={{ marginBottom: "10px" }}>
-          <div style={{ fontSize: "10px", fontFamily: "'JetBrains Mono', monospace", color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px", fontWeight: 600 }}>Alternatives</div>
+          <div style={{ fontSize: "10px", fontFamily: "'JetBrains Mono', monospace", color: "rgba(255,255,255,0.55)", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px", fontWeight: 600 }}>Alternatives</div>
           {suggestion.alternatives.map((alt, i) => (
             <div key={i} onClick={() => onAccept(field, alt)} style={{ background: "rgba(0,0,0,0.2)", borderRadius: "6px", padding: "8px 12px", color: "rgba(255,255,255,0.7)", fontSize: "13px", lineHeight: 1.5, marginBottom: "6px", cursor: "pointer", display: "flex", justifyContent: "space-between", gap: "10px", border: "1px solid rgba(255,255,255,0.05)" }}>
               <span style={{ flex: 1 }}>{alt}</span>
@@ -29,7 +29,7 @@ export const RefinePanel = ({ field, suggestion, onAccept, onDismiss }) => {
       {suggestion.tips?.length > 0 && (
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: "8px" }}>
           <Lightbulb size={12} color="rgba(255,255,255,0.3)" style={{ marginTop: "2px" }} />
-          {suggestion.tips.map((tip, i) => <span key={i} style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>{tip}{i < suggestion.tips.length - 1 ? " · " : ""}</span>)}
+          {suggestion.tips.map((tip, i) => <span key={i} style={{ fontSize: "11px", color: "rgba(255,255,255,0.55)" }}>{tip}{i < suggestion.tips.length - 1 ? " · " : ""}</span>)}
         </div>
       )}
       {suggestion.missingInfo?.length > 0 && (

@@ -9,23 +9,23 @@ export function PriorityStep({ loading, priorities, dragIdx, dragOverIdx, itemLo
         <SectionLabel>Priority Rules</SectionLabel>
         <Btn small onClick={generatePriorities} disabled={loading}>{loading ? <Loader2 size={14} className="spin" /> : <Sparkles size={14} />}{priorities.length ? "Regenerate All" : "Generate"}</Btn>
       </div>
-      {!priorities.length && !loading && <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "14px", fontStyle: "italic" }}>Priority rules resolve conflicts when two instructions compete. Higher = wins.</div>}
-      {priorities.length > 0 && <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.35)", fontStyle: "italic" }}>Drag to reorder or use arrows. Higher position = higher priority.</div>}
-      <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+      {!priorities.length && !loading && <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "14px", fontStyle: "italic" }}>Priority rules resolve conflicts when two instructions compete. Higher = wins.</div>}
+      {priorities.length > 0 && <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.55)", fontStyle: "italic" }}>Drag to reorder or use arrows. Higher position = higher priority.</div>}
+      <div style={{ display: "flex", flexDirection: "column", gap: "6px" }} role="list" aria-label="Priority rules, ordered by importance">
         {priorities.map((p, i) => (
           <Card key={i} style={{ display: "flex", alignItems: "center", gap: "12px", cursor: "grab", opacity: dragIdx === i ? 0.5 : 1, borderColor: dragOverIdx === i ? "rgba(212,162,78,0.5)" : undefined, transform: dragOverIdx === i ? "scale(1.02)" : "scale(1)", transition: "transform 0.2s, border-color 0.2s, opacity 0.2s" }}
             draggable onDragStart={() => handleDragStart(i)} onDragOver={e => handleDragOver(e, i)} onDragEnd={handleDragEnd}>
-            <div style={{ display: "flex", alignItems: "center", gap: "2px", flexShrink: 0 }}>
-              <Sliders size={14} color="rgba(255,255,255,0.2)" style={{ cursor: "grab", marginRight: "4px" }} />
+            <div role="listitem" style={{ display: "flex", alignItems: "center", gap: "2px", flexShrink: 0 }}>
+              <Sliders size={14} color="rgba(255,255,255,0.3)" style={{ cursor: "grab", marginRight: "4px" }} />
               <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
-                <button onClick={e => { e.stopPropagation(); movePriority(i, -1); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", lineHeight: 0 }}><ArrowUp size={12} color="rgba(255,255,255,0.35)" /></button>
-                <button onClick={e => { e.stopPropagation(); movePriority(i, 1); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", lineHeight: 0 }}><ArrowDown size={12} color="rgba(255,255,255,0.35)" /></button>
+                <button onClick={e => { e.stopPropagation(); movePriority(i, -1); }} aria-label={`Move "${p.rule}" up`} disabled={i === 0} style={{ background: "none", border: "none", cursor: i === 0 ? "default" : "pointer", padding: "10px", lineHeight: 0, minWidth: "36px", minHeight: "36px", display: "flex", alignItems: "center", justifyContent: "center", opacity: i === 0 ? 0.3 : 1 }}><ArrowUp size={14} color="rgba(255,255,255,0.55)" /></button>
+                <button onClick={e => { e.stopPropagation(); movePriority(i, 1); }} aria-label={`Move "${p.rule}" down`} disabled={i === priorities.length - 1} style={{ background: "none", border: "none", cursor: i === priorities.length - 1 ? "default" : "pointer", padding: "10px", lineHeight: 0, minWidth: "36px", minHeight: "36px", display: "flex", alignItems: "center", justifyContent: "center", opacity: i === priorities.length - 1 ? 0.3 : 1 }}><ArrowDown size={14} color="rgba(255,255,255,0.55)" /></button>
               </div>
             </div>
             <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "12px", color: "#d4a24e", minWidth: "20px" }}>P{i + 1}</span>
             <div style={{ flex: 1 }}>
               <div style={{ color: "#e0e0e0", fontSize: "13px", fontWeight: 600 }}>{p.rule}</div>
-              <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "12px", marginTop: "2px" }}>Overrides: {p.overrides} | Exception: {p.exception}</div>
+              <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "12px", marginTop: "2px" }}>Overrides: {p.overrides} | Exception: {p.exception}</div>
             </div>
             <Btn small onClick={() => regeneratePriority(i)} disabled={itemLoading[`priority_${i}`]}>{itemLoading[`priority_${i}`] ? <Loader2 size={12} className="spin" /> : <RefreshCw size={12} />} Redo</Btn>
           </Card>

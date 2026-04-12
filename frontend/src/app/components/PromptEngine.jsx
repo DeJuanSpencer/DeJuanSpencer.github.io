@@ -47,14 +47,17 @@ export default function PromptEngine() {
         @keyframes shimmerBar { 0% { transform: translateX(-100%); } 100% { transform: translateX(300%); } }
         @keyframes fadeInScale { 0% { opacity:0; transform:scale(0.5); } 50% { opacity:1; transform:scale(1.1); } 100% { opacity:1; transform:scale(1); } }
         @keyframes gateFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes flipHint { 0%,100% { transform: rotateY(0deg); } 50% { transform: rotateY(12deg); } }
         .spin { animation: spin 1s linear infinite; }
         .gate-fade { animation: gateFade 0.6s ease forwards; }
         .gate-fade-2 { animation: gateFade 0.6s 0.15s ease forwards; opacity: 0; }
         .gate-fade-3 { animation: gateFade 0.6s 0.3s ease forwards; opacity: 0; }
         textarea:focus, input:focus { border-color: rgba(212,162,78,0.4) !important; }
+        button:focus-visible, [tabindex]:focus-visible, a:focus-visible { outline: 2px solid #d4a24e; outline-offset: 2px; }
         button:hover:not(:disabled) { opacity: 0.85; }
         .flip-card { perspective: 800px; cursor: pointer; }
         .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .flip-card-inner:not(.flipped) { animation: flipHint 2s 1.5s ease-in-out 1; }
         .flip-card-inner.flipped { transform: rotateY(180deg); }
         .flip-card-front, .flip-card-back { position: absolute; top: 0; left: 0; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 12px; box-sizing: border-box; overflow: hidden; }
         .flip-card-back { transform: rotateY(180deg); }
@@ -66,7 +69,7 @@ export default function PromptEngine() {
 
       {!pe.gateUnlocked ? (
         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: pe.isMobile ? "32px 20px" : "60px 24px", position: "relative", overflow: "hidden" }}>
-          <a href="/" style={{ position: "absolute", top: pe.isMobile ? "16px" : "24px", left: pe.isMobile ? "16px" : "24px", display: "flex", alignItems: "center", gap: "6px", color: "rgba(255,255,255,0.4)", fontSize: "13px", textDecoration: "none", fontFamily: "'DM Sans', sans-serif", transition: "color 0.2s", zIndex: 1 }} onMouseEnter={e => (e.currentTarget.style.color = "#d4a24e")} onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.4)")}>
+          <a href="/" style={{ position: "absolute", top: pe.isMobile ? "16px" : "24px", left: pe.isMobile ? "16px" : "24px", display: "flex", alignItems: "center", gap: "6px", color: "rgba(255,255,255,0.55)", fontSize: "13px", textDecoration: "none", fontFamily: "'DM Sans', sans-serif", transition: "color 0.2s", zIndex: 1 }} onMouseEnter={e => (e.currentTarget.style.color = "#d4a24e")} onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}>
             <ChevronLeft size={16} /> dejuanspencer.com
           </a>
           <div style={{ position: "absolute", top: "20%", left: "50%", transform: "translateX(-50%)", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(212,162,78,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
@@ -75,37 +78,37 @@ export default function PromptEngine() {
               <Zap size={26} color="#1a1a1a" />
             </div>
             <div>
-              <div style={{ fontSize: pe.isMobile ? "22px" : "28px", fontWeight: 700, letterSpacing: "-0.5px" }}>Prompt Engine</div>
-              <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono', monospace" }}>Project Instructions Builder · {VERSION}</div>
+              <h1 style={{ fontSize: pe.isMobile ? "22px" : "28px", fontWeight: 700, letterSpacing: "-0.5px", margin: 0 }}>Prompt Engine</h1>
+              <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.55)", fontFamily: "'JetBrains Mono', monospace" }}>Project Instructions Builder · {VERSION}</div>
             </div>
           </div>
           <p className="gate-fade-2" style={{ fontSize: pe.isMobile ? "15px" : "17px", color: "rgba(255,255,255,0.55)", textAlign: "center", maxWidth: "480px", lineHeight: 1.7, marginBottom: "28px" }}>
             Claude projects let you set custom instructions that shape every conversation. Most people skip them because writing them from scratch is hard. This tool builds them for you.
           </p>
           <div className="gate-fade-2" style={{ maxWidth: pe.isMobile ? "100%" : "580px", width: "100%", marginBottom: "32px", display: "grid", gridTemplateColumns: pe.isMobile ? "1fr" : "1fr 1fr", gap: pe.isMobile ? "12px" : "16px" }}>
-            <div className="flip-card" style={{ height: pe.isMobile ? "280px" : "300px" }} onClick={() => pe.setFlippedCards(p => ({ ...p, without: !p.without }))}>
+            <div className="flip-card" style={{ height: pe.isMobile ? "280px" : "300px" }} onClick={() => pe.setFlippedCards(p => ({ ...p, without: !p.without }))} role="button" tabIndex={0} aria-label="Flip card: without instructions example" onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pe.setFlippedCards(p => ({ ...p, without: !p.without })); } }}>
               <div className={`flip-card-inner${pe.flippedCards.without ? " flipped" : ""}`}>
                 <div className="flip-card-front" style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.02)", padding: "16px", display: "flex", flexDirection: "column" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-                    <div style={{ fontSize: "10px", fontFamily: "'JetBrains Mono', monospace", color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "1.5px", fontWeight: 600 }}>Without instructions</div>
-                    <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.2)", fontFamily: "'JetBrains Mono', monospace" }}>tap to flip</div>
+                    <div style={{ fontSize: "10px", fontFamily: "'JetBrains Mono', monospace", color: "rgba(255,255,255,0.55)", textTransform: "uppercase", letterSpacing: "1.5px", fontWeight: 600 }}>Without instructions</div>
+                    <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.5)", fontFamily: "'JetBrains Mono', monospace" }}>tap to flip</div>
                   </div>
                   <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: "8px", padding: "10px 12px", marginBottom: "8px" }}>
-                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", marginBottom: "4px", fontFamily: "'JetBrains Mono', monospace" }}>PROMPT</div>
-                    <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)", lineHeight: 1.5 }}>"Help me write a cold email to a prospect"</div>
+                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.55)", marginBottom: "4px", fontFamily: "'JetBrains Mono', monospace" }}>PROMPT</div>
+                    <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.6)", lineHeight: 1.5 }}>"Help me write a cold email to a prospect"</div>
                   </div>
                   <div style={{ background: "rgba(255,255,255,0.02)", borderRadius: "8px", padding: "10px 12px", flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.25)", textAlign: "center" }}>No project instructions set.<br />Claude uses default behavior.</div>
+                    <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.55)", textAlign: "center" }}>No project instructions set.<br />Claude uses default behavior.</div>
                   </div>
                 </div>
                 <div className="flip-card-back" style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", padding: "16px", display: "flex", flexDirection: "column", overflow: "hidden" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
-                    <div style={{ fontSize: "10px", fontFamily: "'JetBrains Mono', monospace", color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "1.5px", fontWeight: 600 }}>Claude's response</div>
-                    <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.2)", fontFamily: "'JetBrains Mono', monospace" }}>tap to flip</div>
+                    <div style={{ fontSize: "10px", fontFamily: "'JetBrains Mono', monospace", color: "rgba(255,255,255,0.55)", textTransform: "uppercase", letterSpacing: "1.5px", fontWeight: 600 }}>Claude's response</div>
+                    <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.5)", fontFamily: "'JetBrains Mono', monospace" }}>tap to flip</div>
                   </div>
                   <div style={{ background: "rgba(255,255,255,0.02)", borderRadius: "8px", padding: "12px", flex: 1, overflowY: "auto" }}>
-                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.45)", lineHeight: 1.7, fontFamily: "'JetBrains Mono', monospace" }}>
-                      <div style={{ color: "rgba(255,255,255,0.3)", marginBottom: "6px" }}>Subject: Introduction and Opportunity</div>
+                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, fontFamily: "'JetBrains Mono', monospace" }}>
+                      <div style={{ color: "rgba(255,255,255,0.55)", marginBottom: "6px" }}>Subject: Introduction and Opportunity</div>
                       <div>Hi [Name],</div><br />
                       <div>I hope this email finds you well. My name is [Your Name] and I work at [Company]. We help businesses like yours achieve [value proposition].</div><br />
                       <div>I'd love to schedule a quick 15-minute call to discuss how we might be able to help.</div><br />
@@ -116,20 +119,20 @@ export default function PromptEngine() {
                 </div>
               </div>
             </div>
-            <div className="flip-card" style={{ height: pe.isMobile ? "280px" : "300px" }} onClick={() => pe.setFlippedCards(p => ({ ...p, with: !p.with }))}>
+            <div className="flip-card" style={{ height: pe.isMobile ? "280px" : "300px" }} onClick={() => pe.setFlippedCards(p => ({ ...p, with: !p.with }))} role="button" tabIndex={0} aria-label="Flip card: with instructions example" onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pe.setFlippedCards(p => ({ ...p, with: !p.with })); } }}>
               <div className={`flip-card-inner${pe.flippedCards.with ? " flipped" : ""}`}>
                 <div className="flip-card-front" style={{ border: "1px solid rgba(212,162,78,0.25)", background: "rgba(212,162,78,0.04)", padding: "16px", display: "flex", flexDirection: "column" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
                     <div style={{ fontSize: "10px", fontFamily: "'JetBrains Mono', monospace", color: "#d4a24e", textTransform: "uppercase", letterSpacing: "1.5px", fontWeight: 600 }}>With instructions</div>
-                    <div style={{ fontSize: "10px", color: "rgba(212,162,78,0.4)", fontFamily: "'JetBrains Mono', monospace" }}>tap to flip</div>
+                    <div style={{ fontSize: "10px", color: "rgba(212,162,78,0.6)", fontFamily: "'JetBrains Mono', monospace" }}>tap to flip</div>
                   </div>
                   <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: "8px", padding: "10px 12px", marginBottom: "8px" }}>
-                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", marginBottom: "4px", fontFamily: "'JetBrains Mono', monospace" }}>PROMPT</div>
-                    <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)", lineHeight: 1.5 }}>"Help me write a cold email to a prospect"</div>
+                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.55)", marginBottom: "4px", fontFamily: "'JetBrains Mono', monospace" }}>PROMPT</div>
+                    <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.6)", lineHeight: 1.5 }}>"Help me write a cold email to a prospect"</div>
                   </div>
                   <div style={{ background: "rgba(212,162,78,0.06)", borderRadius: "8px", padding: "10px 12px", flex: 1, overflowY: "auto" }}>
-                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", marginBottom: "6px", fontFamily: "'JetBrains Mono', monospace" }}>PROJECT INSTRUCTIONS</div>
-                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", lineHeight: 1.6, fontFamily: "'JetBrains Mono', monospace" }}>
+                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.55)", marginBottom: "6px", fontFamily: "'JetBrains Mono', monospace" }}>PROJECT INSTRUCTIONS</div>
+                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.55)", lineHeight: 1.6, fontFamily: "'JetBrains Mono', monospace" }}>
                       Identity: B2B sales consultant<br />
                       Tone: direct, conversational, no fluff<br />
                       Never use "I hope this finds you well"<br />
@@ -141,10 +144,10 @@ export default function PromptEngine() {
                 <div className="flip-card-back" style={{ border: "1px solid rgba(212,162,78,0.25)", background: "rgba(212,162,78,0.04)", padding: "16px", display: "flex", flexDirection: "column", overflow: "hidden" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
                     <div style={{ fontSize: "10px", fontFamily: "'JetBrains Mono', monospace", color: "#d4a24e", textTransform: "uppercase", letterSpacing: "1.5px", fontWeight: 600 }}>Claude's response</div>
-                    <div style={{ fontSize: "10px", color: "rgba(212,162,78,0.4)", fontFamily: "'JetBrains Mono', monospace" }}>tap to flip</div>
+                    <div style={{ fontSize: "10px", color: "rgba(212,162,78,0.6)", fontFamily: "'JetBrains Mono', monospace" }}>tap to flip</div>
                   </div>
                   <div style={{ background: "rgba(212,162,78,0.06)", borderRadius: "8px", padding: "12px", flex: 1, overflowY: "auto" }}>
-                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, fontFamily: "'JetBrains Mono', monospace" }}>
+                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.65)", lineHeight: 1.7, fontFamily: "'JetBrains Mono', monospace" }}>
                       <div style={{ color: "#d4a24e", marginBottom: "6px" }}>Subject: Cutting your onboarding time in half</div>
                       <div>[First Name],</div><br />
                       <div>Most SaaS teams lose 3-4 weeks onboarding each new client. That's revenue sitting idle.</div><br />
@@ -164,9 +167,11 @@ export default function PromptEngine() {
               onChange={e => { pe.setUserEmail(e.target.value); pe.setGateError(""); }}
               onKeyDown={e => e.key === "Enter" && pe.unlockGate()}
               placeholder="Enter your email to get started"
+              aria-label="Email address"
               style={{ width: "100%", padding: "14px 18px", background: "rgba(255,255,255,0.05)", border: pe.gateError ? "1.5px solid rgba(220,80,80,0.5)" : "1.5px solid rgba(212,162,78,0.2)", borderRadius: "12px", color: "#e0e0e0", fontSize: "15px", fontFamily: "'DM Sans', sans-serif", outline: "none", textAlign: "center", boxSizing: "border-box" }}
             />
-            {pe.gateError && <div style={{ fontSize: "12px", color: "#dc5050" }}>{pe.gateError}</div>}
+            {pe.gateError && <div role="alert" style={{ fontSize: "12px", color: "#dc5050" }}>{pe.gateError}</div>}
+            <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.45)", textAlign: "center" }}>Used only to link your feedback. No spam, no mailing list.</div>
             <Btn primary onClick={pe.unlockGate} style={{ width: "100%", justifyContent: "center", padding: "14px 20px", fontSize: "15px", borderRadius: "12px" }}>
               <Sparkles size={18} /> Launch Engine
             </Btn>
@@ -174,53 +179,53 @@ export default function PromptEngine() {
           <div className="gate-fade-3" style={{ marginTop: "48px", display: "flex", gap: "24px", flexWrap: "wrap", justifyContent: "center" }}>
             {[{ icon: Target, label: "Identity" }, { icon: Brain, label: "Knowledge" }, { icon: ShieldOff, label: "Guardrails" }, { icon: Sliders, label: "Modes" }].map(({ icon: Icon, label }) => (
               <div key={label} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                <Icon size={14} color="rgba(212,162,78,0.4)" />
-                <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)", fontFamily: "'JetBrains Mono', monospace" }}>{label}</span>
+                <Icon size={14} color="rgba(212,162,78,0.5)" />
+                <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.55)", fontFamily: "'JetBrains Mono', monospace" }}>{label}</span>
               </div>
             ))}
           </div>
         </div>
       ) : (
         <>
-          <div style={{ padding: pe.isMobile ? "12px 16px" : "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(0,0,0,0.2)", flexWrap: "wrap", gap: "8px" }}>
+          <header style={{ padding: pe.isMobile ? "12px 16px" : "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(0,0,0,0.2)", flexWrap: "wrap", gap: "8px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: pe.isMobile ? "10px" : "14px" }}>
               <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "linear-gradient(135deg, #d4a24e, #b8862e)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><Zap size={18} color="#1a1a1a" /></div>
               <div>
-                <div style={{ fontSize: pe.isMobile ? "14px" : "16px", fontWeight: 700, letterSpacing: "-0.3px" }}>Prompt Engine</div>
-                {!pe.isMobile && <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono', monospace" }}>Project Instructions Builder · {VERSION}</div>}
+                <h1 style={{ fontSize: pe.isMobile ? "14px" : "16px", fontWeight: 700, letterSpacing: "-0.3px", margin: 0 }}>Prompt Engine</h1>
+                {!pe.isMobile && <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.55)", fontFamily: "'JetBrains Mono', monospace" }}>Project Instructions Builder · {VERSION}</div>}
               </div>
             </div>
             <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
               <Badge active={pe.appMode === "create"} onClick={() => { pe.setAppMode("create"); pe.setParsedPreview(null); }}>Create</Badge>
               <Badge active={pe.appMode === "edit"} onClick={() => pe.setAppMode("edit")}>Edit</Badge>
               {!pe.isMobile && <div style={{ width: "1px", height: "24px", background: "rgba(255,255,255,0.1)", margin: "0 4px" }} />}
-              <button onClick={() => pe.setShowPreview(!pe.showPreview)} style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", display: "flex", alignItems: "center", gap: "4px" }}>
-                {pe.showPreview ? <PanelRightClose size={18} color="rgba(255,255,255,0.5)" /> : <PanelRightOpen size={18} color="rgba(255,255,255,0.5)" />}
-                {!pe.isMobile && <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.35)", fontFamily: "'JetBrains Mono', monospace" }}>Preview</span>}
+              <button onClick={() => pe.setShowPreview(!pe.showPreview)} aria-label={pe.showPreview ? "Hide preview panel" : "Show preview panel"} style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", display: "flex", alignItems: "center", gap: "4px" }}>
+                {pe.showPreview ? <PanelRightClose size={18} color="rgba(255,255,255,0.6)" /> : <PanelRightOpen size={18} color="rgba(255,255,255,0.6)" />}
+                {!pe.isMobile && <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.55)", fontFamily: "'JetBrains Mono', monospace" }}>Preview</span>}
               </button>
               <div style={{ width: "1px", height: "24px", background: "rgba(255,255,255,0.1)", margin: "0 2px" }} />
-              <a href="/" style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", display: "flex", alignItems: "center", gap: "4px", textDecoration: "none" }} title="Back to site">
-                <X size={18} color="rgba(255,255,255,0.4)" />
+              <a href="/" style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", display: "flex", alignItems: "center", gap: "4px", textDecoration: "none" }} title="Back to site" aria-label="Back to site">
+                <X size={18} color="rgba(255,255,255,0.55)" />
               </a>
             </div>
-          </div>
+          </header>
 
           <div style={{ display: "flex", flex: 1, overflow: "hidden", flexDirection: pe.isMobile ? "column" : "row" }}>
             {pe.appMode === "create" && (
               pe.isMobile ? (
                 <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", background: "rgba(0,0,0,0.1)" }}>
-                  <div style={{ height: "3px", background: "rgba(255,255,255,0.04)" }}>
+                  <div style={{ height: "3px", background: "rgba(255,255,255,0.04)" }} role="progressbar" aria-valuenow={pe.step + 1} aria-valuemin={1} aria-valuemax={STEPS.length} aria-label={`Step ${pe.step + 1} of ${STEPS.length}`}>
                     <div style={{ height: "100%", width: `${((pe.step + 1) / STEPS.length) * 100}%`, background: "linear-gradient(90deg, #d4a24e, #b8862e)", borderRadius: "0 2px 2px 0", transition: "width 0.3s ease" }} />
                   </div>
-                  <button onClick={() => pe.setShowMobileNav(!pe.showMobileNav)} style={{ width: "100%", padding: "12px 16px", background: "none", border: "none", display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer" }}>
+                  <button onClick={() => pe.setShowMobileNav(!pe.showMobileNav)} aria-expanded={pe.showMobileNav} aria-label="Toggle step navigation" style={{ width: "100%", padding: "12px 16px", background: "none", border: "none", display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", flex: 1 }}>
                       {(() => { const Icon = STEPS[pe.step].icon; return <Icon size={14} color="#d4a24e" />; })()}
                       <div style={{ textAlign: "left" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                           <span style={{ fontSize: "13px", fontWeight: 600, color: "#e0e0e0" }}>{STEPS[pe.step].label}</span>
-                          <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.25)", fontFamily: "'JetBrains Mono', monospace" }}>{pe.step + 1}/{STEPS.length}</span>
+                          <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.55)", fontFamily: "'JetBrains Mono', monospace" }}>{pe.step + 1}/{STEPS.length}</span>
                         </div>
-                        <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.35)", marginTop: "2px" }}>{STEPS[pe.step].desc}</div>
+                        <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.55)", marginTop: "2px" }}>{STEPS[pe.step].desc}</div>
                       </div>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
@@ -229,45 +234,45 @@ export default function PromptEngine() {
                     </div>
                   </button>
                   {pe.showMobileNav && (
-                    <div style={{ padding: "0 0 8px", maxHeight: "300px", overflowY: "auto", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+                    <nav aria-label="Steps" style={{ padding: "0 0 8px", maxHeight: "300px", overflowY: "auto", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
                       {STEPS.map((s, i) => {
                         const Icon = s.icon; const active = pe.step === i; const completed = i < pe.step;
                         return (
-                          <button key={s.id} onClick={() => { pe.setStep(i); pe.setShowMobileNav(false); pe.trackActivity(); }} style={{ width: "100%", padding: "10px 16px", background: active ? "rgba(212,162,78,0.08)" : "transparent", border: "none", borderLeft: active ? "3px solid #d4a24e" : "3px solid transparent", cursor: "pointer", display: "flex", alignItems: "center", gap: "10px", textAlign: "left" }}>
+                          <button key={s.id} onClick={() => { pe.setStep(i); pe.setShowMobileNav(false); pe.trackActivity(); }} aria-current={active ? "step" : undefined} style={{ width: "100%", padding: "10px 16px", background: active ? "rgba(212,162,78,0.08)" : "transparent", border: "none", borderLeft: active ? "3px solid #d4a24e" : "3px solid transparent", cursor: "pointer", display: "flex", alignItems: "center", gap: "10px", textAlign: "left" }}>
                             <div style={{ position: "relative", flexShrink: 0 }}>
-                              <Icon size={14} color={active ? "#d4a24e" : completed ? "#50b450" : "rgba(255,255,255,0.2)"} />
+                              <Icon size={14} color={active ? "#d4a24e" : completed ? "#50b450" : "rgba(255,255,255,0.3)"} />
                               {completed && <CheckCircle2 size={8} color="#50b450" style={{ position: "absolute", top: -3, right: -3 }} />}
                             </div>
                             <div style={{ flex: 1 }}>
-                              <div style={{ fontSize: "13px", fontWeight: active ? 600 : 400, color: active ? "#e0e0e0" : "rgba(255,255,255,0.5)" }}>{s.label}</div>
-                              <div style={{ fontSize: "10px", color: active ? "rgba(212,162,78,0.6)" : "rgba(255,255,255,0.25)", fontFamily: "'JetBrains Mono', monospace", marginTop: "1px" }}>{s.desc}</div>
+                              <div style={{ fontSize: "13px", fontWeight: active ? 600 : 400, color: active ? "#e0e0e0" : "rgba(255,255,255,0.6)" }}>{s.label}</div>
+                              <div style={{ fontSize: "10px", color: active ? "rgba(212,162,78,0.7)" : "rgba(255,255,255,0.45)", fontFamily: "'JetBrains Mono', monospace", marginTop: "1px" }}>{s.desc}</div>
                             </div>
                             {active && <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#d4a24e", flexShrink: 0 }} />}
                           </button>
                         );
                       })}
-                    </div>
+                    </nav>
                   )}
                 </div>
               ) : (
-                <div style={{ width: "220px", minWidth: "220px", borderRight: "1px solid rgba(255,255,255,0.06)", padding: "16px 0", background: "rgba(0,0,0,0.1)", overflowY: "auto" }}>
+                <nav aria-label="Steps" style={{ width: "220px", minWidth: "220px", borderRight: "1px solid rgba(255,255,255,0.06)", padding: "16px 0", background: "rgba(0,0,0,0.1)", overflowY: "auto" }}>
                   {STEPS.map((s, i) => {
                     const Icon = s.icon; const active = pe.step === i; const completed = i < pe.step;
                     return (
-                      <button key={s.id} onClick={() => { pe.setStep(i); pe.trackActivity(); }} style={{ width: "100%", padding: "10px 16px", background: active ? "rgba(212,162,78,0.08)" : "transparent", border: "none", borderLeft: active ? "2px solid #d4a24e" : "2px solid transparent", cursor: "pointer", display: "flex", alignItems: "center", gap: "10px", transition: "all 0.15s", textAlign: "left" }}>
+                      <button key={s.id} onClick={() => { pe.setStep(i); pe.trackActivity(); }} aria-current={active ? "step" : undefined} style={{ width: "100%", padding: "10px 16px", background: active ? "rgba(212,162,78,0.08)" : "transparent", border: "none", borderLeft: active ? "2px solid #d4a24e" : "2px solid transparent", cursor: "pointer", display: "flex", alignItems: "center", gap: "10px", transition: "all 0.15s", textAlign: "left" }}>
                         <Icon size={16} color={active ? "#d4a24e" : completed ? "#50b450" : "rgba(255,255,255,0.3)"} />
                         <div>
-                          <div style={{ fontSize: "13px", fontWeight: active ? 600 : 400, color: active ? "#e0e0e0" : "rgba(255,255,255,0.5)" }}>{s.label}</div>
-                          <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.3)", fontFamily: "'JetBrains Mono', monospace" }}>{s.desc}</div>
+                          <div style={{ fontSize: "13px", fontWeight: active ? 600 : 400, color: active ? "#e0e0e0" : "rgba(255,255,255,0.6)" }}>{s.label}</div>
+                          <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.55)", fontFamily: "'JetBrains Mono', monospace" }}>{s.desc}</div>
                         </div>
                       </button>
                     );
                   })}
-                </div>
+                </nav>
               )
             )}
 
-            <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column" }}>
+            <main style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column" }}>
               {pe.appMode === "edit" ? (
                 <EditMode
                   isMobile={pe.isMobile}
@@ -284,7 +289,7 @@ export default function PromptEngine() {
               ) : (
                 <div style={{ padding: pe.isMobile ? "16px" : "32px 40px", flex: 1, maxWidth: "640px", margin: "0 auto" }}>
                   <div style={{ marginBottom: "24px" }}>
-                    <span style={{ fontSize: "11px", fontFamily: "'JetBrains Mono', monospace", color: "rgba(255,255,255,0.3)" }}>STEP {pe.step + 1} / {STEPS.length}</span>
+                    <span style={{ fontSize: "11px", fontFamily: "'JetBrains Mono', monospace", color: "rgba(255,255,255,0.55)" }}>STEP {pe.step + 1} / {STEPS.length}</span>
                     <h2 style={{ fontSize: "22px", fontWeight: 700, letterSpacing: "-0.5px", marginTop: "4px" }}>{STEPS[pe.step].label}</h2>
                   </div>
                   {pe.showAssist && pe.step < 9 && (
@@ -305,7 +310,7 @@ export default function PromptEngine() {
                   </div>
                 </div>
               )}
-            </div>
+            </main>
 
             <PreviewPanel
               isMobile={pe.isMobile}

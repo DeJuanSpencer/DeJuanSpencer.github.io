@@ -9,7 +9,7 @@ export function FailureStep({ loading, failures, itemLoading, generateFailures, 
         <SectionLabel>Failure Mode Preemption</SectionLabel>
         <Btn small onClick={generateFailures} disabled={loading}>{loading ? <Loader2 size={14} className="spin" /> : <Sparkles size={14} />}{failures.length ? "Regenerate All" : "Generate"}</Btn>
       </div>
-      {!failures.length && !loading && <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "14px", fontStyle: "italic" }}>Domain-specific failure patterns Claude should be explicitly blocked from.</div>}
+      {!failures.length && !loading && <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "14px", fontStyle: "italic" }}>Domain-specific failure patterns Claude should be explicitly blocked from.</div>}
       {failures.length > 0 && (
         <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", background: "rgba(212,162,78,0.06)", border: "1px solid rgba(212,162,78,0.15)", borderRadius: "8px" }}>
           <ShieldOff size={16} color="#d4a24e" style={{ flexShrink: 0 }} />
@@ -23,7 +23,7 @@ export function FailureStep({ loading, failures, itemLoading, generateFailures, 
               <AlertTriangle size={16} color={f.severity === "high" ? "#dc5050" : f.severity === "medium" ? "#d4a24e" : "rgba(255,255,255,0.3)"} style={{ marginTop: "2px", flexShrink: 0 }} />
               <div style={{ flex: 1 }}>
                 <div style={{ color: "#e0e0e0", fontSize: "13px", fontWeight: 600 }}>{f.pattern}</div>
-                <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "12px", marginTop: "2px" }}>Severity: {f.severity}</div>
+                <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "12px", marginTop: "2px" }}>Severity: {f.severity}</div>
                 <div style={{ color: "rgba(212,162,78,0.8)", fontSize: "12px", marginTop: "4px" }}>Prevention: {f.prevention}</div>
               </div>
               <Btn small onClick={() => regenerateFailure(i)} disabled={itemLoading[`failure_${i}`]}>{itemLoading[`failure_${i}`] ? <Loader2 size={12} className="spin" /> : <RefreshCw size={12} />} Redo</Btn>

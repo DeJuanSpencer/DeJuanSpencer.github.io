@@ -9,7 +9,7 @@ export function ModesStep({ loading, modes, defaultModeIdx, setDefaultModeIdx, i
         <SectionLabel>Operational Modes</SectionLabel>
         <Btn small onClick={generateModes} disabled={loading}>{loading ? <Loader2 size={14} className="spin" /> : <Sparkles size={14} />}{modes.length ? "Regenerate All" : "Generate Modes"}</Btn>
       </div>
-      {!modes.length && !loading && <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "14px", fontStyle: "italic" }}>Modes give you switchable behavior profiles within the same project.</div>}
+      {!modes.length && !loading && <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "14px", fontStyle: "italic" }}>Modes give you switchable behavior profiles within the same project.</div>}
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         {modes.map((m, i) => (
           <Card key={i} highlight={i === defaultModeIdx}>
