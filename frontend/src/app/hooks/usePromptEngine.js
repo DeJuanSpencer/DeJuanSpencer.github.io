@@ -291,7 +291,7 @@ export function usePromptEngine(user) {
     if (r && !r._error) { setNegativeSuggestions(r); setSelectedNegatives(new Set(r.map((_, i) => i))); } else showError(r?._error || "Guardrail generation failed. Try again.");
   });
   const generateModes = () => withLoading(async () => {
-    const r = await callClaude(`You design operational modes for AI assistants. Return ONLY valid JSON: {"modes":[{"name":"...","trigger":"one word or short phrase","description":"...","characteristics":["...","...","..."]}],"defaultMode":0}`, `Domain: ${domain}\nProject: ${projectName}\nDescription: ${projectDesc}\nGoals: ${goals}`);
+    const r = await callClaude(`You design operational modes for AI assistants. Return ONLY valid JSON: {"modes":[{"name":"...","trigger":"one word or short phrase","description":"...","characteristics":["...","...","..."]}],"defaultMode":0}`, `Domain: ${domain}\nProject: ${projectName}\nDescription: ${projectDesc}\nGoals: ${goals}`, 8000);
     if (r && !r._error) { setModes(r.modes || []); setDefaultModeIdx(r.defaultMode || 0); } else showError(r?._error || "Mode generation failed. Try again.");
   });
   const regenerateMode = async (idx) => {
@@ -469,7 +469,7 @@ export function usePromptEngine(user) {
   }, []);
 
   const projectBlurb = `${projectDesc}${goals ? " Goal: " + goals.trim().replace(/\.?\s*$/, ".") : ""}`.trim();
-  const canAdvance = () => step === 0 ? (projectName && domain && projectDesc) : true;
+  const canAdvance = () => step === 0 ? !!(projectName || domain || projectDesc || goals) : true;
 
   return {
     // Navigation
