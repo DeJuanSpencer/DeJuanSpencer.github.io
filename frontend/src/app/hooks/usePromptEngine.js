@@ -291,7 +291,7 @@ export function usePromptEngine(user) {
     if (r && !r._error) { setNegativeSuggestions(r); setSelectedNegatives(new Set(r.map((_, i) => i))); } else showError(r?._error || "Guardrail generation failed. Try again.");
   });
   const generateModes = () => withLoading(async () => {
-    const r = await callClaude(`You design operational modes for AI assistants. Return ONLY valid JSON: {"modes":[{"name":"...","trigger":"one word or short phrase","description":"...","characteristics":["...","...","..."]}],"defaultMode":0}`, `Domain: ${domain}\nProject: ${projectName}\nDescription: ${projectDesc}\nGoals: ${goals}`, 4000);
+    const r = await callClaude(`You design operational modes for AI assistants. Return ONLY valid JSON: {"modes":[{"name":"...","trigger":"one word or short phrase","description":"...","characteristics":["...","...","..."]}],"defaultMode":0}`, `Domain: ${domain}\nProject: ${projectName}\nDescription: ${projectDesc}\nGoals: ${goals}`, 8000);
     if (r && !r._error) { setModes(r.modes || []); setDefaultModeIdx(r.defaultMode || 0); } else showError(r?._error || "Mode generation failed. Try again.");
   });
   const regenerateMode = async (idx) => {
