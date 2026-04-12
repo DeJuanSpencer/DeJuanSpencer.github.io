@@ -3,28 +3,49 @@
 import Link from "next/link";
 
 const navLinks = [
-  { name: "Services", href: "#services" },
-  { name: "Projects", href: "#projects" },
-  { name: "Experience", href: "#experience" },
-  { name: "About", href: "#about" },
-  { name: "Contact", href: "#contact" },
+  { name: "About", href: "/#about" },
+  { name: "Services", href: "/#services" },
+  { name: "Projects", href: "/#projects" },
+  { name: "Experience", href: "/#experience" },
+  { name: "Contact", href: "/#contact" },
+  { name: "Work With Me", href: "/work-with-me", highlight: true },
+  { name: "Prompt Engine", href: "/prompt-engine", accent: true },
 ];
 
 type Props = {
   className?: string;
-  onClick?: () => void; // for mobile close menu on click
+  onClick?: () => void;
 };
 
 export default function Links({ className = "", onClick }: Props) {
   return (
-    <nav
-      className={`space-x-6 md:space-x-6 text-gray-700 font-medium ${className}`}
-    >
+    <nav className={className}>
       {navLinks.map((link) => (
         <Link
           key={link.href}
           href={link.href}
-          className="hover:text-blue-600 transition block md:inline"
+          className="transition-colors duration-200"
+          style={{
+            color: link.highlight
+              ? "var(--brand-red)"
+              : link.accent
+              ? "var(--brand-gold)"
+              : "var(--text-secondary)",
+            fontSize: "14px",
+            fontWeight: link.highlight || link.accent ? 600 : 500,
+          }}
+          onMouseEnter={(e) => {
+            if (!link.highlight) {
+              (e.target as HTMLElement).style.color = "var(--brand-gold)";
+            }
+          }}
+          onMouseLeave={(e) => {
+            (e.target as HTMLElement).style.color = link.highlight
+              ? "var(--brand-red)"
+              : link.accent
+              ? "var(--brand-gold)"
+              : "var(--text-secondary)";
+          }}
           onClick={onClick}
         >
           {link.name}

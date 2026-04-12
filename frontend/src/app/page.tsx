@@ -11,38 +11,38 @@ import Skills from "./components/Skills";
 
 export default function HomePage() {
   return (
-    <main className="bg-gray-50 text-gray-900 scroll-smooth">
+    <main className="scroll-smooth" style={{ background: "var(--brand-foundation)", color: "var(--text-primary)" }}>
       <Header />
 
       <section id="hero">
         <Hero />
       </section>
 
-      <section id="services" className="py-20 bg-white border-t border-gray-100">
+      <section id="services" className="py-20" style={{ borderTop: "1px solid var(--border-subtle)" }}>
         <Services />
       </section>
 
-      <section id="about" className="py-20 border-t border-gray-100">
+      <section id="about" className="py-20" style={{ background: "var(--section-alt)", borderTop: "1px solid var(--border-subtle)" }}>
         <About />
       </section>
 
-      <section id="projects" className="py-20 bg-white border-t border-gray-100">
+      <section id="projects" className="py-20" style={{ borderTop: "1px solid var(--border-subtle)" }}>
         <Projects />
       </section>
 
-      <section id="experience" className="py-20 border-t border-gray-100">
+      <section id="experience" className="py-20" style={{ background: "var(--section-alt)", borderTop: "1px solid var(--border-subtle)" }}>
         <Experience />
       </section>
 
-      <section id="skills" className="py-20 bg-white border-t border-gray-100">
+      <section id="skills" className="py-20" style={{ borderTop: "1px solid var(--border-subtle)" }}>
         <Skills />
       </section>
 
-      <section id="martial-arts" className="py-14 border-t border-gray-100">
+      <section id="martial-arts" className="py-20" style={{ background: "var(--section-alt)", borderTop: "1px solid var(--border-subtle)" }}>
         <MartialArts />
       </section>
 
-      <section id="contact" className="py-20 bg-white border-t border-gray-100">
+      <section id="contact" className="py-20" style={{ borderTop: "1px solid var(--border-subtle)" }}>
         <ContactForm />
       </section>
 
