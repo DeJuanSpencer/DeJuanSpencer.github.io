@@ -373,7 +373,7 @@ export function usePromptEngine() {
     // Gate
     userEmail, setUserEmail,
     gateUnlocked,
-    gateError,
+    gateError, setGateError,
     feedbackText, setFeedbackText,
     feedbackSubmitted,
     feedbackSending,

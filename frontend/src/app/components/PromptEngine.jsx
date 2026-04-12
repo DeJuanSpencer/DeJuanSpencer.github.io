@@ -16,6 +16,8 @@ import { ExportStep } from "./prompt-engine/steps/ExportStep";
 import PreviewPanel from "./prompt-engine/PreviewPanel";
 import EditMode from "./prompt-engine/EditMode";
 
+const STEP_COMPONENTS = [ContextStep, IdentityStep, KnowledgeStep, NegativeSpaceStep, ModesStep, PriorityStep, FailureStep, TemplatesStep, ExamplesStep, ExportStep];
+
 export default function PromptEngine() {
   const pe = usePromptEngine();
 
@@ -25,14 +27,13 @@ export default function PromptEngine() {
     { loading: pe.loading, quizQuestions: pe.quizQuestions, quizAnswers: pe.quizAnswers, setQuizAnswers: pe.setQuizAnswers, knowledgeResult: pe.knowledgeResult, generateQuiz: pe.generateQuiz, processQuizAnswers: pe.processQuizAnswers, trackActivity: pe.trackActivity },
     { loading: pe.loading, negativeSuggestions: pe.negativeSuggestions, selectedNegatives: pe.selectedNegatives, setSelectedNegatives: pe.setSelectedNegatives, generateNegativeSpace: pe.generateNegativeSpace, trackActivity: pe.trackActivity },
     { loading: pe.loading, modes: pe.modes, defaultModeIdx: pe.defaultModeIdx, setDefaultModeIdx: pe.setDefaultModeIdx, itemLoading: pe.itemLoading, generateModes: pe.generateModes, regenerateMode: pe.regenerateMode, trackActivity: pe.trackActivity },
-    { loading: pe.loading, priorities: pe.priorities, dragIdx: pe.dragIdx, dragOverIdx: pe.dragOverIdx, itemLoading: pe.itemLoading, generatePriorities: pe.generatePriorities, regeneratePriority: pe.regeneratePriority, handleDragStart: pe.handleDragStart, handleDragOver: pe.handleDragOver, handleDragEnd: pe.handleDragEnd, movePriority: pe.movePriority },
-    { loading: pe.loading, failures: pe.failures, itemLoading: pe.itemLoading, generateFailures: pe.generateFailures, regenerateFailure: pe.regenerateFailure },
+    { loading: pe.loading, priorities: pe.priorities, dragIdx: pe.dragIdx, dragOverIdx: pe.dragOverIdx, itemLoading: pe.itemLoading, generatePriorities: pe.generatePriorities, regeneratePriority: pe.regeneratePriority, handleDragStart: pe.handleDragStart, handleDragOver: pe.handleDragOver, handleDragEnd: pe.handleDragEnd, movePriority: pe.movePriority, trackActivity: pe.trackActivity },
+    { loading: pe.loading, failures: pe.failures, itemLoading: pe.itemLoading, generateFailures: pe.generateFailures, regenerateFailure: pe.regenerateFailure, trackActivity: pe.trackActivity },
     { loading: pe.loading, templates: pe.templates, templatesEnabled: pe.templatesEnabled, setTemplatesEnabled: pe.setTemplatesEnabled, selectedTemplates: pe.selectedTemplates, setSelectedTemplates: pe.setSelectedTemplates, generateTemplates: pe.generateTemplates, trackActivity: pe.trackActivity },
     { loading: pe.loading, examples: pe.examples, approvedExamples: pe.approvedExamples, setApprovedExamples: pe.setApprovedExamples, generateExamples: pe.generateExamples, trackActivity: pe.trackActivity },
     { projectBlurb: pe.projectBlurb, compiledOutput: pe.compiledOutput, customInjection: pe.customInjection, setCustomInjection: pe.setCustomInjection, copied: pe.copied, copiedBlurb: pe.copiedBlurb, feedbackText: pe.feedbackText, setFeedbackText: pe.setFeedbackText, feedbackSubmitted: pe.feedbackSubmitted, feedbackSending: pe.feedbackSending, onCopy: pe.copyToClipboard, onCopyBlurb: pe.copyBlurb, onSubmitFeedback: pe.submitFeedback, trackActivity: pe.trackActivity },
   ];
 
-  const STEP_COMPONENTS = [ContextStep, IdentityStep, KnowledgeStep, NegativeSpaceStep, ModesStep, PriorityStep, FailureStep, TemplatesStep, ExamplesStep, ExportStep];
   const CurrentStep = STEP_COMPONENTS[pe.step];
 
   return (
@@ -160,7 +161,7 @@ export default function PromptEngine() {
             <input
               type="email"
               value={pe.userEmail}
-              onChange={e => { pe.setUserEmail(e.target.value); }}
+              onChange={e => { pe.setUserEmail(e.target.value); pe.setGateError(""); }}
               onKeyDown={e => e.key === "Enter" && pe.unlockGate()}
               placeholder="Enter your email to get started"
               style={{ width: "100%", padding: "14px 18px", background: "rgba(255,255,255,0.05)", border: pe.gateError ? "1.5px solid rgba(220,80,80,0.5)" : "1.5px solid rgba(212,162,78,0.2)", borderRadius: "12px", color: "#e0e0e0", fontSize: "15px", fontFamily: "'DM Sans', sans-serif", outline: "none", textAlign: "center", boxSizing: "border-box" }}
