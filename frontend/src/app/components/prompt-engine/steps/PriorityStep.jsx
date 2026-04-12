@@ -1,8 +1,34 @@
 "use client";
+import { useState } from "react";
 import { Loader2, Sparkles, RefreshCw, Sliders, ArrowUp, ArrowDown } from "lucide-react";
 import { SectionLabel, Btn, Card } from "../ui";
 
-export function PriorityStep({ loading, priorities, dragIdx, dragOverIdx, itemLoading, generatePriorities, regeneratePriority, handleDragStart, handleDragOver, handleDragEnd, movePriority }) {
+const INPUT_STYLE = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(212,162,78,0.4)", borderRadius: "4px", padding: "3px 8px", color: "#e0e0e0", fontSize: "inherit", fontFamily: "inherit", fontWeight: "inherit", width: "100%", outline: "none", resize: "vertical" };
+
+export function PriorityStep({ loading, priorities, dragIdx, dragOverIdx, itemLoading, generatePriorities, regeneratePriority, handleDragStart, handleDragOver, handleDragEnd, movePriority, updatePriority, trackActivity }) {
+  const [editKey, setEditKey] = useState(null);
+  const [editVal, setEditVal] = useState("");
+
+  const startEdit = (key, val, e) => {
+    e?.stopPropagation();
+    setEditKey(key);
+    setEditVal(val);
+  };
+
+  const commitEdit = () => {
+    if (editKey === null) return;
+    const [idxStr, field] = editKey.split(".");
+    updatePriority(parseInt(idxStr), { [field]: editVal });
+    setEditKey(null);
+  };
+
+  const cancelEdit = () => setEditKey(null);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && e.target.tagName !== "TEXTAREA") { e.preventDefault(); commitEdit(); }
+    if (e.key === "Escape") cancelEdit();
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -24,8 +50,64 @@ export function PriorityStep({ loading, priorities, dragIdx, dragOverIdx, itemLo
             </div>
             <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "12px", color: "#d4a24e", minWidth: "20px" }}>P{i + 1}</span>
             <div style={{ flex: 1 }}>
-              <div style={{ color: "#e0e0e0", fontSize: "13px", fontWeight: 600 }}>{p.rule}</div>
-              <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "12px", marginTop: "2px" }}>Overrides: {p.overrides} | Exception: {p.exception}</div>
+              {editKey === `${i}.rule` ? (
+                <input
+                  type="text"
+                  value={editVal}
+                  autoFocus
+                  style={{ ...INPUT_STYLE, fontSize: "13px", fontWeight: 600 }}
+                  onChange={e => setEditVal(e.target.value)}
+                  onBlur={commitEdit}
+                  onKeyDown={handleKeyDown}
+                  onClick={e => e.stopPropagation()}
+                />
+              ) : (
+                <div
+                  style={{ color: "#e0e0e0", fontSize: "13px", fontWeight: 600, cursor: "text" }}
+                  title="Click to edit"
+                  onClick={e => startEdit(`${i}.rule`, p.rule, e)}
+                >{p.rule}</div>
+              )}
+              <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "12px", marginTop: "2px", display: "flex", flexWrap: "wrap", gap: "4px", alignItems: "center" }}>
+                <span style={{ flexShrink: 0 }}>Overrides:</span>
+                {editKey === `${i}.overrides` ? (
+                  <input
+                    type="text"
+                    value={editVal}
+                    autoFocus
+                    style={{ ...INPUT_STYLE, fontSize: "12px", flex: 1, minWidth: "80px" }}
+                    onChange={e => setEditVal(e.target.value)}
+                    onBlur={commitEdit}
+                    onKeyDown={handleKeyDown}
+                    onClick={e => e.stopPropagation()}
+                  />
+                ) : (
+                  <span
+                    style={{ cursor: "text" }}
+                    title="Click to edit"
+                    onClick={e => startEdit(`${i}.overrides`, p.overrides, e)}
+                  >{p.overrides}</span>
+                )}
+                <span style={{ flexShrink: 0 }}>| Exception:</span>
+                {editKey === `${i}.exception` ? (
+                  <input
+                    type="text"
+                    value={editVal}
+                    autoFocus
+                    style={{ ...INPUT_STYLE, fontSize: "12px", flex: 1, minWidth: "80px" }}
+                    onChange={e => setEditVal(e.target.value)}
+                    onBlur={commitEdit}
+                    onKeyDown={handleKeyDown}
+                    onClick={e => e.stopPropagation()}
+                  />
+                ) : (
+                  <span
+                    style={{ cursor: "text" }}
+                    title="Click to edit"
+                    onClick={e => startEdit(`${i}.exception`, p.exception, e)}
+                  >{p.exception}</span>
+                )}
+              </div>
             </div>
             <Btn small onClick={() => regeneratePriority(i)} disabled={itemLoading[`priority_${i}`]}>{itemLoading[`priority_${i}`] ? <Loader2 size={12} className="spin" /> : <RefreshCw size={12} />} Redo</Btn>
           </Card>

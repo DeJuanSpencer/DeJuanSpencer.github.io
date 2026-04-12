@@ -444,6 +444,30 @@ export function usePromptEngine(user) {
     [arr[idx], arr[target]] = [arr[target], arr[idx]]; setPriorities(arr);
   };
 
+  const updateIdentityOption = useCallback((idx, changes) => {
+    setIdentityOptions(prev => prev.map((opt, i) => i === idx ? { ...opt, ...changes } : opt));
+  }, []);
+
+  const updateMode = useCallback((idx, changes) => {
+    setModes(prev => prev.map((m, i) => i === idx ? { ...m, ...changes } : m));
+  }, []);
+
+  const updateNegative = useCallback((idx, changes) => {
+    setNegativeSuggestions(prev => prev.map((n, i) => i === idx ? { ...n, ...changes } : n));
+  }, []);
+
+  const updatePriority = useCallback((idx, changes) => {
+    setPriorities(prev => prev.map((p, i) => i === idx ? { ...p, ...changes } : p));
+  }, []);
+
+  const updateFailure = useCallback((idx, changes) => {
+    setFailures(prev => prev.map((f, i) => i === idx ? { ...f, ...changes } : f));
+  }, []);
+
+  const updateExample = useCallback((idx, changes) => {
+    setExamples(prev => prev.map((e, i) => i === idx ? { ...e, ...changes } : e));
+  }, []);
+
   const projectBlurb = `${projectDesc}${goals ? " Goal: " + goals.trim().replace(/\.?\s*$/, ".") : ""}`.trim();
   const canAdvance = () => step === 0 ? (projectName && domain && projectDesc) : true;
 
@@ -487,7 +511,7 @@ export function usePromptEngine(user) {
     // Step 2
     quizQuestions,
     quizAnswers, setQuizAnswers,
-    knowledgeResult,
+    knowledgeResult, setKnowledgeResult,
     // Step 3
     negativeSuggestions,
     selectedNegatives, setSelectedNegatives,
@@ -542,5 +566,11 @@ export function usePromptEngine(user) {
     handleDragOver,
     handleDragEnd,
     movePriority,
+    updateIdentityOption,
+    updateMode,
+    updateNegative,
+    updatePriority,
+    updateFailure,
+    updateExample,
   };
 }

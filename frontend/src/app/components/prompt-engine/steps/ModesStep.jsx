@@ -1,8 +1,38 @@
 "use client";
+import { useState } from "react";
 import { Loader2, Sparkles, RefreshCw } from "lucide-react";
 import { SectionLabel, Btn, Card } from "../ui";
 
-export function ModesStep({ loading, modes, defaultModeIdx, setDefaultModeIdx, itemLoading, generateModes, regenerateMode, trackActivity }) {
+const INPUT_STYLE = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(212,162,78,0.4)", borderRadius: "4px", padding: "3px 8px", color: "#e0e0e0", fontSize: "inherit", fontFamily: "inherit", fontWeight: "inherit", width: "100%", outline: "none", resize: "vertical" };
+
+export function ModesStep({ loading, modes, defaultModeIdx, setDefaultModeIdx, itemLoading, generateModes, regenerateMode, updateMode, trackActivity }) {
+  const [editKey, setEditKey] = useState(null);
+  const [editVal, setEditVal] = useState("");
+
+  const startEdit = (key, val, e) => {
+    e?.stopPropagation();
+    setEditKey(key);
+    setEditVal(val);
+  };
+
+  const commitEdit = () => {
+    if (editKey === null) return;
+    const [idxStr, field] = editKey.split(".");
+    updateMode(parseInt(idxStr), { [field]: editVal });
+    setEditKey(null);
+  };
+
+  const cancelEdit = () => setEditKey(null);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && e.target.tagName !== "TEXTAREA") { e.preventDefault(); commitEdit(); }
+    if (e.key === "Escape") cancelEdit();
+  };
+
+  const handleTextareaKeyDown = (e) => {
+    if (e.key === "Escape") cancelEdit();
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -16,11 +46,62 @@ export function ModesStep({ loading, modes, defaultModeIdx, setDefaultModeIdx, i
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px", flexWrap: "wrap" }}>
-                  <span style={{ fontWeight: 700, color: "#e0e0e0", fontSize: "15px" }}>{m.name}</span>
-                  <span style={{ fontSize: "11px", padding: "2px 8px", borderRadius: "4px", background: "rgba(212,162,78,0.15)", color: "#d4a24e", fontFamily: "'JetBrains Mono', monospace" }}>"{m.trigger}"</span>
+                  {editKey === `${i}.name` ? (
+                    <input
+                      type="text"
+                      value={editVal}
+                      autoFocus
+                      style={{ ...INPUT_STYLE, fontWeight: 700, fontSize: "15px" }}
+                      onChange={e => setEditVal(e.target.value)}
+                      onBlur={commitEdit}
+                      onKeyDown={handleKeyDown}
+                      onClick={e => e.stopPropagation()}
+                    />
+                  ) : (
+                    <span
+                      style={{ fontWeight: 700, color: "#e0e0e0", fontSize: "15px", cursor: "text" }}
+                      title="Click to edit"
+                      onClick={e => startEdit(`${i}.name`, m.name, e)}
+                    >{m.name}</span>
+                  )}
+                  {editKey === `${i}.trigger` ? (
+                    <input
+                      type="text"
+                      value={editVal}
+                      autoFocus
+                      style={{ ...INPUT_STYLE, fontSize: "11px", fontFamily: "'JetBrains Mono', monospace", width: "auto", minWidth: "80px" }}
+                      onChange={e => setEditVal(e.target.value)}
+                      onBlur={commitEdit}
+                      onKeyDown={handleKeyDown}
+                      onClick={e => e.stopPropagation()}
+                    />
+                  ) : (
+                    <span
+                      style={{ fontSize: "11px", padding: "2px 8px", borderRadius: "4px", background: "rgba(212,162,78,0.15)", color: "#d4a24e", fontFamily: "'JetBrains Mono', monospace", cursor: "text" }}
+                      title="Click to edit"
+                      onClick={e => startEdit(`${i}.trigger`, m.trigger, e)}
+                    >"{m.trigger}"</span>
+                  )}
                   {i === defaultModeIdx && <span style={{ fontSize: "10px", padding: "2px 8px", borderRadius: "4px", background: "rgba(80,180,80,0.15)", color: "#50b450", fontFamily: "'JetBrains Mono', monospace", textTransform: "uppercase" }}>default</span>}
                 </div>
-                <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "13px", margin: "4px 0 8px" }}>{m.description}</p>
+                {editKey === `${i}.description` ? (
+                  <textarea
+                    value={editVal}
+                    autoFocus
+                    rows={2}
+                    style={{ ...INPUT_STYLE, fontSize: "13px", margin: "4px 0 8px", display: "block" }}
+                    onChange={e => setEditVal(e.target.value)}
+                    onBlur={commitEdit}
+                    onKeyDown={handleTextareaKeyDown}
+                    onClick={e => e.stopPropagation()}
+                  />
+                ) : (
+                  <p
+                    style={{ color: "rgba(255,255,255,0.55)", fontSize: "13px", margin: "4px 0 8px", cursor: "text" }}
+                    title="Click to edit"
+                    onClick={e => startEdit(`${i}.description`, m.description, e)}
+                  >{m.description}</p>
+                )}
                 <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
                   {m.characteristics?.map((c, j) => <span key={j} style={{ fontSize: "11px", padding: "3px 8px", borderRadius: "4px", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.5)" }}>{c}</span>)}
                 </div>

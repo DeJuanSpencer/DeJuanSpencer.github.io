@@ -1,8 +1,33 @@
 "use client";
+import { useState } from "react";
 import { Loader2, Sparkles, Check } from "lucide-react";
 import { SectionLabel, Btn, Card } from "../ui";
 
-export function ExamplesStep({ loading, examples, approvedExamples, setApprovedExamples, generateExamples, trackActivity }) {
+const INPUT_STYLE = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(212,162,78,0.4)", borderRadius: "4px", padding: "3px 8px", color: "#e0e0e0", fontSize: "inherit", fontFamily: "inherit", fontWeight: "inherit", width: "100%", outline: "none", resize: "vertical" };
+
+export function ExamplesStep({ loading, examples, approvedExamples, setApprovedExamples, generateExamples, updateExample, trackActivity }) {
+  const [editKey, setEditKey] = useState(null);
+  const [editVal, setEditVal] = useState("");
+
+  const startEdit = (key, val, e) => {
+    e?.stopPropagation();
+    setEditKey(key);
+    setEditVal(val);
+  };
+
+  const commitEdit = () => {
+    if (editKey === null) return;
+    const [idxStr, field] = editKey.split(".");
+    updateExample(parseInt(idxStr), { [field]: editVal });
+    setEditKey(null);
+  };
+
+  const cancelEdit = () => setEditKey(null);
+
+  const handleTextareaKeyDown = (e) => {
+    if (e.key === "Escape") cancelEdit();
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -21,11 +46,45 @@ export function ExamplesStep({ loading, examples, approvedExamples, setApprovedE
             </div>
             <div style={{ background: "rgba(0,0,0,0.2)", borderRadius: "6px", padding: "10px 12px", marginBottom: "8px" }}>
               <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", marginBottom: "4px" }}>USER</div>
-              <div style={{ color: "#e0e0e0", fontSize: "13px" }}>{e.userMessage}</div>
+              {editKey === `${i}.userMessage` ? (
+                <textarea
+                  value={editVal}
+                  autoFocus
+                  rows={3}
+                  style={{ ...INPUT_STYLE, fontSize: "13px", background: "rgba(255,255,255,0.07)" }}
+                  onChange={ev => setEditVal(ev.target.value)}
+                  onBlur={commitEdit}
+                  onKeyDown={handleTextareaKeyDown}
+                  onClick={ev => ev.stopPropagation()}
+                />
+              ) : (
+                <div
+                  style={{ color: "#e0e0e0", fontSize: "13px", cursor: "text" }}
+                  title="Click to edit"
+                  onClick={ev => startEdit(`${i}.userMessage`, e.userMessage, ev)}
+                >{e.userMessage}</div>
+              )}
             </div>
             <div style={{ background: "rgba(212,162,78,0.05)", borderRadius: "6px", padding: "10px 12px" }}>
               <div style={{ fontSize: "11px", color: "rgba(212,162,78,0.6)", marginBottom: "4px" }}>ASSISTANT</div>
-              <div style={{ color: "rgba(255,255,255,0.8)", fontSize: "13px", lineHeight: 1.5 }}>{e.idealResponse}</div>
+              {editKey === `${i}.idealResponse` ? (
+                <textarea
+                  value={editVal}
+                  autoFocus
+                  rows={4}
+                  style={{ ...INPUT_STYLE, fontSize: "13px", lineHeight: "1.5", background: "rgba(212,162,78,0.07)", color: "rgba(255,255,255,0.8)" }}
+                  onChange={ev => setEditVal(ev.target.value)}
+                  onBlur={commitEdit}
+                  onKeyDown={handleTextareaKeyDown}
+                  onClick={ev => ev.stopPropagation()}
+                />
+              ) : (
+                <div
+                  style={{ color: "rgba(255,255,255,0.8)", fontSize: "13px", lineHeight: 1.5, cursor: "text" }}
+                  title="Click to edit"
+                  onClick={ev => startEdit(`${i}.idealResponse`, e.idealResponse, ev)}
+                >{e.idealResponse}</div>
+              )}
             </div>
             {e.reasoning && <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "12px", fontStyle: "italic", marginTop: "8px" }}>{e.reasoning}</div>}
           </Card>
