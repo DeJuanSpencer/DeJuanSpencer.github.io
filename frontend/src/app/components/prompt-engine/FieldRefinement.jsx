@@ -42,14 +42,61 @@ export const RefinePanel = ({ field, suggestion, onAccept, onDismiss }) => {
   );
 };
 
-export const RefineBtn = ({ field, disabled, onRefine, isLoading }) => (
-  <Btn small onClick={() => onRefine(field)} disabled={disabled || isLoading}>
-    {isLoading ? <Loader2 size={12} className="spin" /> : <Wand2 size={12} />} Refine
-  </Btn>
-);
+// Ghost button — gold border, transparent background. Label changes based on field content.
+export const GenerateBtn = ({ field, value, onGenerate, isLoading }) => {
+  const hasContent = Boolean(value && value.trim());
+  return (
+    <button
+      onClick={() => !isLoading && onGenerate(field)}
+      disabled={isLoading}
+      title={hasContent ? "Rewrite this field with AI" : "Generate content for this field"}
+      style={{
+        padding: "4px 10px",
+        borderRadius: "6px",
+        border: "1px solid rgba(212,162,78,0.4)",
+        background: "transparent",
+        color: "#d4a24e",
+        fontSize: "11px",
+        fontWeight: 500,
+        cursor: isLoading ? "not-allowed" : "pointer",
+        display: "flex", alignItems: "center", gap: "5px",
+        fontFamily: "'DM Sans', sans-serif",
+        transition: "all 0.15s",
+        opacity: isLoading ? 0.6 : 1,
+        whiteSpace: "nowrap",
+      }}
+      onMouseEnter={e => { if (!isLoading) { e.currentTarget.style.background = "rgba(212,162,78,0.08)"; e.currentTarget.style.borderColor = "#d4a24e"; }}}
+      onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(212,162,78,0.4)"; }}
+    >
+      {isLoading ? <Loader2 size={11} className="spin" /> : <Sparkles size={11} />}
+      {isLoading ? "Writing…" : hasContent ? "Improve this" : "Write for me"}
+    </button>
+  );
+};
 
-export const GenerateBtn = ({ field, onGenerate, isLoading }) => (
-  <Btn small onClick={() => onGenerate(field)} disabled={isLoading}>
-    {isLoading ? <Loader2 size={12} className="spin" /> : <Sparkles size={12} />} Generate
-  </Btn>
+// Text-only button — quiet, no border. Disabled when field is empty.
+export const RefineBtn = ({ field, disabled, onRefine, isLoading }) => (
+  <button
+    onClick={() => !disabled && !isLoading && onRefine(field)}
+    disabled={disabled || isLoading}
+    title={disabled ? "Fill in the field first" : "Get suggestions to improve this field"}
+    style={{
+      padding: "4px 8px",
+      background: "none",
+      border: "none",
+      color: disabled ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.4)",
+      fontSize: "11px",
+      fontWeight: 400,
+      cursor: disabled ? "not-allowed" : isLoading ? "wait" : "pointer",
+      display: "flex", alignItems: "center", gap: "5px",
+      fontFamily: "'DM Sans', sans-serif",
+      transition: "color 0.15s",
+      whiteSpace: "nowrap",
+    }}
+    onMouseEnter={e => { if (!disabled && !isLoading) e.currentTarget.style.color = "rgba(255,255,255,0.7)"; }}
+    onMouseLeave={e => { e.currentTarget.style.color = disabled ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.4)"; }}
+  >
+    {isLoading ? <Loader2 size={11} className="spin" /> : <Wand2 size={11} />}
+    Refine
+  </button>
 );

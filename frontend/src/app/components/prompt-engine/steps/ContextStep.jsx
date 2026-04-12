@@ -15,7 +15,7 @@ export function ContextStep({ projectName, setProjectName, domain, setDomain, pr
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "8px", flexWrap: "wrap", gap: "6px" }}>
             <SectionLabel>{label}</SectionLabel>
             <div style={{ display: "flex", gap: "6px" }}>
-              <GenerateBtn field={field} onGenerate={generateField} isLoading={generateLoading[field]} />
+              <GenerateBtn field={field} value={val} onGenerate={generateField} isLoading={generateLoading[field]} />
               <RefineBtn field={field} disabled={!val} onRefine={refineField} isLoading={refineLoading[field]} />
             </div>
           </div>

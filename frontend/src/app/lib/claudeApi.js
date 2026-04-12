@@ -1,3 +1,5 @@
+import { getSupabaseClient } from "./supabase/client";
+
 const extractJSON = (text) => {
   const stripped = text.replace(/```json\s?|```/g, "").trim();
   const firstBrace = stripped.indexOf("{");
@@ -26,11 +28,26 @@ const safeParseJSON = (str) => {
   return null;
 };
 
-const callClaude = async (systemPrompt, userPrompt, maxTokens = 2000) => {
+const getSessionToken = async () => {
   try {
+    const supabase = getSupabaseClient();
+    const { data } = await supabase.auth.getSession();
+    return data.session?.access_token ?? null;
+  } catch {
+    return null;
+  }
+};
+
+const callClaude = async (systemPrompt, userPrompt, maxTokens = 2000) => {
+  const token = await getSessionToken();
+
+  try {
+    const headers = { "Content-Type": "application/json" };
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+
     const response = await fetch("/api/claude", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
         max_tokens: maxTokens,
@@ -38,7 +55,19 @@ const callClaude = async (systemPrompt, userPrompt, maxTokens = 2000) => {
         messages: [{ role: "user", content: userPrompt }],
       }),
     });
+
+    if (response.status === 401) {
+      throw new Error("Please sign in to use AI features.");
+    }
+    if (response.status === 429) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(
+        errData.message ||
+          "Monthly limit reached. Upgrade to Pro for unlimited access."
+      );
+    }
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
     const data = await response.json();
     if (data.type === "error") throw new Error(data?.error?.message || "API error");
     if (data.stop_reason === "max_tokens") throw new Error("Response truncated");
