@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Loader2, Sparkles, RefreshCw } from "lucide-react";
-import { SectionLabel, Btn, Card } from "../ui";
+import { SectionLabel, Btn, Card, StepExample } from "../ui";
 
 const INPUT_STYLE = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(212,162,78,0.4)", borderRadius: "4px", padding: "3px 8px", color: "#e0e0e0", fontSize: "inherit", fontFamily: "inherit", fontWeight: "inherit", width: "100%", outline: "none", resize: "vertical" };
 
@@ -35,8 +35,11 @@ export function ModesStep({ loading, modes, defaultModeIdx, setDefaultModeIdx, i
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+      <StepExample>
+        Example: a mode called "Deep Dive" with trigger "deep" — type "[deep] Explain async/await" and Claude shifts into detailed explanation mode. The trigger is just the word or phrase you type at the start of a message.
+      </StepExample>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <SectionLabel>Operational Modes</SectionLabel>
+        <SectionLabel sub>Behavior Modes</SectionLabel>
         <Btn small onClick={generateModes} disabled={loading}>{loading ? <Loader2 size={14} className="spin" /> : <Sparkles size={14} />}{modes.length ? "Regenerate All" : "Generate Modes"}</Btn>
       </div>
       {!modes.length && !loading && <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "14px", fontStyle: "italic" }}>Modes give you switchable behavior profiles within the same project.</div>}
@@ -102,8 +105,11 @@ export function ModesStep({ loading, modes, defaultModeIdx, setDefaultModeIdx, i
                     onClick={e => startEdit(`${i}.description`, m.description, e)}
                   >{m.description}</p>
                 )}
-                <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "8px" }}>
                   {m.characteristics?.map((c, j) => <span key={j} style={{ fontSize: "11px", padding: "3px 8px", borderRadius: "4px", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.5)" }}>{c}</span>)}
+                </div>
+                <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", fontStyle: "italic" }}>
+                  To activate: type <span style={{ fontFamily: "'JetBrains Mono', monospace", color: "rgba(212,162,78,0.55)", fontStyle: "normal" }}>[{m.trigger}]</span> at the start of a message.
                 </div>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginLeft: "10px", flexShrink: 0 }}>

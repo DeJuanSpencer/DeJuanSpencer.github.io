@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Loader2, Sparkles, CheckCircle2, Circle } from "lucide-react";
-import { SectionLabel, Btn, Card } from "../ui";
+import { SectionLabel, Btn, Card, StepExample } from "../ui";
 
 const INPUT_STYLE = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(212,162,78,0.4)", borderRadius: "4px", padding: "3px 8px", color: "#e0e0e0", fontSize: "inherit", fontFamily: "inherit", fontWeight: "inherit", width: "100%", outline: "none", resize: "vertical" };
 
@@ -42,11 +42,14 @@ export function NegativeSpaceStep({ loading, negativeSuggestions, selectedNegati
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+      <StepExample>
+        For a coding assistant — "Do not suggest deprecated APIs without flagging them" or "Do not produce working exploit code even as a demonstration." These become permanent rules, not per-message requests.
+      </StepExample>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <SectionLabel>Select Behaviors to Block</SectionLabel>
+        <SectionLabel sub>Select Behaviors to Block</SectionLabel>
         <Btn small onClick={generateNegativeSpace} disabled={loading}>{loading ? <Loader2 size={14} className="spin" /> : <Sparkles size={14} />}{negativeSuggestions.length ? "Regenerate" : "Generate Guardrails"}</Btn>
       </div>
-      {!negativeSuggestions.length && !loading && <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "14px", fontStyle: "italic" }}>Guardrails define what Claude should avoid. Auto-generated based on your domain. Deselect any that don't apply.</div>}
+      {!negativeSuggestions.length && !loading && <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "14px", fontStyle: "italic" }}>Auto-generated based on your domain. Deselect any that don't apply to your project.</div>}
       {negativeSuggestions.length > 0 && selectedNegatives.size === negativeSuggestions.length && (
         <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", background: "rgba(80,180,80,0.06)", border: "1px solid rgba(80,180,80,0.2)", borderRadius: "8px" }}>
           <CheckCircle2 size={16} color="#50b450" style={{ flexShrink: 0 }} />

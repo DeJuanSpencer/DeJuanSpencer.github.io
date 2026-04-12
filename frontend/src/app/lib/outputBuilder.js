@@ -6,16 +6,16 @@ import {
 export const VERSION = "v1.6";
 
 export const STEPS = [
-  { id: "context",   label: "Project Context",    icon: Layers,        desc: "Define what you're building" },
-  { id: "identity",  label: "Identity",            icon: Target,        desc: "Assign Claude's role" },
-  { id: "knowledge", label: "Knowledge Base",      icon: Brain,         desc: "Map what you know" },
-  { id: "negative",  label: "Negative Space",      icon: ShieldOff,     desc: "Define what to avoid" },
-  { id: "modes",     label: "Mode Architecture",   icon: Sliders,       desc: "Set operational modes" },
-  { id: "priority",  label: "Priority Hierarchy",  icon: ArrowUp,       desc: "Resolve conflicts" },
-  { id: "failure",   label: "Failure Preemption",  icon: AlertTriangle, desc: "Block failure patterns" },
-  { id: "templates", label: "Output Templates",    icon: FileText,      desc: "Optional response formats" },
-  { id: "examples",  label: "Concrete Examples",   icon: BookOpen,      desc: "Anchor ideal behavior" },
-  { id: "export",    label: "Review & Export",     icon: Download,      desc: "Compile instructions" },
+  { id: "context",   label: "Project Context",    icon: Layers,        desc: "Name your project, define its domain, and state your goals — this context shapes everything Claude generates in the steps that follow." },
+  { id: "identity",  label: "Identity",            icon: Target,        desc: "Choose a role for Claude to inhabit. The role defines its tone, depth of expertise, and default approach to every response in this project." },
+  { id: "knowledge", label: "Knowledge Base",      icon: Brain,         desc: "Answer a short quiz so Claude knows what you already understand — it calibrates explanation depth without over-explaining basics you already know." },
+  { id: "negative",  label: "Guardrails",          icon: ShieldOff,     desc: "Select behaviors Claude should never do in this project. These become hard limits baked into every response, regardless of how a message is phrased." },
+  { id: "modes",     label: "Behavior Modes",      icon: Sliders,       desc: "Define switchable work modes for different situations. You activate a mode by typing its trigger word at the start of any message." },
+  { id: "priority",  label: "Conflict Rules",      icon: ArrowUp,       desc: "Set which rule wins when two instructions compete. Claude reads this list top-to-bottom and stops at the first rule that applies." },
+  { id: "failure",   label: "Failure Preemption",  icon: AlertTriangle, desc: "Identify failure patterns common in your domain and give Claude explicit instructions to prevent each one before it happens." },
+  { id: "templates", label: "Output Templates",    icon: FileText,      desc: "Optional: define named response formats — such as a structured report or a decision table — that Claude can switch into on demand." },
+  { id: "examples",  label: "Concrete Examples",   icon: BookOpen,      desc: "Show Claude what a perfect response looks like. Concrete examples anchor abstract rules more reliably than written instructions alone." },
+  { id: "export",    label: "Review & Export",     icon: Download,      desc: "Copy two things into Claude project settings: the project description (Step 1) and the compiled custom instructions (Step 2)." },
 ];
 
 export const LOADING_PHRASES = [

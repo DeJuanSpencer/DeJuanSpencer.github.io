@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Loader2, Sparkles, RefreshCw, Sliders, ArrowUp, ArrowDown } from "lucide-react";
-import { SectionLabel, Btn, Card } from "../ui";
+import { SectionLabel, Btn, Card, StepExample } from "../ui";
 
 const INPUT_STYLE = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(212,162,78,0.4)", borderRadius: "4px", padding: "3px 8px", color: "#e0e0e0", fontSize: "inherit", fontFamily: "inherit", fontWeight: "inherit", width: "100%", outline: "none", resize: "vertical" };
 
@@ -31,8 +31,11 @@ export function PriorityStep({ loading, priorities, dragIdx, dragOverIdx, itemLo
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+      <StepExample>
+        Example — P1: "Accuracy over brevity" overrides P2: "Keep responses under 200 words." Exception: when the user explicitly asks for a summary. Drag rows to reorder; higher position = wins.
+      </StepExample>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <SectionLabel>Priority Rules</SectionLabel>
+        <SectionLabel sub>Priority Rules</SectionLabel>
         <Btn small onClick={generatePriorities} disabled={loading}>{loading ? <Loader2 size={14} className="spin" /> : <Sparkles size={14} />}{priorities.length ? "Regenerate All" : "Generate"}</Btn>
       </div>
       {!priorities.length && !loading && <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "14px", fontStyle: "italic" }}>Priority rules resolve conflicts when two instructions compete. Higher = wins.</div>}
@@ -69,7 +72,7 @@ export function PriorityStep({ loading, priorities, dragIdx, dragOverIdx, itemLo
                 >{p.rule}</div>
               )}
               <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "12px", marginTop: "2px", display: "flex", flexWrap: "wrap", gap: "4px", alignItems: "center" }}>
-                <span style={{ flexShrink: 0 }}>Overrides:</span>
+                <span style={{ flexShrink: 0 }} title="Which lower-ranked rule does this one beat?">Overrides:</span>
                 {editKey === `${i}.overrides` ? (
                   <input
                     type="text"
@@ -88,7 +91,7 @@ export function PriorityStep({ loading, priorities, dragIdx, dragOverIdx, itemLo
                     onClick={e => startEdit(`${i}.overrides`, p.overrides, e)}
                   >{p.overrides}</span>
                 )}
-                <span style={{ flexShrink: 0 }}>| Exception:</span>
+                <span style={{ flexShrink: 0 }} title="When does the lower-ranked rule win anyway?">| Exception:</span>
                 {editKey === `${i}.exception` ? (
                   <input
                     type="text"

@@ -79,6 +79,13 @@ export const SectionLabel = ({ children, sub, htmlFor }) => {
   );
 };
 
+export const StepExample = ({ children, onDismiss }) => (
+  <div style={{ background: "rgba(212,162,78,0.04)", border: "1px solid rgba(212,162,78,0.15)", borderRadius: "8px", padding: "10px 14px", fontSize: "12px", color: "rgba(255,255,255,0.5)", lineHeight: 1.6, display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px", marginBottom: "16px" }}>
+    <span style={{ fontStyle: "italic" }}>{children}</span>
+    {onDismiss && <button onClick={onDismiss} aria-label="Dismiss example" style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.3)", padding: "0 2px", fontSize: "16px", lineHeight: 1, flexShrink: 0 }}>×</button>}
+  </div>
+);
+
 export const Toast = ({ msg }) => (
   <div role="alert" aria-live="assertive" style={{
     position: "fixed", bottom: "24px", left: "50%", transform: "translateX(-50%)",
