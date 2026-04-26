@@ -19,6 +19,7 @@ import { ExportStep } from "./prompt-engine/steps/ExportStep";
 import PreviewPanel from "./prompt-engine/PreviewPanel";
 import EditMode from "./prompt-engine/EditMode";
 import SignInGate from "./prompt-engine/SignInGate";
+import PaymentGate from "./prompt-engine/PaymentGate";
 
 const FREE_LIMIT = 50;
 
@@ -27,6 +28,62 @@ const STEP_COMPONENTS = [ContextStep, IdentityStep, KnowledgeStep, NegativeSpace
 export default function PromptEngine() {
   const auth = useAuth();
   const pe = usePromptEngine(auth.user);
+
+  // Payment gate state
+  const [isPaid, setIsPaid] = useState(false);
+  const [checkoutPending, setCheckoutPending] = useState(false);
+  const [checkoutError, setCheckoutError] = useState("");
+
+  // Detect session_id / canceled params on mount (Stripe redirect back)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session_id");
+    const canceled = params.get("canceled");
+    if (sessionId) setIsPaid(true);
+    if (canceled) setCheckoutError("Payment was canceled. Try again when you're ready.");
+    if (sessionId || canceled) {
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, []);
+
+  // Fetch user tier from Supabase after auth; pro tier bypasses payment gate
+  useEffect(() => {
+    if (!auth.user) return;
+    (async () => {
+      try {
+        const supabase = getSupabaseClient();
+        const { data } = await supabase
+          .from("profiles")
+          .select("tier")
+          .eq("user_id", auth.user.id)
+          .maybeSingle();
+        if (data?.tier === "pro") setIsPaid(true);
+      } catch {}
+    })();
+  }, [auth.user]);
+
+  const initiateCheckout = async () => {
+    if (!auth.user?.email) return;
+    setCheckoutPending(true);
+    setCheckoutError("");
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: auth.user.email, userId: auth.user.id }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setCheckoutError(data.error || "Failed to start checkout. Please try again.");
+        setCheckoutPending(false);
+      }
+    } catch {
+      setCheckoutError("Failed to start checkout. Please try again.");
+      setCheckoutPending(false);
+    }
+  };
 
   // Usage counter
   const [usageCount, setUsageCount] = useState(null);
@@ -127,6 +184,14 @@ export default function PromptEngine() {
         </div>
       ) : !auth.user ? (
         <SignInGate isMobile={pe.isMobile} signInWithMagicLink={auth.signInWithMagicLink} />
+      ) : !isPaid ? (
+        <PaymentGate
+          email={auth.user.email}
+          onCheckout={initiateCheckout}
+          pending={checkoutPending}
+          error={checkoutError}
+          isMobile={pe.isMobile}
+        />
       ) : (
         <>
           {/* ── Header ─────────────────────────────────────────────────────── */}
