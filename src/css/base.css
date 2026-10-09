@@ -5,7 +5,7 @@
   Only three media queries exist, all min-width: 720px, 1024px, 1280px.
 
   TOKENS (on :root)
-    --paper --ink --copper --sand --hairline, --font-sans, --font-serif,
+    --paper --ink --copper --copper-text --copper-on-ink --sand --hairline, --font-sans, --font-serif,
     --container (1200px), --gutter (16px, 32px at 720, 64px at 1024, 120px at 1280)
 
   LAYOUT
@@ -23,7 +23,7 @@
     .lead     19px sub copy
     .body     18px/1.55 (17px below 720px)
     .small    15px
-    .kicker   14px, 600, uppercase, .16em tracking, copper
+    .kicker   14px, 600, uppercase, .16em tracking, --copper-text (--copper-on-ink in the footer)
     .em       Newsreader italic 400, for emphasis words and pull-quotes (on em or a span)
     .serif    Newsreader family, no style change
     .tel      standalone phone number text, 28px 600
@@ -40,7 +40,7 @@
 
   COMPONENTS
     .btn              base button link
-    .btn--primary     copper fill, paper label, 4px radius, 18px 600, min-height 56px
+    .btn--primary     copper-text fill, paper label, 4px radius, 18px 600, min-height 56px
     .btn--lg          full width below 720px, 300px wide from 720px, min-height 61px
     .check-list       checkmark rows at 36px pitch, copper check drawn by ::before
     .numeral          88px copper (56px below 720px), tabular-nums
@@ -52,6 +52,8 @@
   --paper: #F5F0E6;
   --ink: #1B1815;
   --copper: #B26E3B;
+  --copper-text: #885630;
+  --copper-on-ink: #B3713E;
   --sand: #E7DCC3;
   --hairline: rgba(27, 24, 21, .18);
   --font-sans: "Inter Tight", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -168,7 +170,7 @@ button, input, textarea, select { font: inherit; color: inherit; }
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .16em;
-  color: var(--copper);
+  color: var(--copper-text);
 }
 .em, em.em {
   font-family: var(--font-serif);
@@ -235,7 +237,7 @@ button, input, textarea, select { font: inherit; color: inherit; }
 .btn--primary {
   min-height: 56px;
   padding: 0 36px;
-  background: var(--copper);
+  background: var(--copper-text);
   color: var(--paper);
   font-size: 18px;
   font-weight: 600;

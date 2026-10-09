@@ -433,3 +433,8 @@
     margin-top: 34px;
   }
 }
+
+/* Small copper text on the ink footer is lightened, not darkened, for 4.5:1. */
+.footer .kicker {
+  color: var(--copper-on-ink);
+}
