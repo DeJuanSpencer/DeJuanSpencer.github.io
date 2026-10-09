@@ -1,0 +1,13 @@
+Fonts in this folder: Inter Tight and Newsreader.
+
+Both are licensed under the SIL Open Font License, Version 1.1
+(https://openfontlicense.org). Source: Google Fonts
+(https://fonts.google.com/specimen/Inter+Tight and https://fonts.google.com/specimen/Newsreader).
+
+Inter Tight: Copyright 2020 The Inter Project Authors (https://github.com/rsms/inter).
+Newsreader: Copyright 2020 The Newsreader Project Authors (https://github.com/productiontype/Newsreader).
+
+The SIL Open Font License 1.1 permits free use, study, modification and
+redistribution of these fonts, including embedding in web sites, as long as the
+fonts are not sold by themselves and this notice stays with them. The full
+license text is at https://openfontlicense.org/open-font-license-official-text/.
