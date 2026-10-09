@@ -82,6 +82,9 @@
 }
 .hero__copy .btn--lg { align-self: stretch; }
 .hero__tel {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
   font-size: 28px;
   font-weight: 600;
   line-height: 1.1;
