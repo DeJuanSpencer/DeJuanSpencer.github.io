@@ -56,6 +56,7 @@
   padding-inline: 8px;
   text-decoration: none;
 }
+.nav__links a:focus-visible { outline-offset: -3px; }
 .nav__links a:hover { text-decoration: underline; text-underline-offset: 4px; }
 
 /* ---- Hero ---- */
@@ -209,22 +210,6 @@
 }
 
 @media (min-width: 720px) {
-  .nav__inner {
-    flex-wrap: nowrap;
-    min-height: 93px;
-    padding-top: 0;
-    column-gap: 0;
-  }
-  .nav__brand,
-  .nav__cta,
-  .nav__links { order: 0; }
-  .nav__cta { margin-left: 20px; min-height: 42px; }
-  .nav__links {
-    flex: 0 0 auto;
-    margin-left: auto;
-    gap: clamp(2px, 1.25vw, 18px);
-    overflow: visible;
-  }
   .hero { padding-top: 80px; }
   .hero__kicker { margin-bottom: 36px; }
   .hero__title { margin-bottom: 40px; }
@@ -245,6 +230,22 @@
 }
 
 @media (min-width: 1024px) {
+  .nav__inner {
+    flex-wrap: nowrap;
+    min-height: 93px;
+    padding-top: 0;
+    column-gap: 0;
+  }
+  .nav__brand,
+  .nav__cta,
+  .nav__links { order: 0; }
+  .nav__cta { margin-left: 20px; min-height: 42px; }
+  .nav__links {
+    flex: 0 0 auto;
+    margin-left: auto;
+    gap: clamp(2px, 1.25vw, 18px);
+    overflow: visible;
+  }
   .hero { padding-top: 104px; padding-bottom: 150px; }
   .hero__kicker { margin-bottom: 44px; }
   .hero__title { margin-bottom: 44px; }
