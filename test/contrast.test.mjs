@@ -45,6 +45,15 @@ test('ink label on a copper-on-ink footer button is at least 4.5:1', () => {
   assert.ok(contrast(ink, copperOnInk) >= 4.5);
 });
 
+test('paper label on the --sepia hero arch is at least 4.5:1', () => {
+  assert.ok(contrast(paper, token('sepia')) >= 4.5);
+});
+test('.hero__arch fills with --sepia and a paper label', () => {
+  const d = declarations('.hero__arch');
+  assert.match(d, /background:\s*var\(--sepia\)/);
+  assert.match(d, /(^|[;\s])color:\s*var\(--paper\)/);
+});
+
 // Selectors that may keep the exact copper as text colour: large elements only.
 const ALLOWED_COPPER_TEXT = ['.quote-card__mark'];
 
