@@ -1,15 +1,15 @@
 # Run report: Built by Seven site rebrand (Quiet Operator)
 
-**Needs input.** Deploy blocked: dejuanspencer-github-io does not exist on Vercel yet, and Vercel makes a project's first deployment production, so a preview deploy is not possible. Set Hosting to vercel production for the first deploy, or create the project in the Vercel dashboard first, then run the deploy step again.
+**Needs input (updated 2026-10-09T13:46Z).** Seven created the Vercel project `dejuanspencer-github-io` and the deploy step was rerun. The site is live at https://dejuanspencer-github-n0801pevl-dejuans-projects-61c7a3da.vercel.app (public, HTTP 200, no login wall, served page identical to `dist/index.html`). The pipeline asked for a preview, but Vercel gave this first deployment of the new project the production target (exit 30, reason target-mismatch). That project has no custom domain, so dejuanspencer.com is untouched; "production" here means only the new project's own vercel.app URLs. PR #2 is held open for Seven (label seven-review and his comment), not merged. A copper contrast follow-up is in progress and the deploy step will be rerun once more after it.
 
-Nothing was deployed. Production (dejuanspencer.com) is untouched. The site is built, every gate and review passed, and the pull request is open and unmerged for Seven.
+Earlier in the run the first deploy attempt was blocked with exit 10 (first-deploy: no project of that name existed); that verdict is kept in the Deploy gate block below as attempt 1.
 
 - Brief: https://app.notion.com/p/3f478f7199f2819eb310d5c124a444e4
 - Branch: `forge/built-by-seven-site-rebrand-quiet-operator` on DeJuanSpencer/DeJuanSpencer.github.io
-- Started: 2026-10-09T12:23:52Z. Deploy step finished: 2026-10-09T12:53:28Z.
-- Hosted URL: not deployed (see the deploy gate below)
-- Cap check: 13 of unlimited projects on the pro plan, scope dejuans-projects-61c7a3da, cap from config:cap-limits.json#pro, project dejuanspencer-github-io, new, decision proceed
-- Usage check: bandwidth 0.0267 of 1000 gigabyte (0 percent), build minutes 2.31 of 20 USD (11.55 percent), serverless execution 0.0009 of 20 USD (0 percent), included usage credit 2.3151 of 20 USD (11.57 percent), block point 80 percent, scope dejuans-projects-61c7a3da, decision proceed
+- Started: 2026-10-09T12:23:52Z. Deploy attempt 1: 2026-10-09T12:53:28Z (blocked). Deploy attempt 2: 2026-10-09T13:45:52Z (deployed, target mismatch).
+- Hosted URL: https://dejuanspencer-github-n0801pevl-dejuans-projects-61c7a3da.vercel.app
+- Cap check: 14 of unlimited projects on the pro plan, scope dejuans-projects-61c7a3da, cap from config:cap-limits.json#pro, project dejuanspencer-github-io, existing, decision proceed
+- Usage check: bandwidth 0.0271 of 1000 gigabyte (0 percent), build minutes 4.305 of 20 USD (21.52 percent), serverless execution 0.0009 of 20 USD (0 percent), included usage credit 4.3102 of 20 USD (21.55 percent), block point 80 percent, scope dejuans-projects-61c7a3da, decision proceed
 
 ## Three things for Seven to decide
 
@@ -76,6 +76,7 @@ The pipeline deployed nothing, but the Git integration on the production project
 ## Deploy gate
 
 - Hosting line, verbatim: `Hosting: vercel`
+- Attempt 1 (2026-10-09T12:53Z, blocked):
 - Cap check: 13 of unlimited projects on the pro plan, scope dejuans-projects-61c7a3da, cap from config:cap-limits.json#pro, project dejuanspencer-github-io, new, decision proceed
 - Usage check: bandwidth 0.0267 of 1000 gigabyte (0 percent), build minutes 2.31 of 20 USD (11.55 percent), serverless execution 0.0009 of 20 USD (0 percent), included usage credit 2.3151 of 20 USD (11.57 percent), block point 80 percent, scope dejuans-projects-61c7a3da, decision proceed
 - Deploy: blocked, target preview, URL none. Exit code 10, reason first-deploy, status needs_input.
@@ -85,6 +86,15 @@ The pipeline deployed nothing, but the Git integration on the production project
   `2026-10-09T12:53:24.563Z cap-check pass scope=dejuans-projects-61c7a3da plan=pro count=13 cap=unlimited source=config:cap-limits.json#pro project=dejuanspencer-github-io exists=false target=preview projected=14 mode=live :: ok-unlimited`
   `2026-10-09T12:53:28.249Z deploy block project=dejuanspencer-github-io target=preview hosting="vercel" :: first-deploy`
 - Verdict JSON (abridged): `{"schema":"forge.deploy/1","mode":"live","action":"blocked","reason":"first-deploy","status":"needs_input","hosting":"vercel","target":"preview","project":"dejuanspencer-github-io","url":null,"check":{"decision":"proceed","reason":"ok-unlimited","count":13,"cap":"unlimited","projectExists":false,"projectedCount":14},"usage":{"decision":"proceed","reason":"ok-under-threshold"},"rerun":"node scripts/forge-deploy.js --hosting \"vercel\" --dir dejuanspencer-github-io","finishedAt":"2026-10-09T12:53:28.249Z"}`
+- Attempt 2 (2026-10-09T13:45Z, after Seven created the project):
+  - Cap check: 14 of unlimited projects on the pro plan, scope dejuans-projects-61c7a3da, cap from config:cap-limits.json#pro, project dejuanspencer-github-io, existing (prj_lmTd9xFQahkb1V6ZSNpVqLsFeXxc), decision proceed
+  - Usage check: bandwidth 0.0271 of 1000 gigabyte (0 percent), build minutes 4.305 of 20 USD (21.52 percent), serverless execution 0.0009 of 20 USD (0 percent), included usage credit 4.3102 of 20 USD (21.55 percent), block point 80 percent, scope dejuans-projects-61c7a3da, decision proceed
+  - Deploy: deployed, target asked preview, observed production, URL https://dejuanspencer-github-n0801pevl-dejuans-projects-61c7a3da.vercel.app. Exit code 30, reason target-mismatch, status needs_input. Warnings: target-mismatch. Public check: HTTP 200, no redirect; `/assets/site.css` 200; `/assets/fonts/inter-tight-600.woff2` 200; served index.html identical to dist.
+  - Usage-check line: `2026-10-09T13:45:28.255Z usage-check pass scope=dejuans-projects-61c7a3da plan=pro threshold=80 bandwidth=0.0271/1000/0/gigabyte build-minutes=4.305/20/21.52/USD serverless=0.0009/20/0/USD credit=4.3102/20/21.55/USD mode=live :: ok-under-threshold`
+  - Cap-check line: `2026-10-09T13:45:38.280Z cap-check pass scope=dejuans-projects-61c7a3da plan=pro count=14 cap=unlimited source=config:cap-limits.json#pro project=dejuanspencer-github-io exists=true target=preview projected=14 mode=live :: ok-unlimited`
+  - Deploy line: `2026-10-09T13:45:52.319Z deploy FAIL project=dejuanspencer-github-io target=preview hosting="vercel" url=https://dejuanspencer-github-n0801pevl-dejuans-projects-61c7a3da.vercel.app ms=10186 :: target-mismatch observed production asked preview`
+  - Verdict JSON (abridged): `{"schema":"forge.deploy/1","mode":"live","action":"deployed","reason":"target-mismatch","status":"needs_input","hosting":"vercel","target":"preview","project":"dejuanspencer-github-io","url":"https://dejuanspencer-github-n0801pevl-dejuans-projects-61c7a3da.vercel.app","deploymentId":"dpl_E5VMfgSiZKMhjyiqWZRYgGHXwyQ8","observedTarget":"production","warnings":["target-mismatch"],"check":{"decision":"proceed","count":14,"cap":"unlimited","projectExists":true},"usage":{"decision":"proceed","reason":"ok-under-threshold"},"finishedAt":"2026-10-09T13:45:52.319Z"}`
+  - Why the mismatch: Vercel makes the first deployment of any project production, even one created in the dashboard with no deployments; the pipeline's preview argv carries no target flag and relies on the default, which is production until a project has one deployment. The next deploy should be a preview.
 - Rerun, once the project exists: `node scripts/forge-deploy.js --hosting "vercel" --dir dejuanspencer-github-io`
 
 ## Team
