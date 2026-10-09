@@ -99,6 +99,13 @@ test('banned: quote marks outside the testimonials section fail', () => {
 test('banned: quote marks inside the testimonials section and apostrophes elsewhere pass', () => {
   assert.deepEqual(checkBanned(mutate('Plain text.', "It's fine.")), []);
 });
+test('banned: single quotation marks fail but apostrophes pass', () => {
+  fails(checkBanned(mutate('Plain text.', "He said 'hello' today.")), 'quote marks');
+  fails(checkBanned(mutate('Plain text.', 'He said \u2018hello\u2019 today.')), 'quote marks');
+  fails(checkBanned(mutate('Plain text.', 'Start \u2019hello')), 'quote marks');
+  const apostrophes = "Terrence's shop. If you don't like it, I'll refund. You're fine. Let's talk. I'm here. It\u2019s ok. Two years' work.";
+  assert.deepEqual(checkBanned(mutate('Plain text.', apostrophes)), []);
+});
 test('banned: sms links fail', () => {
   fails(checkBanned(mutate('Plain text.', '<a href="sms:+14807574367">Text</a>')), 'sms:');
 });

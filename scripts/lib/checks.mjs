@@ -1,6 +1,6 @@
 // Machine checks over the assembled page and the source css. Each check returns an array of problem strings.
 // Inputs are plain values (html text, css file list, stub set) so fixtures can feed them bad markup.
-import { hasAncestor, hasClass, normalizeText, parse, visibleText } from './parse-html.mjs';
+import { decodeEntities, hasAncestor, hasClass, normalizeText, parse, visibleText } from './parse-html.mjs';
 
 const NAV_LINKS = ['#work', '#services', '#process', '#faq', '#about'];
 const PHONE = 'tel:+14807574367';
@@ -115,6 +115,13 @@ export function checkRequiredCopy(html, required, stubs = new Set()) {
   return { problems, skipped };
 }
 
+// Quotation marks, not apostrophes: double quotes of any kind, a curly opening single quote,
+// and a straight or curly single quote that opens a word (preceded by space, start or a bracket).
+// Apostrophes inside words (don't, Terrence's) and after a plural s (years' work) pass.
+function hasQuotationMarks(text) {
+  return /["\u201c\u201d\u201e\u2018]|(?:^|[\s(\[])['\u2019][\p{L}\p{N}]/u.test(text);
+}
+
 // (e) Banned content.
 export function checkBanned(html, cssFiles = []) {
   const problems = [];
@@ -134,8 +141,7 @@ export function checkBanned(html, cssFiles = []) {
   for (const t of tokens) {
     if (t.type !== 'text') continue;
     if (hasAncestor(t.node, (n) => n.name === 'head' || hasClass(n, 'testimonials'))) continue;
-    const decoded = normalizeText(t.text);
-    if (/["“”]/.test(decoded)) problems.push(`line ${t.line}: quote marks outside .testimonials`);
+    if (hasQuotationMarks(decodeEntities(t.text))) problems.push(`line ${t.line}: quote marks outside .testimonials`);
   }
   return problems;
 }
