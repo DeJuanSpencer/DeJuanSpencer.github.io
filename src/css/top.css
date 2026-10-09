@@ -43,7 +43,7 @@
   order: 2;
   flex: 0 0 100%;
   display: flex;
-  gap: 24px;
+  gap: 8px;
   overflow-x: auto;
   scrollbar-width: thin;
   font-size: 16px;
@@ -53,6 +53,7 @@
   display: inline-flex;
   align-items: center;
   min-height: 44px;
+  padding-inline: 8px;
   text-decoration: none;
 }
 .nav__links a:hover { text-decoration: underline; text-underline-offset: 4px; }
@@ -93,9 +94,9 @@
 .hero__note {
   margin: 0;
   color: var(--copper);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
 }
 .hero__arch {
   width: min(100%, 340px);
@@ -106,17 +107,13 @@
   justify-content: center;
   padding: 0 32px;
   border-radius: 230px 230px 0 0;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--copper) 60%, var(--sand)) 0%,
-    color-mix(in srgb, var(--copper) 68%, var(--ink)) 100%
-  );
+  background: color-mix(in srgb, color-mix(in srgb, var(--copper) 70%, var(--ink)) 88%, var(--paper));
   color: var(--paper);
   text-align: center;
 }
 .hero__arch-label {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.4;
 }
 
@@ -130,7 +127,7 @@
 .solo__line {
   margin: 0;
   font-size: 36px;
-  line-height: 1.1;
+  line-height: 1;
   font-weight: 600;
   letter-spacing: -0.02em;
 }
@@ -221,11 +218,11 @@
   .nav__brand,
   .nav__cta,
   .nav__links { order: 0; }
-  .nav__cta { margin-left: 28px; min-height: 42px; }
+  .nav__cta { margin-left: 20px; min-height: 42px; }
   .nav__links {
     flex: 0 0 auto;
     margin-left: auto;
-    gap: clamp(18px, 2.4vw, 34px);
+    gap: clamp(2px, 1.25vw, 18px);
     overflow: visible;
   }
   .hero { padding-top: 80px; }
