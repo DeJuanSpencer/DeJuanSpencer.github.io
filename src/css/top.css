@@ -1,0 +1,277 @@
+/* top.css: nav, hero, solo strip, proof, selected work. Tokens and shared classes live in base.css. */
+
+/* ---- Nav ---- */
+.nav {
+  border-bottom: 1px solid var(--hairline);
+}
+.nav__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 16px;
+  padding-top: 12px;
+}
+.nav__brand {
+  order: 0;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+.nav__cta {
+  order: 1;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 22px;
+  border-radius: 4px;
+  background: var(--copper-text);
+  color: var(--paper);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.nav__links {
+  order: 2;
+  flex: 0 0 100%;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  font-size: 16px;
+}
+.nav__links a {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 8px;
+  text-decoration: none;
+}
+.nav__links a:focus-visible { outline-offset: -3px; }
+.nav__links a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+/* ---- Hero ---- */
+.hero {
+  padding-top: 48px;
+  padding-bottom: 64px;
+}
+.hero__kicker { margin: 0 0 24px; }
+.hero__title { margin: 0 0 28px; }
+.hero__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 40px;
+}
+.hero__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  max-width: 600px;
+}
+.hero__sub {
+  margin: 0;
+  color: color-mix(in srgb, var(--ink) 82%, var(--paper));
+}
+.hero__copy .btn--lg { align-self: stretch; }
+.hero__tel {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.1;
+  text-decoration: none;
+}
+.hero__note {
+  margin: 0;
+  color: var(--copper-text);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+.hero__arch {
+  width: min(100%, 340px);
+  height: 480px;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 32px;
+  border-radius: 230px 230px 0 0;
+  background: var(--sepia);
+  color: var(--paper);
+  text-align: center;
+}
+.hero__arch-label {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* ---- Solo strip ---- */
+.solo { padding-block: 64px; }
+.solo__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.solo__line {
+  margin: 0;
+  font-size: 36px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* ---- Proof ---- */
+.proof { padding-block: 64px; }
+.proof__line {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.proof__sub { margin: 24px 0 0; }
+.proof__rule { margin: 28px 0; }
+.proof__pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+.proof__title {
+  margin: 0 0 8px;
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+.proof__text { margin: 0; font-size: 17px; }
+
+/* ---- Selected work ---- */
+.work {
+  padding-top: 64px;
+  padding-bottom: 64px;
+}
+.work__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+.work__head > * { margin: 0; }
+.work__row {
+  grid-template-columns: minmax(0, 677px);
+  gap: 0;
+  padding-block: 40px;
+}
+.work__row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.work__entry {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.work__entry > * { margin: 0; }
+.work__entry .h3 { line-height: 1.2; }
+.work__text { font-size: 17px; }
+.work__note {
+  font-size: 15px;
+  color: color-mix(in srgb, var(--ink) 75%, var(--paper));
+}
+.work__slots {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 100%;
+}
+.slot {
+  display: block;
+  max-width: 100%;
+  padding: 4px 12px;
+  border: 1px dashed color-mix(in srgb, var(--ink) 35%, transparent);
+  color: color-mix(in srgb, var(--ink) 75%, var(--paper));
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+@media (min-width: 720px) {
+  .hero { padding-top: 80px; }
+  .hero__kicker { margin-bottom: 36px; }
+  .hero__title { margin-bottom: 40px; }
+  .solo { padding-block: 96px; }
+  .solo__line { font-size: 48px; }
+  .proof { padding-block: 80px; }
+  .proof__line { font-size: 36px; }
+  .proof__pair {
+    grid-template-columns: repeat(2, max-content);
+    column-gap: 90px;
+  }
+  .proof__text { font-size: 18px; }
+  .work { padding-block: 80px; }
+  .work__head { margin-bottom: 40px; }
+  .work__row { padding-block: 56px; }
+  .work__row:last-child { padding-bottom: 0; }
+  .work__text { font-size: 18px; }
+}
+
+@media (min-width: 1024px) {
+  .nav__inner {
+    flex-wrap: nowrap;
+    min-height: 93px;
+    padding-top: 0;
+    column-gap: 0;
+  }
+  .nav__brand,
+  .nav__cta,
+  .nav__links { order: 0; }
+  .nav__cta { margin-left: 20px; min-height: 42px; }
+  .nav__links {
+    flex: 0 0 auto;
+    margin-left: auto;
+    gap: clamp(2px, 1.25vw, 18px);
+    overflow: visible;
+  }
+  .hero { padding-top: 104px; padding-bottom: 150px; }
+  .hero__kicker { margin-bottom: 44px; }
+  .hero__title { margin-bottom: 44px; }
+  .hero__row {
+    grid-template-columns: minmax(0, 600fr) minmax(0, 460fr);
+    column-gap: clamp(32px, 6.3vw, 90px);
+    align-items: start;
+    max-width: 1150px;
+  }
+  .hero__copy { padding-top: 10px; gap: 38px; }
+  .hero__copy .btn--lg { align-self: flex-start; }
+  .hero__arch {
+    width: 100%;
+    height: 684px;
+    margin-left: 0;
+  }
+  .solo { padding-block: 150px; }
+  .solo__line { font-size: 64px; }
+  .proof { padding-block: 110px; }
+  .proof__line { font-size: 46px; }
+  .proof__sub { margin-top: 30px; }
+  .proof__rule { margin-block: 30px; }
+  .work { padding-top: 110px; padding-bottom: 120px; }
+  .work__head { gap: 40px; margin-bottom: 40px; }
+  .work__row { padding-block: 76px 76px; }
+  .work__row:last-child { padding-bottom: 0; }
+  .work__entry { gap: 14px; }
+  .work__slots { gap: 14px; }
+}
