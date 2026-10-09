@@ -19,7 +19,7 @@ No file is in two slices. A section builder who needs a new shared class asks bu
 ## Shared contract
 
 ### Tokens (CSS custom properties on `:root`, in base.css only)
-- Colours: `--paper #F5F0E6`, `--ink #1B1815`, `--copper #B26E3B`, `--sand #E7DCC3`, `--hairline rgba(27,24,21,.18)`. Added 2026-10-09 on Seven's decision: `--copper-text #885630` (small copper text on paper or sand, and the primary button fill under a paper label) and `--copper-on-ink #B3713E` (small copper text and the button fill on the ink footer, with an ink label). Large elements (the 88px numerals, the quote mark, rules, check marks, slot outlines) keep `--copper`.
+- Colours: `--paper #F5F0E6`, `--ink #1B1815`, `--copper #B26E3B`, `--sand #E7DCC3`, `--hairline rgba(27,24,21,.18)`. Added 2026-10-09 on Seven's decision: `--copper-text #885630` (small copper text on paper or sand, and the primary button fill under a paper label) and `--copper-on-ink #B3713E` (small copper text and the button fill on the ink footer, with an ink label). Large elements (the 88px numerals, the quote mark, rules, check marks, slot outlines) keep `--copper`. Also added: `--sepia #8D6444`, the hero arch fill under its paper label (4.58:1).
 - `--font-sans` is "Inter Tight" with a system-ui fallback stack. `--font-serif` is "Newsreader" with a Georgia fallback.
 - `--container 1200px` and `--gutter`.
 - Section css files use `var(--*)` only. No raw hex or rgba colours outside base.css and fonts.css; lint enforces this. Derived tints use `color-mix()` on tokens.
@@ -147,7 +147,7 @@ Format: number. subject | owner | depends on. Phase tags: `build:` and `ship:` a
    - Hero: kicker "A one-man web studio in Tempe, Arizona". H1 full width, two lines at 1440, with `<em class="em">customers</em>`.
    - Hero row at 1024px and up: grid with columns 600px and 460px, column gap 90px. Portrait aligned to the top of the row and taller than the copy (684px vs about 325px), which makes the lower-right offset.
    - Copy column: the sub paragraph at 19px; a `.btn--primary .btn--lg` "Text or call (480) 757-4367"; the standalone `.tel` number at 28px beneath; the small line "One project at a time — now booking November builds." (from the mockup).
-   - Portrait: `div.hero__arch role="img" aria-label="Photo: DeJuan inside a real client shop"`, border-radius 230px 230px 0 0, warm sepia gradient built from tokens with `color-mix` (no raw colours), the label text centred inside, `data-slot="hero-photo"`. Below 1024px the columns stack and the arch is at most 340px wide and 480px tall, right-aligned with `margin-left:auto`.
+   - Portrait: `div.hero__arch role="img" aria-label="Photo: DeJuan inside a real client shop"`, border-radius 230px 230px 0 0, flat warm sepia fill `var(--sepia)` (a literal token in base.css, chosen so the paper label meets AA; no gradient, no raw colours in top.css), the label text centred inside, `data-slot="hero-photo"`. Below 1024px the columns stack and the arch is at most 340px wide and 480px tall, right-aligned with `margin-left:auto`.
    - Pick the button label colour by checking `docs/reference/figma-v2-hero.png`. Compare the layout to that PNG.
 
 7. build: solo strip and proof | builder-top | 2
