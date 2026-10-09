@@ -1,0 +1,123 @@
+/* Bottom sections: services, who, process, faq, testimonials, about, footer. */
+
+/* ---- 06 services ---- */
+.services .h2 {
+  margin-top: 16px;
+}
+
+.price-card {
+  margin-top: 40px;
+  padding: 32px 20px;
+  background: var(--sand);
+  border: 2px solid var(--ink);
+  border-radius: 2px;
+}
+
+.price-card__top {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.price-card__name {
+  margin: 0;
+}
+
+.price-card__total {
+  margin: 0;
+  color: var(--copper);
+  font-size: clamp(56px, 18vw, 64px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.price-card__lead {
+  margin: 24px 0 0;
+}
+
+.price-card .rule {
+  margin-block: 24px;
+}
+
+.price-card__own {
+  margin: 28px 0 0;
+}
+
+.price-card__cta {
+  margin-top: 28px;
+  min-height: 69px;
+}
+
+.price-card__refund {
+  margin: 0;
+}
+
+.services__addons {
+  margin-top: 44px;
+}
+
+.services__addons .ledger__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 20px;
+}
+
+.services__addon-label {
+  font-size: 19px;
+}
+
+.services__addons .ledger__price {
+  flex: none;
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.services__care {
+  margin-top: 40px;
+  max-width: 510px;
+}
+
+.services__care-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.services__care-text {
+  margin: 12px 0 0;
+}
+
+@media (min-width: 720px) {
+  .price-card {
+    padding: 48px 40px;
+  }
+
+  .price-card__top {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .price-card__total {
+    font-size: 88px;
+  }
+
+  .services__addons .ledger__row {
+    padding-block: 20px;
+  }
+
+  .services__addons .leader {
+    flex: 1 1 auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .price-card {
+    padding: 66px 74px;
+  }
+}
