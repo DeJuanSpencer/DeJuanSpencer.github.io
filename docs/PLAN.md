@@ -19,7 +19,7 @@ No file is in two slices. A section builder who needs a new shared class asks bu
 ## Shared contract
 
 ### Tokens (CSS custom properties on `:root`, in base.css only)
-- Colours: `--paper #F5F0E6`, `--ink #1B1815`, `--copper #B26E3B`, `--sand #E7DCC3`, `--hairline rgba(27,24,21,.18)`.
+- Colours: `--paper #F5F0E6`, `--ink #1B1815`, `--copper #B26E3B`, `--sand #E7DCC3`, `--hairline rgba(27,24,21,.18)`. Added 2026-10-09 on Seven's decision: `--copper-text #885630` (small copper text on paper or sand, and the primary button fill under a paper label) and `--copper-on-ink #B3713E` (small copper text and the button fill on the ink footer, with an ink label). Large elements (the 88px numerals, the quote mark, rules, check marks, slot outlines) keep `--copper`.
 - `--font-sans` is "Inter Tight" with a system-ui fallback stack. `--font-serif` is "Newsreader" with a Georgia fallback.
 - `--container 1200px` and `--gutter`.
 - Section css files use `var(--*)` only. No raw hex or rgba colours outside base.css and fonts.css; lint enforces this. Derived tints use `color-mix()` on tokens.
@@ -44,7 +44,7 @@ No file is in two slices. A section builder who needs a new shared class asks bu
 | h3 | 28px | 22px | |
 | body | 18px / 1.55 | 17px | |
 | small | 15px | | |
-| kicker | 14px | | 600, uppercase via CSS, letter-spacing .16em, copper |
+| kicker | 14px | | 600, uppercase via CSS, letter-spacing .16em, `--copper-text` (`--copper-on-ink` in the footer) |
 
 - Copper text below 24px is always weight 600.
 - Process numerals 88px, mobile 56px. Price "$1,000" about 88px copper, mobile 64px.
@@ -60,7 +60,7 @@ No file is in two slices. A section builder who needs a new shared class asks bu
 - Layout: `.container`, `.section` (padding-block 110px, mobile 64px), `.section--flush-top`, `.stack` (vertical flow, spacing via the `--space` custom property), `.visually-hidden`.
 - Type: `.h1`, `.h2`, `.h3`, `.lead` (19px sub copy), `.body`, `.small`, `.kicker`, `.em` (Newsreader italic 400, for emphasis words and pull-quotes, on `<em>` or a span), `.serif`.
 - Rules and ledger: `.rule` (1px hairline hr); `.ledger` (list wrapper with a top hairline); `.ledger__row` (bottom hairline, grid with a 300px label column then 1fr at 720px and up, stacked below); `.ledger__label`, `.ledger__text`; `.ledger__price` (right-aligned price cell); `.leader` (flex-grow 1px low-opacity line between a label and a price, hidden on mobile).
-- Components: `.btn`, `.btn--primary` (copper fill, 4px radius, 18px 600 text, min-height 56px), `.btn--lg` (300px wide at 720px and up, full width on mobile), `.check-list` (checkmark rows at 36px pitch, copper `::before` check), `.numeral` (88px copper, tabular-nums), `.tel` (standalone phone number text).
+- Components: `.btn`, `.btn--primary` (`--copper-text` fill with a paper label; in the footer `--copper-on-ink` fill with an ink label; 4px radius, 18px 600 text, min-height 56px), `.btn--lg` (300px wide at 720px and up, full width on mobile), `.check-list` (checkmark rows at 36px pitch, copper `::before` check), `.numeral` (88px copper, tabular-nums), `.tel` (standalone phone number text).
 - Section-only classes are prefixed with the section name (`.hero__arch`, `.price-card__total`, `.footer__cta`), so nothing collides across the three css files.
 
 ### Assembly contract
