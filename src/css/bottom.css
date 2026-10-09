@@ -230,10 +230,8 @@
   gap: 12px;
 }
 
-/* Hairlines between rows only. */
-.who__list,
-.faq__list,
-.faq__compare {
+/* FAQ rows sit between hairlines only; Who and the comparison keep a top rule. */
+.faq__list {
   border-top: 0;
 }
 
@@ -280,15 +278,17 @@
   .faq .h2 {
     margin-top: 40px;
   }
-
-  .testimonials .h2 {
-    margin-top: 30px;
-  }
 }
 
 /* ---- 10 testimonials ---- */
 .testimonials .h2 {
   margin-top: 24px;
+}
+
+@media (min-width: 1024px) {
+  .testimonials .h2 {
+    margin-top: 30px;
+  }
 }
 
 .quote-card {
