@@ -17,7 +17,9 @@ before(() => {
   mkdirSync(copy);
   for (const p of ['package.json', 'scripts', 'src']) cpSync(join(root, p), join(copy, p), { recursive: true });
 });
-after(() => rmSync(base, { recursive: true, force: true }));
+after(() => {
+  if (base) rmSync(base, { recursive: true, force: true });
+});
 
 const run = (script) => spawnSync(process.execPath, [join(copy, 'scripts', script)], { cwd: copy, encoding: 'utf8' });
 const section = (file) => join(copy, 'src', 'sections', file);
