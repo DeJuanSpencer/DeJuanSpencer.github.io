@@ -65,3 +65,38 @@ test('.kicker in base.css uses --copper-text', () => {
   assert.ok(m, '.kicker rule exists');
   assert.match(m[1], /color:\s*var\(--copper-text\)/);
 });
+
+// Binding checks: the selectors use the tokens, read from the source files.
+function declarations(selector) {
+  const out = [];
+  for (const name of ['base', 'top', 'bottom']) {
+    const rules = css(name).replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/([^{}]+)\{([^{}]*)\}/g);
+    for (const [, sel, body] of rules) {
+      if (sel.split(',').map((x) => x.trim()).includes(selector)) out.push(body);
+    }
+  }
+  assert.ok(out.length > 0, `${selector} has a rule`);
+  return out.join('\n');
+}
+
+test('.btn--primary fills with --copper-text and a paper label', () => {
+  const d = declarations('.btn--primary');
+  assert.match(d, /background:\s*var\(--copper-text\)/);
+  assert.match(d, /(^|[;\s])color:\s*var\(--paper\)/);
+});
+test('.nav__cta fills with --copper-text and a paper label', () => {
+  const d = declarations('.nav__cta');
+  assert.match(d, /background:\s*var\(--copper-text\)/);
+  assert.match(d, /(^|[;\s])color:\s*var\(--paper\)/);
+});
+test('.hero__note uses --copper-text', () => {
+  assert.match(declarations('.hero__note'), /(^|[;\s])color:\s*var\(--copper-text\)/);
+});
+test('.footer .kicker uses --copper-on-ink', () => {
+  assert.match(declarations('.footer .kicker'), /(^|[;\s])color:\s*var\(--copper-on-ink\)/);
+});
+test('.footer .btn--primary fills with --copper-on-ink and an ink label', () => {
+  const d = declarations('.footer .btn--primary');
+  assert.match(d, /background:\s*var\(--copper-on-ink\)/);
+  assert.match(d, /(^|[;\s])color:\s*var\(--ink\)/);
+});
