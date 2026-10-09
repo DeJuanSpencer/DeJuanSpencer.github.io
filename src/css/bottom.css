@@ -438,3 +438,13 @@
 .footer .kicker {
   color: var(--copper-on-ink);
 }
+
+/* The footer button reads as copper on ink: lighter fill, ink label. */
+.footer .btn--primary {
+  background: var(--copper-on-ink);
+  color: var(--ink);
+}
+.footer .btn--primary:focus-visible {
+  outline: 3px solid var(--paper);
+  outline-offset: 3px;
+}

@@ -41,6 +41,10 @@ test('copper-on-ink on ink is at least 4.5:1', () => {
   assert.ok(contrast(copperOnInk, ink) >= 4.5);
 });
 
+test('ink label on a copper-on-ink footer button is at least 4.5:1', () => {
+  assert.ok(contrast(ink, copperOnInk) >= 4.5);
+});
+
 // Selectors that may keep the exact copper as text colour: large elements only.
 const ALLOWED_COPPER_TEXT = ['.quote-card__mark'];
 
