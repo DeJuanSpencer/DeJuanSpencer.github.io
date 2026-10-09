@@ -1,5 +1,7 @@
-// Lint: anchors, placeholders, banned content and style, run over the page assembled in memory.
+// Lint: anchors, placeholders, banned content and style, then the static performance budget,
+// all run over the page assembled in memory.
 import { assemble } from './build.mjs';
+import { runBudget } from './check-budget.mjs';
 import { runLint } from './lib/checks.mjs';
 
 let site;
@@ -21,6 +23,11 @@ for (const [name, problems] of Object.entries(results)) {
   console.log(`FAIL  ${name}`);
   for (const p of problems) console.log(`      ${p}`);
 }
+
+const budget = runBudget(site);
+console.log(`\nStatic performance budget (approximates Lighthouse, not a score)\n${budget.table}`);
+failed += budget.failed.length;
+
 if (failed) {
   console.error(`lint failed: ${failed} problem${failed === 1 ? '' : 's'}`);
   process.exit(1);
