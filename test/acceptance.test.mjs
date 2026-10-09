@@ -12,7 +12,7 @@ const required = JSON.parse(readFileSync(join(root, 'scripts', 'required-copy.js
 
 const decode = (s) => s.replace(/&amp;/g, '&').replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 const body = html.slice(html.indexOf('<body'));
-const text = decode(body.replace(/<[^>]*>/g, ' ')).replace(/\s+/g, ' ').trim();
+const text = decode(body.replace(/<\/?(em|strong|b|i)\b[^>]*>/g, '').replace(/<[^>]*>/g, ' ')).replace(/\s+/g, ' ').trim();
 const count = (hay, needle) => hay.split(needle).length - 1;
 
 // Flat list of { selector, decls } for top-level rules and rules inside @media.
