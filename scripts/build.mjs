@@ -3,6 +3,7 @@
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parseAttrs } from './lib/parse-html.mjs';
 
 const here = fileURLToPath(import.meta.url);
 export const root = join(dirname(here), '..');
@@ -40,21 +41,19 @@ function readSection([file, tag, cls, id]) {
   const html = readRequired(join(src, 'sections', file), `section file ${file}`);
   const open = html.trimStart().match(/^<([a-z][a-z0-9]*)\b([^>]*)>/i);
   if (!open) fail(`${file} does not start with an element`);
-  const [, foundTag, attrs] = open;
+  const [, foundTag, rawAttrs] = open;
+  const attrs = parseAttrs(rawAttrs);
   if (foundTag.toLowerCase() !== tag) fail(`${file} root must be <${tag}>, found <${foundTag}>`);
-  const classes = (attrs.match(/\bclass="([^"]*)"/) || [, ''])[1].split(/\s+/);
+  const classes = (attrs.class || '').split(/\s+/);
   if (!classes.includes(cls)) fail(`${file} root must have class "${cls}"`);
-  const foundId = (attrs.match(/\bid="([^"]*)"/) || [, null])[1];
+  const foundId = attrs.id ?? null;
   if (foundId !== id) fail(`${file} root id must be ${id === null ? 'absent' : `"${id}"`}, found ${foundId === null ? 'none' : `"${foundId}"`}`);
-  return { name: cls, html: html.trim() + '\n', stub: /\bdata-stub\b/.test(attrs) };
+  return { name: cls, html: html.trim() + '\n', stub: 'data-stub' in attrs };
 }
 
-function readCss(name, optional) {
+function readCss(name) {
   const path = join(src, 'css', name);
-  if (!existsSync(path)) {
-    if (optional) return null;
-    fail(`css file ${name} is missing`);
-  }
+  if (!existsSync(path)) fail(`css file src/css/${name} is missing${name === 'fonts.css' ? ' (run scripts/fetch-fonts.mjs once and commit the result)' : ''}`);
   return { name, text: readFileSync(path, 'utf8') };
 }
 
@@ -73,7 +72,7 @@ export function assemble() {
     tail.trimEnd(),
     '',
   ].join('\n');
-  const cssFiles = [readCss('fonts.css', true), readCss('base.css'), readCss('top.css'), readCss('bottom.css')].filter(Boolean);
+  const cssFiles = [readCss('fonts.css'), readCss('base.css'), readCss('top.css'), readCss('bottom.css')];
   const css = cssFiles.map((c) => c.text.trim()).filter(Boolean).join('\n\n') + '\n';
   return {
     html,

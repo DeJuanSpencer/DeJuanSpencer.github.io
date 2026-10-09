@@ -1,6 +1,6 @@
 // Machine checks over the assembled page and the source css. Each check returns an array of problem strings.
 // Inputs are plain values (html text, css file list, stub set) so fixtures can feed them bad markup.
-import { decodeEntities, hasAncestor, hasClass, normalizeText, parse, visibleText } from './parse-html.mjs';
+import { checkBalance, decodeEntities, hasAncestor, hasClass, normalizeText, parse, visibleText } from './parse-html.mjs';
 
 const NAV_LINKS = ['#work', '#services', '#process', '#faq', '#about'];
 const PHONE = 'tel:+14807574367';
@@ -203,9 +203,10 @@ export function checkStyle(html, cssFiles = [], { stubs = new Set() } = {}) {
   return problems;
 }
 
-// Runs the lint set (b, c, e, f) and returns { name: problems }.
+// Runs the lint set (a, b, c, e, f) and returns { name: problems }.
 export function runLint({ html, cssFiles, stubs }) {
   return {
+    balance: checkBalance(html),
     anchors: checkAnchors(html, { stubs }),
     placeholders: checkPlaceholders(html, cssFiles),
     banned: checkBanned(html, cssFiles),

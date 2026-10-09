@@ -5,6 +5,7 @@
 // and exits non-zero on any breach. No network access.
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { gzipSync } from 'node:zlib';
 import { assemble, root } from './build.mjs';
 import { parse } from './lib/parse-html.mjs';
@@ -116,7 +117,7 @@ export function runBudget(site = assemble(), assets = loadAssets()) {
   return { rows, table: formatTable(rows), failed: rows.filter((r) => !r.ok) };
 }
 
-if (process.argv[1] === new URL(import.meta.url).pathname) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const { table, failed } = runBudget();
   console.log(table);
   if (failed.length) {
