@@ -69,6 +69,10 @@ Other decisions worth a glance: repo cleanup is in scope; no JavaScript at all; 
 - Pre-existing and untouched: `.claude/settings.local.json` with Windows paths, `.claude/skills/agent-team-setup/` and `CLAUDE-AGENT-TEAMS.md` are still tracked in the repo (stale copies; a separate decision).
 - The process is lead-run gates: this build has no task-list tools, so the lead ran `task-gate.js` by hand on every completion.
 
+## Previews Vercel built on its own
+
+The pipeline deployed nothing, but the Git integration on the production project `dejuan-spencer-github-io` builds every push to this repo, so each push of the run branch produced a preview deployment there (six in the last minutes of the run, all READY, target preview, none production). The branch preview is https://dejuan-spencer-github-io-git-f-9c8602-dejuans-projects-61c7a3da.vercel.app and answers a cookie-less request with a 302 to Vercel SSO, so it is behind a login wall (Seven can open it signed in; it does not meet the brief's public-preview check). dejuanspencer.com is unchanged. Two consequences for Seven: every future push to any branch of this repo costs a build on that project, and a merge to `main` is a production deploy.
+
 ## Deploy gate
 
 - Hosting line, verbatim: `Hosting: vercel`
