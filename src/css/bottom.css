@@ -205,3 +205,44 @@
     margin-top: 0;
   }
 }
+
+/* ---- 09 faq ---- */
+.faq .h2 {
+  margin-top: 16px;
+}
+
+.faq__list {
+  margin-top: 28px;
+}
+
+.faq .ledger__label,
+.faq .ledger__text {
+  margin: 0;
+}
+
+.faq__compare-title {
+  margin: 56px 0 0;
+}
+
+.faq__compare {
+  margin-top: 24px;
+}
+
+.faq__compare-row .ledger__label {
+  font-weight: 500;
+}
+
+.faq__compare-row--me .ledger__label {
+  font-weight: 600;
+  color: var(--copper);
+}
+
+@media (min-width: 720px) {
+  .faq__list {
+    margin-top: 40px;
+  }
+
+  .faq__compare-title {
+    margin-top: 80px;
+  }
+}
