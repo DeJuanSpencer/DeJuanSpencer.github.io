@@ -2,7 +2,7 @@
 
 /* ---- 06 services ---- */
 .services .h2 {
-  margin-top: 16px;
+  margin-top: 24px;
 }
 
 .price-card {
@@ -25,7 +25,7 @@
 
 .price-card__total {
   margin: 0;
-  color: var(--copper);
+  color: var(--ink);
   font-size: clamp(56px, 18vw, 64px);
   font-weight: 600;
   line-height: 1;
@@ -63,7 +63,7 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 16px;
-  padding-block: 20px;
+  padding-block: 28px;
 }
 
 .services__addon-label {
@@ -107,10 +107,6 @@
     font-size: 88px;
   }
 
-  .services__addons .ledger__row {
-    padding-block: 20px;
-  }
-
   .services__addons .leader {
     flex: 1 1 auto;
   }
@@ -119,6 +115,14 @@
 @media (min-width: 1024px) {
   .price-card {
     padding: 66px 74px;
+  }
+
+  .services .h2 {
+    margin-top: 44px;
+  }
+
+  .services__addons .ledger__row {
+    padding-block: 64px;
   }
 }
 
@@ -134,14 +138,13 @@
 
 /* ---- 08 process ---- */
 .process .h2 {
-  margin-top: 16px;
+  margin-top: 24px;
 }
 
 .process__steps {
   list-style: none;
   margin: 32px 0 0;
   padding: 0;
-  max-width: 962px;
 }
 
 .process__step {
@@ -163,6 +166,7 @@
 
 .process__body {
   min-width: 0;
+  max-width: 800px;
 }
 
 .process__body .h3,
@@ -190,11 +194,11 @@
   .process__step {
     grid-template-columns: 162px minmax(0, 1fr);
     column-gap: 0;
-    padding-block: 40px;
+    padding-block: 66px;
   }
 
   .process__step:first-child {
-    padding-top: 0;
+    padding-top: 26px;
   }
 
   .process__body {
@@ -208,7 +212,7 @@
 
 /* ---- 09 faq ---- */
 .faq .h2 {
-  margin-top: 16px;
+  margin-top: 24px;
 }
 
 .faq__list {
@@ -218,6 +222,25 @@
 .faq .ledger__label,
 .faq .ledger__text {
   margin: 0;
+}
+
+/* Q and A: one column at every width, question above answer. */
+.faq__list .ledger__row {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+/* Hairlines between rows only. */
+.who__list,
+.faq__list,
+.faq__compare {
+  border-top: 0;
+}
+
+.who__list .ledger__row:last-child,
+.faq__list .ledger__row:last-child,
+.faq__compare .ledger__row:last-child {
+  border-bottom: 0;
 }
 
 .faq__compare-title {
@@ -234,7 +257,8 @@
 
 .faq__compare-row--me .ledger__label {
   font-weight: 600;
-  color: var(--copper);
+  padding-left: 16px;
+  border-left: 3px solid var(--copper);
 }
 
 @media (min-width: 720px) {
@@ -243,13 +267,28 @@
   }
 
   .faq__compare-title {
-    margin-top: 80px;
+    margin-top: 66px;
+  }
+
+  .faq__compare {
+    margin-top: 40px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .process .h2,
+  .faq .h2 {
+    margin-top: 40px;
+  }
+
+  .testimonials .h2 {
+    margin-top: 30px;
   }
 }
 
 /* ---- 10 testimonials ---- */
 .testimonials .h2 {
-  margin-top: 16px;
+  margin-top: 24px;
 }
 
 .quote-card {
@@ -378,14 +417,19 @@
 
 @media (min-width: 720px) {
   .footer {
-    padding-block: 110px;
+    padding-top: 110px;
+    padding-bottom: 80px;
   }
 
   .footer__title {
+    margin-top: 34px;
     font-size: 64px;
   }
 
+  .footer__avail,
+  .footer__cta,
+  .footer__promise,
   .footer__credit {
-    margin-top: 80px;
+    margin-top: 34px;
   }
 }
