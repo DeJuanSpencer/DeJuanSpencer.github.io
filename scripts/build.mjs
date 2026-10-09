@@ -1,14 +1,16 @@
 // Assembles dist/ from src/. Reads src/, writes dist/, makes no network access.
+// assemble() builds the page in memory so lint and tests can use it without touching dist/.
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+const here = fileURLToPath(import.meta.url);
+export const root = join(dirname(here), '..');
 const src = join(root, 'src');
 const dist = join(root, 'dist');
 
 // Section files in document order. 01 sits before <main>, 12 after it.
-const sections = [
+export const sections = [
   ['01-nav.html', 'header', 'nav', null],
   ['02-hero.html', 'section', 'hero', 'top'],
   ['03-solo.html', 'section', 'solo', null],
@@ -24,8 +26,7 @@ const sections = [
 ];
 
 function fail(message) {
-  console.error(`build failed: ${message}`);
-  process.exit(1);
+  throw new Error(`build failed: ${message}`);
 }
 
 function readRequired(path, label) {
@@ -45,42 +46,58 @@ function readSection([file, tag, cls, id]) {
   if (!classes.includes(cls)) fail(`${file} root must have class "${cls}"`);
   const foundId = (attrs.match(/\bid="([^"]*)"/) || [, null])[1];
   if (foundId !== id) fail(`${file} root id must be ${id === null ? 'absent' : `"${id}"`}, found ${foundId === null ? 'none' : `"${foundId}"`}`);
-  return html.trim() + '\n';
+  return { name: cls, html: html.trim() + '\n', stub: /\bdata-stub\b/.test(attrs) };
 }
 
 function readCss(name, optional) {
   const path = join(src, 'css', name);
   if (!existsSync(path)) {
-    if (optional) return '';
+    if (optional) return null;
     fail(`css file ${name} is missing`);
   }
-  return readFileSync(path, 'utf8');
+  return { name, text: readFileSync(path, 'utf8') };
 }
 
-const parts = sections.map(readSection);
-const head = readRequired(join(src, 'layout', 'head.html'), 'src/layout/head.html');
-const tail = readRequired(join(src, 'layout', 'tail.html'), 'src/layout/tail.html');
+// Returns { html, css, sections: { name: html }, stubs: Set of section names, cssFiles: [{ name, text }] }.
+export function assemble() {
+  const parts = sections.map(readSection);
+  const head = readRequired(join(src, 'layout', 'head.html'), 'src/layout/head.html');
+  const tail = readRequired(join(src, 'layout', 'tail.html'), 'src/layout/tail.html');
+  const html = [
+    head.trimEnd(),
+    parts[0].html.trimEnd(),
+    '<main id="main">',
+    ...parts.slice(1, 11).map((p) => p.html.trimEnd()),
+    '</main>',
+    parts[11].html.trimEnd(),
+    tail.trimEnd(),
+    '',
+  ].join('\n');
+  const cssFiles = [readCss('fonts.css', true), readCss('base.css'), readCss('top.css'), readCss('bottom.css')].filter(Boolean);
+  const css = cssFiles.map((c) => c.text.trim()).filter(Boolean).join('\n\n') + '\n';
+  return {
+    html,
+    css,
+    cssFiles,
+    sections: Object.fromEntries(parts.map((p) => [p.name, p.html])),
+    stubs: new Set(parts.filter((p) => p.stub).map((p) => p.name)),
+  };
+}
 
-const html = [
-  head.trimEnd(),
-  parts[0].trimEnd(),
-  '<main id="main">',
-  ...parts.slice(1, 11).map((p) => p.trimEnd()),
-  '</main>',
-  parts[11].trimEnd(),
-  tail.trimEnd(),
-  '',
-].join('\n');
+function writeDist({ html, css }) {
+  rmSync(dist, { recursive: true, force: true });
+  mkdirSync(join(dist, 'assets'), { recursive: true });
+  writeFileSync(join(dist, 'index.html'), html);
+  writeFileSync(join(dist, 'assets', 'site.css'), css);
+  if (existsSync(join(src, 'assets'))) cpSync(join(src, 'assets'), join(dist, 'assets'), { recursive: true });
+  console.log(`built dist/index.html (${html.length} bytes) and dist/assets/site.css (${css.length} bytes)`);
+}
 
-const css = [readCss('fonts.css', true), readCss('base.css'), readCss('top.css'), readCss('bottom.css')]
-  .map((c) => c.trim())
-  .filter(Boolean)
-  .join('\n\n') + '\n';
-
-rmSync(dist, { recursive: true, force: true });
-mkdirSync(join(dist, 'assets'), { recursive: true });
-writeFileSync(join(dist, 'index.html'), html);
-writeFileSync(join(dist, 'assets', 'site.css'), css);
-if (existsSync(join(src, 'assets'))) cpSync(join(src, 'assets'), join(dist, 'assets'), { recursive: true });
-
-console.log(`built dist/index.html (${html.length} bytes) and dist/assets/site.css (${css.length} bytes)`);
+if (process.argv[1] === here) {
+  try {
+    writeDist(assemble());
+  } catch (err) {
+    console.error(err.message);
+    process.exit(1);
+  }
+}
