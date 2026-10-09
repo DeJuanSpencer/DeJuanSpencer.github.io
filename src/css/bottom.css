@@ -326,3 +326,66 @@
     margin-top: 32px;
   }
 }
+
+/* ---- 12 footer (the one ink section) ---- */
+.footer {
+  padding-block: 64px;
+  background: var(--ink);
+  color: var(--paper);
+  text-align: center;
+}
+
+.footer__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer p {
+  margin: 0;
+}
+
+.footer__title {
+  margin-top: 16px;
+  font-size: 36px;
+  line-height: 1.1;
+}
+
+.footer__avail {
+  margin-top: 24px;
+  font-size: 15px;
+}
+
+.footer__cta {
+  margin-top: 32px;
+  min-height: 61px;
+}
+
+.footer__promise {
+  margin-top: 24px;
+}
+
+.footer__credit {
+  margin-top: 56px;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--paper) 60%, transparent);
+}
+
+.footer a:focus-visible {
+  outline: 3px solid var(--paper);
+  outline-offset: 3px;
+}
+
+@media (min-width: 720px) {
+  .footer {
+    padding-block: 110px;
+  }
+
+  .footer__title {
+    font-size: 64px;
+  }
+
+  .footer__credit {
+    margin-top: 80px;
+  }
+}
